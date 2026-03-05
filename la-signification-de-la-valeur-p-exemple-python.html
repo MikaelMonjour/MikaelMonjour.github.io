@@ -41,41 +41,73 @@
 </footer><!-- /.post-info -->
 
       <!-- ATTENTION -->
-      <p>Imaginez la scène. Vous êtes un lundi matin en réunion. Le product manager affiche un dashboard et annonce, triomphant : <em>"Notre nouveau bouton vert a augmenté le taux de conversion de 12 %. La p-value est de 0.03. C'est statistiquement significatif. On déploie en prod."</em></p>
+      <p>Imaginez la scène. Lundi matin, 9 h 30, réunion d'équipe. Le product manager (la personne responsable du produit) affiche un graphique et annonce fièrement :</p>
 
-      <p>Tout le monde applaudit. Sauf vous. Parce que vous savez qu'un test A/B lancé un vendredi soir sur 200 utilisateurs avec une p-value de 0.03 ne veut probablement pas dire ce que tout le monde pense. Et pourtant, des décisions à plusieurs millions d'euros sont prises chaque jour sur la base de ce petit nombre mal compris.</p>
+      <p><em>"Notre nouveau bouton vert a augmenté le taux de conversion de 12 %. La p-value est de 0.03. C'est statistiquement significatif. On déploie en production."</em></p>
 
-      <p><strong>La p-value est sans doute le concept statistique le plus utilisé — et le plus mal interprété — dans le monde de la tech.</strong></p>
+      <p>Traduction : il pense avoir prouvé que le bouton vert fait acheter plus de clients. Tout le monde applaudit.</p>
+
+      <p>Sauf vous. Parce que vous savez que ce test a été lancé un vendredi soir, sur seulement 200 visiteurs. Et qu'une p-value de 0.03 dans ces conditions ne prouve pas grand-chose.</p>
+
+      <p>Pourtant, des décisions à plusieurs millions d'euros sont prises chaque jour sur la base de ce petit nombre mal compris. <strong>La p-value est le concept statistique le plus utilisé — et le plus mal interprété — dans le monde de la tech.</strong></p>
 
       <!-- INTÉRÊT -->
-      <h2>Qu'est-ce que la valeur p, vraiment ?</h2>
+      <h2>Qu'est-ce que la valeur p, en termes simples ?</h2>
 
-      <p>Oubliez les définitions académiques pendant une seconde. Voici ce que la p-value fait concrètement :</p>
+      <p>Avant d'aller plus loin, posons quelques définitions :</p>
 
-      <p>C'est la probabilité que vous obteniez un résultat de test <strong>au moins aussi extrême que celui observé</strong>, en supposant que votre hypothèse de départ est vraie.</p>
+      <ul>
+        <li><strong>Test A/B :</strong> on montre deux versions d'une page (A et B) à des groupes différents de visiteurs pour voir laquelle fonctionne le mieux.</li>
+        <li><strong>Taux de conversion :</strong> le pourcentage de visiteurs qui font l'action souhaitée (acheter, s'inscrire, cliquer).</li>
+        <li><strong>Hypothèse nulle :</strong> l'idée de départ qu'on cherche à tester. Par exemple : "le bouton vert ne change rien au comportement des visiteurs".</li>
+      </ul>
 
-      <p>Prenons un exemple concret que tout growth engineer connaît par cœur.</p>
+      <p>La p-value, c'est un chiffre entre 0 et 1 qui répond à une question simple :</p>
 
-      <p>Vous travaillez sur une plateforme e-commerce. La valeur moyenne des commandes de vos clients est de <strong>170 €</strong>. C'est votre hypothèse de départ — ce que les statisticiens appellent l'<strong>hypothèse nulle</strong>. L'écart type est de 5 €.</p>
+      <p><strong>Si rien n'a changé (si l'hypothèse nulle est vraie), quelle est la probabilité d'observer un résultat aussi extrême que celui qu'on a mesuré ?</strong></p>
 
-      <p>Vous lancez un test. Vous prenez un échantillon de clients. Et vous obtenez une valeur moyenne de commande de <strong>183 €</strong>.</p>
+      <p>Plus la p-value est petite, plus le résultat observé serait surprenant si rien n'avait changé. Mais attention : "surprenant" ne veut pas dire "impossible". C'est toute la subtilité.</p>
 
-      <p>La question : <em>est-ce que ça veut dire que quelque chose a changé, ou est-ce juste du bruit ?</em></p>
+      <h2>Un exemple concret : le panier moyen</h2>
 
-      <p>C'est exactement à cette question que la p-value répond.</p>
+      <p>Prenons un cas que tout growth engineer connaît bien.</p>
 
-      <h2>Le théorème qui change tout</h2>
+      <p>Vous travaillez sur une plateforme e-commerce. Après des mois d'observation, vous savez que vos clients dépensent en moyenne <strong>170 €</strong> par commande. C'est votre référence — votre hypothèse nulle.</p>
 
-      <p>Si vous tirez des échantillons suffisamment souvent, la distribution des moyennes de ces échantillons forme une <strong>distribution normale</strong> (une belle courbe en cloche) dont la moyenne s'approche de la moyenne de la population. C'est le théorème de la limite centrale, et c'est la base de tout ce qui suit.</p>
+      <p>Deux notions importantes ici :</p>
+      <ul>
+        <li><strong>La moyenne :</strong> la somme de toutes les valeurs divisée par le nombre de valeurs. Si 3 clients dépensent 150 €, 170 € et 190 €, la moyenne est (150 + 170 + 190) / 3 = 170 €.</li>
+        <li><strong>L'écart type :</strong> il mesure à quel point les valeurs sont dispersées autour de la moyenne. Un écart type faible (par exemple 5 €) signifie que la plupart des clients dépensent entre 165 € et 175 €. Un écart type élevé signifierait des montants très variés. Ici, notre écart type est de <strong>5 €</strong>.</li>
+      </ul>
 
-      <p>Si on tire <strong>10 000 échantillons</strong> de notre population de clients (dont la moyenne est de 170 €), les moyennes de ces échantillons vont varier entre environ 150 € et 190 €. La plupart seront proches de 170 €. Quelques-unes seront plus éloignées.</p>
+      <p>Vous lancez un test. Vous prenez un groupe de clients au hasard. Et vous observez que leur panier moyen est de <strong>183 €</strong>.</p>
 
-      <p>La question naturelle devient alors : <strong>quelle est la probabilité d'observer une moyenne d'échantillon de 183 € ou plus, si la vraie moyenne est bien de 170 € ?</strong></p>
+      <p>La question : <em>est-ce que ce groupe dépense vraiment plus, ou est-ce juste le hasard qui a sélectionné des clients plus dépensiers ?</em></p>
+
+      <p>C'est exactement la question à laquelle la p-value va répondre.</p>
+
+      <h2>Pourquoi un seul échantillon ne suffit pas</h2>
+
+      <p>Un <strong>échantillon</strong>, c'est un sous-groupe tiré au hasard dans une population plus large. Si votre site a 500 000 clients, un échantillon pourrait être un groupe de 1 000 clients pris au hasard.</p>
+
+      <p>Le problème : chaque fois que vous tirez un échantillon différent, vous obtenez une moyenne légèrement différente. Un groupe tombera sur 168 €, un autre sur 172 €, un autre sur 175 €. C'est normal — c'est la <strong>variabilité d'échantillonnage</strong>.</p>
+
+      <p>Il existe un théorème fondamental en statistiques — le <strong>théorème de la limite centrale</strong> — qui dit ceci : si vous tirez suffisamment d'échantillons et que vous tracez toutes leurs moyennes sur un graphique, vous obtenez une courbe en forme de cloche (une <strong>distribution normale</strong>). Le sommet de cette cloche se situe à la vraie moyenne de la population.</p>
+
+      <p>Concrètement, si on tire <strong>10 000 échantillons</strong> de notre base clients :</p>
+
+      <ul>
+        <li>La plupart des moyennes d'échantillon seront proches de 170 €.</li>
+        <li>Quelques-unes seront à 160 € ou 180 €.</li>
+        <li>Très peu seront à 150 € ou 190 €.</li>
+      </ul>
+
+      <p>La question devient alors : <strong>quelle est la probabilité de tomber sur une moyenne de 183 € ou plus, si la vraie moyenne est bien de 170 € ?</strong> C'est la p-value.</p>
 
       <!-- DÉSIR -->
       <h2>Calculons-le avec Python</h2>
 
-      <p>Voici une fonction Python qui simule exactement ce scénario :</p>
+      <p>Le code ci-dessous simule exactement ce scénario. Il tire 10 000 échantillons d'une population dont la moyenne est 170 € (paramètre <code>mu</code>) et l'écart type est 5 € (paramètre <code>sigma</code>), puis il compte combien de ces échantillons ont une moyenne supérieure à 183 € :</p>
 
 <pre><code>import numpy as np
 import matplotlib.pyplot as plt
@@ -106,85 +138,121 @@ def pvalue_101(mu, sigma, samp_size, samp_mean=0, deltam=0):
     plt.axvline(x=mu-deltam, color='green')
     plt.show()</code></pre>
 
-      <p>Lançons notre test :</p>
+      <p>On lance le test :</p>
 
 <pre><code>pvalue_101(170.0, 5.0, 10000, 183.0)</code></pre>
 
-      <p>Résultat : <strong>le pourcentage de nombres supérieurs à 183 est de 0,35 %</strong>.</p>
+      <p>Résultat : <strong>seulement 0,35 % des échantillons ont une moyenne supérieure à 183 €</strong>.</p>
 
-      <p>C'est minuscule, mais ce n'est pas zéro. Et c'est là que les choses deviennent intéressantes.</p>
+      <p>C'est très peu. Mais ce n'est pas zéro. Sur 10 000 tirages, environ 35 tombent au-dessus de 183 €. Le hasard peut produire ce résultat — rarement, mais il le peut.</p>
 
-      <h2>Le piège du test bilatéral</h2>
+      <h2>Test unilatéral ou bilatéral : pourquoi c'est important</h2>
 
-      <p>Si on pose la question différemment : quelle est la probabilité d'obtenir une moyenne d'échantillon <strong>éloignée de plus de 13 €</strong> de la moyenne de population de 170 € ? C'est-à-dire : inférieure à 157 € <strong>ou</strong> supérieure à 183 € ?</p>
-
-      <p>Réponse : <strong>0,77 %</strong>. Environ le double. Logique : la distribution normale est symétrique autour de la moyenne.</p>
-
-      <p>C'est un point crucial. Dans un vrai test A/B, on utilise presque toujours un test bilatéral. La variation peut être meilleure <em>ou</em> pire que le contrôle.</p>
-
-      <h2>La règle 68-95-99,7</h2>
-
-      <p>Pour comprendre intuitivement où se situent les moyennes d'échantillon :</p>
+      <p>Deux termes à comprendre :</p>
 
       <ul>
-        <li><strong>68,2 %</strong> des moyennes d'échantillon tombent dans l'intervalle μ ± σ. Dans notre cas : entre <strong>165 € et 175 €</strong></li>
-        <li><strong>95,4 %</strong> tombent dans μ ± 2σ : entre <strong>160 € et 180 €</strong></li>
-        <li><strong>99,7 %</strong> tombent dans μ ± 3σ : entre <strong>155 € et 185 €</strong></li>
+        <li><strong>Test unilatéral :</strong> on cherche un écart dans une seule direction. "Est-ce que la moyenne est <em>supérieure</em> à 170 € ?" On ne regarde que le côté droit de la courbe.</li>
+        <li><strong>Test bilatéral :</strong> on cherche un écart dans les deux directions. "Est-ce que la moyenne est <em>différente</em> de 170 €, que ce soit en plus ou en moins ?" On regarde les deux côtés.</li>
       </ul>
 
-      <p>Notre échantillon à 183 € se situe au-delà de 2 écarts types. C'est rare — mais ça arrive.</p>
+      <p>Si on pose la question en bilatéral — quelle est la probabilité d'obtenir une moyenne éloignée de plus de 13 € de 170 €, soit inférieure à 157 € <strong>ou</strong> supérieure à 183 € — la réponse est <strong>0,77 %</strong>. Environ le double, car la courbe en cloche est symétrique.</p>
 
-      <h2>Comment (mal) comprendre la p-value</h2>
+      <p>En pratique, on utilise presque toujours un test bilatéral. Pourquoi ? Parce qu'un changement peut être positif <em>ou</em> négatif, et il faut mesurer les deux possibilités.</p>
 
-      <p>C'est ici que 90 % des équipes product et growth se trompent. Voici le raisonnement classique :</p>
+      <h2>La règle 68-95-99,7 : où tombent la plupart des résultats</h2>
 
-      <p><em>"On veut un niveau de confiance de 95 %. Notre seuil est donc une p-value de 5 %. La moyenne d'échantillon est de 183 € et sa p-value est de 0,35 %. Comme 0,35 % < 5 %, on rejette l'hypothèse que la moyenne de la population est de 170 €."</em></p>
-
-      <p><strong>C'est une conclusion erronée.</strong></p>
-
-      <p>Pourquoi ? Parce que nous avons <em>littéralement</em> tiré cet échantillon d'une population dont la moyenne EST 170 €. L'échantillon à 183 € est rare, mais il existe. Rejeter l'hypothèse sur la base d'un seul échantillon, c'est prendre une décision avec une seule carte retournée au poker.</p>
-
-      <p>La p-value nous dit la probabilité d'observer ce que nous avons constaté <strong>si l'hypothèse est vraie</strong>. Elle ne nous dit <strong>pas</strong> la probabilité que l'hypothèse soit vraie.</p>
-
-      <p>C'est la nuance qui vaut des millions.</p>
-
-      <h2>Un cas réel : le test A/B qui a presque tout cassé</h2>
-
-      <p>Une équipe growth lance un test A/B sur la page de pricing. La variation B affiche le prix barré avec une réduction de 20 %. Après 3 jours, la p-value tombe sous 0.05. Le PM veut déployer immédiatement.</p>
-
-      <p>Mais en creusant les données, on découvre que le test a été lancé un vendredi — et que le trafic du week-end est dominé par un segment de clients qui achètent naturellement plus. La "significativité statistique" n'était que du bruit saisonnier.</p>
-
-      <p>Si l'équipe avait attendu un cycle complet (7 jours minimum) et vérifié que la taille d'échantillon était suffisante, elle aurait vu que l'effet disparaissait complètement.</p>
-
-      <p><strong>Leçon :</strong> une p-value basse ne signifie rien si le design expérimental est bancal.</p>
-
-      <h2>Ce que la p-value nous dit (et ne nous dit pas)</h2>
-
-      <p>Résumons :</p>
+      <p>Cette règle permet de visualiser rapidement la répartition des moyennes d'échantillon autour de la vraie moyenne. Le symbole <strong>σ</strong> (sigma) représente l'écart type :</p>
 
       <ul>
-        <li>Une p-value de <strong>0,35 %</strong> = la probabilité d'obtenir une moyenne d'échantillon supérieure à 183 €, <em>si</em> la moyenne de la population est de 170 €</li>
-        <li>Une p-value de <strong>0,77 %</strong> = la probabilité d'obtenir une moyenne d'échantillon à plus de ±13 € de la moyenne de 170 €</li>
-        <li>Ça <strong>ne nous dit pas</strong> si l'hypothèse est vraie ou fausse</li>
-        <li>On <strong>ne peut pas</strong> rejeter une hypothèse sur un seul point de données</li>
+        <li><strong>68,2 %</strong> des moyennes tombent à moins de 1 écart type de la moyenne (entre 165 € et 175 €). C'est la zone "normale".</li>
+        <li><strong>95,4 %</strong> tombent à moins de 2 écarts types (entre 160 € et 180 €). Presque tout est là.</li>
+        <li><strong>99,7 %</strong> tombent à moins de 3 écarts types (entre 155 € et 185 €). Au-delà, c'est exceptionnel.</li>
+      </ul>
+
+      <p>Notre échantillon à 183 € se situe au-delà de 2 écarts types. C'est rare — mais le hasard le permet.</p>
+
+      <h2>L'erreur que 90 % des équipes commettent</h2>
+
+      <p>Voici le raisonnement que l'on entend dans presque toutes les équipes produit et marketing :</p>
+
+      <p><em>"On veut un niveau de confiance de 95 %. Notre seuil est donc une p-value de 5 %. La moyenne d'échantillon est de 183 € et sa p-value est de 0,35 %. Comme 0,35 % est inférieur à 5 %, on rejette l'hypothèse que la moyenne de la population est de 170 €."</em></p>
+
+      <p><strong>Cette conclusion est fausse.</strong></p>
+
+      <p>Pourquoi ? Parce que dans notre simulation, nous avons <em>nous-mêmes</em> tiré cet échantillon d'une population dont la moyenne EST 170 €. L'échantillon à 183 € est rare, mais il existe bel et bien dans cette population.</p>
+
+      <p>Rejeter l'hypothèse sur la base d'un seul échantillon, c'est comme retourner une seule carte au poker et décider que vous avez gagné la partie.</p>
+
+      <p>La p-value nous dit : <strong>"Si l'hypothèse de départ est vraie, voici la probabilité d'observer ce résultat."</strong> Elle ne nous dit <strong>pas</strong> : "Voici la probabilité que l'hypothèse soit vraie." C'est la nuance la plus importante de cet article.</p>
+
+      <h2>Exemple concret : l'ingestion de leads dans un CRM</h2>
+
+      <p>Un <strong>lead</strong>, c'est un contact commercial potentiel — quelqu'un qui a rempli un formulaire, téléchargé un livre blanc, ou laissé ses coordonnées. Un <strong>CRM</strong> (Customer Relationship Management) est le logiciel qui centralise et suit tous ces contacts (HubSpot, Salesforce, Pipedrive, etc.).</p>
+
+      <p>Imaginons une équipe growth qui travaille sur l'ingestion de leads. Le pipeline actuel fonctionne comme ceci : un visiteur remplit un formulaire sur le site, ses données sont envoyées au CRM via une API, et un commercial le recontacte sous 24 h.</p>
+
+      <p>L'équipe observe que le <strong>taux de qualification</strong> des leads (le pourcentage de leads qui deviennent de vrais prospects qualifiés) est de <strong>18 %</strong> en moyenne. L'écart type, calculé sur 6 mois de données, est de <strong>3 %</strong>.</p>
+
+      <p>Un développeur propose un changement : enrichir automatiquement chaque lead avec des données publiques (taille d'entreprise, secteur, poste) <em>avant</em> qu'il arrive dans le CRM. L'idée est que les commerciaux, mieux informés, qualifient mieux les leads.</p>
+
+      <p>Après 2 semaines de test sur un échantillon de leads, le taux de qualification grimpe à <strong>26 %</strong>.</p>
+
+      <p>L'équipe est enthousiaste. Le Head of Sales veut généraliser immédiatement. Mais posons-nous la question :</p>
+
+      <p><strong>Quelle est la probabilité d'observer un taux de 26 % ou plus, si en réalité l'enrichissement n'a rien changé et que la vraie moyenne est toujours de 18 % ?</strong></p>
+
+<pre><code>pvalue_101(18.0, 3.0, 10000, 26.0)</code></pre>
+
+      <p>Résultat : <strong>pratiquement 0 %</strong>. La différence est de plus de 2,5 écarts types. Il est extrêmement improbable d'observer un tel écart par le seul hasard.</p>
+
+      <p>Mais avant de célébrer, il faut vérifier plusieurs choses :</p>
+
+      <ul>
+        <li><strong>La durée du test :</strong> 2 semaines, est-ce suffisant ? Si le cycle de vente est de 30 jours, on n'a vu qu'une partie du tableau.</li>
+        <li><strong>La taille de l'échantillon :</strong> combien de leads ont été testés ? 50 leads enrichis contre 50 non enrichis, c'est trop peu. 500 contre 500, c'est plus solide.</li>
+        <li><strong>Le biais de sélection :</strong> les leads enrichis venaient-ils de la même source que les autres ? Si l'enrichissement a été testé uniquement sur les leads entrants de Google Ads (souvent plus qualifiés que ceux venant des réseaux sociaux), la comparaison est faussée.</li>
+        <li><strong>La saisonnalité :</strong> la période de test correspond-elle à un pic naturel d'activité (rentrée, Black Friday, fin de trimestre) qui gonfle artificiellement les résultats ?</li>
+      </ul>
+
+      <p>Ici, la p-value est rassurante — le signal est fort. Mais elle ne remplace pas un design expérimental rigoureux. Si le test avait été lancé uniquement pendant la dernière semaine du trimestre (quand les commerciaux poussent pour atteindre leurs objectifs), le taux de qualification serait naturellement plus élevé, enrichissement ou pas.</p>
+
+      <h2>Le test A/B qui a presque tout cassé</h2>
+
+      <p>Autre situation classique. Une équipe growth lance un test A/B sur la page de tarification de leur SaaS. La version B affiche le prix barré avec une réduction de 20 %. Après seulement 3 jours, la p-value tombe sous 0,05. Le product manager veut déployer immédiatement.</p>
+
+      <p>Mais en analysant les données de plus près, on découvre que le test a été lancé un vendredi soir. Le trafic du week-end est dominé par un profil de visiteurs différent : des particuliers qui achètent plus facilement que les professionnels en semaine. La "significativité statistique" n'était que du bruit lié à la composition du trafic.</p>
+
+      <p>Si l'équipe avait attendu un cycle complet — au moins 7 jours, pour couvrir tous les profils de visiteurs — elle aurait vu que l'effet disparaissait complètement.</p>
+
+      <p><strong>Leçon :</strong> une p-value basse ne signifie rien si la conception du test est bancale.</p>
+
+      <h2>Ce que la p-value nous dit — et ce qu'elle ne dit pas</h2>
+
+      <p>Résumons en termes simples :</p>
+
+      <ul>
+        <li>Une p-value de <strong>0,35 %</strong> signifie : "Si la vraie moyenne est de 170 €, il n'y a que 0,35 % de chance d'observer une moyenne d'échantillon supérieure à 183 €."</li>
+        <li>Une p-value de <strong>0,77 %</strong> signifie : "Si la vraie moyenne est de 170 €, il n'y a que 0,77 % de chance d'observer une moyenne qui s'en éloigne de plus de 13 €, dans un sens ou dans l'autre."</li>
+        <li>La p-value <strong>ne nous dit pas</strong> si l'hypothèse de départ est vraie ou fausse.</li>
+        <li>On <strong>ne peut pas</strong> rejeter une hypothèse de manière fiable sur la base d'un seul échantillon.</li>
       </ul>
 
       <!-- ACTION -->
-      <h2>Checklist avant de conclure sur une p-value</h2>
+      <h2>Les 5 questions à poser avant de conclure</h2>
 
       <p>La prochaine fois que quelqu'un brandit une p-value en réunion, posez ces questions :</p>
 
       <ol>
-        <li><strong>La taille d'échantillon est-elle suffisante ?</strong> — Un test sur 200 utilisateurs ne prouve rien</li>
-        <li><strong>Le test a-t-il tourné assez longtemps ?</strong> — Minimum un cycle business complet (7 jours pour du B2C, souvent 14+)</li>
-        <li><strong>Le test est-il bilatéral ou unilatéral ?</strong> — La plupart du temps, il devrait être bilatéral</li>
-        <li><strong>Y a-t-il des biais de segmentation ?</strong> — Le trafic du week-end n'est pas le même que celui de la semaine</li>
-        <li><strong>A-t-on regardé la p-value une seule fois, ou la surveille-t-on en continu ?</strong> — Le "peeking" gonfle artificiellement la significativité</li>
+        <li><strong>Combien de personnes ont été testées ?</strong> — Un test sur 200 visiteurs ou 50 leads ne prouve rien. Il faut un volume suffisant pour que les résultats soient fiables.</li>
+        <li><strong>Pendant combien de temps le test a-t-il tourné ?</strong> — Il faut couvrir au moins un cycle business complet : 7 jours minimum pour du B2C (vente aux particuliers), souvent 14 jours ou plus pour du B2B (vente aux entreprises).</li>
+        <li><strong>Le test est-il bilatéral ?</strong> — On doit mesurer si le changement est meilleur <em>ou</em> pire, pas seulement meilleur. Un test unilatéral surestime la significativité.</li>
+        <li><strong>Les groupes sont-ils comparables ?</strong> — Si le groupe A vient de Google Ads et le groupe B vient des réseaux sociaux, la comparaison n'a aucun sens. C'est un <strong>biais de segmentation</strong>.</li>
+        <li><strong>A-t-on regardé les résultats une seule fois ou plusieurs ?</strong> — Vérifier la p-value tous les jours (le <strong>"peeking"</strong>) gonfle artificiellement les chances de trouver un résultat significatif. Il faut définir la durée du test à l'avance et ne regarder qu'à la fin.</li>
       </ol>
 
-      <h2>Le code complet</h2>
+      <h2>Le code complet pour reproduire les calculs</h2>
 
-      <p>Pour reproduire les graphiques et les calculs de cet article :</p>
+      <p>Ce code Python génère les graphiques et calcule les p-values présentées dans cet article. Vous pouvez le copier-coller dans un notebook Jupyter ou un script Python :</p>
 
 <pre><code>import numpy as np
 import matplotlib.pyplot as plt
@@ -215,13 +283,16 @@ def pvalue_101(mu, sigma, samp_size, samp_mean=0, deltam=0):
     plt.axvline(x=mu-deltam, color='green')
     plt.show()
 
-# Test 1 : probabilité d'une moyenne > 183
+# Exemple e-commerce : probabilité d'un panier moyen > 183 €
 pvalue_101(170.0, 5.0, 10000, 183.0)
 
-# Test 2 : probabilité d'une moyenne à +/- 13 de 170
-pvalue_101(170.0, 5.0, 10000, 0, 13.0)</code></pre>
+# Exemple e-commerce : probabilité d'un écart de +/- 13 € autour de 170 €
+pvalue_101(170.0, 5.0, 10000, 0, 13.0)
 
-      <p><em>La p-value est un outil puissant — à condition de savoir ce qu'elle mesure et ce qu'elle ne mesure pas. La prochaine fois que vous voyez "p < 0.05" dans un rapport, prenez une seconde pour vous demander si le test mérite qu'on lui fasse confiance.</em></p>
+# Exemple CRM : probabilité d'un taux de qualification > 26 %
+pvalue_101(18.0, 3.0, 10000, 26.0)</code></pre>
+
+      <p><em>La p-value est un outil puissant — à condition de comprendre ce qu'elle mesure et ce qu'elle ne mesure pas. La prochaine fois que vous voyez "p &lt; 0.05" dans un rapport ou un dashboard, prenez une seconde pour vérifier si le test qui se cache derrière mérite vraiment qu'on lui fasse confiance.</em></p>
 
     </div><!-- /.entry-content -->
 
