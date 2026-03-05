@@ -1,0 +1,11 @@
+# Pelican static site generator
+pelican>=4.9,<5.0
+
+# Markdown support for writing articles
+markdown>=3.5
+
+# Typography enhancements (smart quotes, dashes, etc.)
+typogrify>=2.0
+
+# Local development server (included in stdlib, listed for clarity)
+# python3 -m http.server 5000 --bind 0.0.0.0

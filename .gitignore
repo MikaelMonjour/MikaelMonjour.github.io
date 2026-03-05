@@ -5,6 +5,8 @@
 .replit
 attached_assets/
 
+# Articles drafts
+.articles/
 # Python
 __pycache__/
 *.py[cod]
