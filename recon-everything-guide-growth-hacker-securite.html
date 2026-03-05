@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+        <title>Recon Everything : le guide du growth engineer pour la sécurité offensive</title>
+        <link rel="stylesheet" href="/theme/css/main.css?v=3" />
+        <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Blog de Mikael Atom Feed" />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="/">Blog de Mikael </a></h1>
+                <nav><ul>
+                    <li><a href="/category/misc.html">misc</a></li>
+                    <li class="active"><a href="/category/tech.html">tech</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="/recon-everything-guide-growth-hacker-securite.html" rel="bookmark"
+           title="Permalink to Recon Everything : le guide du growth engineer pour la sécurité offensive">Recon Everything : le guide du growth engineer pour la sécurité offensive</a></h1>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2026-03-05T14:00:00+01:00">
+                Published: mer. 05 mars 2026
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="/author/mikael-monjour.html">Mikael Monjour</a>
+        </address>
+<p>In <a href="/category/tech.html">tech</a>.</p>
+<p>tags: <a href="/tag/securite.html">securite</a> <a href="/tag/recon.html">recon</a> <a href="/tag/bug-bounty.html">bug-bounty</a> <a href="/tag/outils.html">outils</a> <a href="/tag/tech.html">tech</a> </p>
+</footer><!-- /.post-info -->
+
+      <p>Il y a quelques mois, un de mes anciens élèves d'<a href="https://eduba.school">Eduba</a> m'a envoyé un message sur LinkedIn : <em>"Mikael, je viens de décrocher ma première bounty sur HackerOne. 500 dollars. C'est grâce à ton cours sur le scraping que j'ai compris comment énumérer des sous-domaines."</em></p>
+
+      <p>Ce message m'a frappé. Pas parce que 500 dollars, c'est beaucoup (quoique). Mais parce que ça m'a rappelé un truc fondamental que je vis chaque jour en tant que growth engineer chez SumUp : <strong>la reconnaissance, c'est 80% du travail</strong>. Que tu cherches des utilisateurs à convertir ou des vulnérabilités à remonter, le principe est le même. Tu dois comprendre le terrain avant de frapper.</p>
+
+      <p>Alors j'ai décidé de poser par écrit tout ce que je sais sur la reconnaissance en sécurité offensive. Ce guide est dense. Il est technique. Mais si vous êtes patient et que vous aimez creuser, vous allez adorer.</p>
+
+      <h2>Le mindset : penser comme un growth engineer qui chasse</h2>
+
+      <p>Quand je suis arrivé dans le bug bounty, j'ai tout de suite vu le parallèle avec mon métier. En growth, on ne lance pas une campagne sans avoir analysé le funnel, segmenté les utilisateurs, compris les points de friction. En bug bounty, c'est pareil : <strong>on ne lance pas un exploit sans avoir cartographié la surface d'attaque</strong>.</p>
+
+      <p>La première règle ? <strong>Toujours lire le code source.</strong> Choisissez un programme avec un large scope. Explorez les informations sur les domaines, les serveurs de messagerie, les connexions aux réseaux sociaux. Fouillez le site, interceptez chaque requête et réponse, analysez-les. Comprenez leur infrastructure : comment ils gèrent les sessions, l'authentification, quel type de protection CSRF ils ont.</p>
+
+      <p>Les tests négatifs sont vos meilleurs amis. Les messages d'erreur révèlent souvent des chemins internes, des noms de variables, des technologies cachées. Prenez le temps de comprendre le flux de l'application pour avoir une meilleure idée du type de vulnérabilités à rechercher.</p>
+
+      <h2>Mon workflow : de la découverte au premier bug</h2>
+
+      <p>Je vais vous raconter comment je procède, étape par étape.</p>
+
+      <p><strong>D'abord, je fuzze les endpoints.</strong> Avec une bonne wordlist, je teste tous les chemins possibles. Ce sont souvent des répertoires d'administration oubliés, des dossiers <code>/.git/</code> qu'on n'a pas pensé à supprimer, des scripts de debug laissés en production. Ça m'est arrivé de trouver un panneau d'admin complet juste en bruteforçant des chemins standard.</p>
+
+      <p><strong>Ensuite, je teste chaque formulaire.</strong> J'utilise plusieurs payloads pour contourner les filtres côté client. Et surtout : je commence tôt. Dès qu'un programme ouvre, je fonce. Les premières heures sont les plus rentables.</p>
+
+      <p>Un conseil que j'aurais aimé qu'on me donne plus tôt : <strong>choisissez un workflow précis dans l'application et creusez-le à fond.</strong> Arrêtez de courir après chaque outil qui brille. Burp Suite est à peu près le seul outil que j'utilise pour tester les applications web. C'est un couteau suisse.</p>
+
+      <h2>L'art du paramètre : casser pour comprendre</h2>
+
+      <p>Supposons qu'un champ prenne un numéro (appelons-le ID). Voici ma checklist systématique :</p>
+
+      <ul>
+        <li>Mettre un chiffre négatif</li>
+        <li>Augmenter ou diminuer le nombre</li>
+        <li>Mettre un nombre astronomique</li>
+        <li>Remplacer par une chaîne de caractères ou un symbole</li>
+        <li>Tenter un path traversal avec <code>../</code></li>
+        <li>Injecter des vecteurs XSS</li>
+        <li>Injecter des vecteurs SQLi</li>
+        <li>Utiliser des caractères non-ASCII</li>
+        <li>Se tromper de type : envoyer une string dans un array</li>
+        <li>Utiliser des caractères nuls</li>
+      </ul>
+
+      <p>Dans 80% des cas, vous finirez par remarquer un comportement étrange. Ce comportement ne signifie pas forcément que vous avez trouvé un bug reportable. Mais ça signifie que vous êtes sur la bonne piste. Continuez à creuser.</p>
+
+      <h2>Les bonnes questions à se poser</h2>
+
+      <p>Après avoir développé une bonne intuition du site, conservez mentalement un enregistrement de votre workflow et posez-vous ces questions :</p>
+
+      <ul>
+        <li><strong>Affichage :</strong> La page affiche-t-elle quelque chose pour les utilisateurs ? (XSS, usurpation de contenu)</li>
+        <li><strong>Données stockées :</strong> La page fait-elle appel à des données persistantes ? (Injections, IDOR, stockage côté client)</li>
+        <li><strong>Système de fichiers :</strong> Interagit-elle avec le serveur de fichiers ? (Upload vulnérable, LFI)</li>
+        <li><strong>Sécurité transactionnelle :</strong> Est-ce une fonction qui mérite d'être protégée par CSRF ?</li>
+        <li><strong>Privilèges :</strong> Cette fonction est-elle privilégiée ? (Défauts de logique, escalade de privilèges)</li>
+        <li><strong>Entrées utilisateur :</strong> La saisie est-elle affichée quelque part ?</li>
+        <li><strong>Endpoints de sauvegarde :</strong> Quels endpoints persistent des données ?</li>
+        <li><strong>Upload :</strong> Y a-t-il une fonctionnalité de téléchargement de fichiers ?</li>
+        <li><strong>Authentification :</strong> Quel type d'authentification est utilisé ?</li>
+      </ul>
+
+      <p>Et n'oubliez pas : <strong>les développeurs soulignent souvent leurs propres faiblesses</strong>, que ce soit dans leur gestion du code ou dans les commentaires. Indirectement, ils deviennent les premiers supporters de votre réussite.</p>
+
+      <h2>La boîte à outils de la reconnaissance</h2>
+
+      <p>Avant d'entrer dans le vif du sujet, quelques mises en garde importantes : certains outils demandent une connaissance avancée. La majorité des configurations sont faites sur Linux (Kali, Ubuntu, Debian). Préférez toujours un environnement virtuel pour vos installations Python. Et surtout : <strong>soyez patient</strong>. Si vous n'êtes pas prêt à avoir des galères, ce qui suit n'est pas pour vous.</p>
+
+      <h3>Étape 1 : Énumération des sous-domaines</h3>
+
+      <p>La reconnaissance ne se limite pas à la recherche de sous-domaines périmés. Il s'agit de comprendre l'application et de trouver des fonctionnalités cachées. Comme le dit <strong>NahamSec</strong> : pour réussir, il faut trouver l'équilibre entre la reconnaissance et le bon vieux hacking.</p>
+
+      <p>Mes outils de prédilection :</p>
+
+      <ul>
+        <li><strong>Sublist3r</strong> &mdash; Énumération rapide de sous-domaines via des moteurs de recherche</li>
+        <li><strong>subfinder</strong> &mdash; Découverte passive de sous-domaines avec support du bruteforce</li>
+        <li><strong>findomain</strong> &mdash; Surveillance de sous-domaines avec notifications Slack/Discord</li>
+        <li><strong>assetfinder</strong> &mdash; Découverte de domaines liés par Tom Hudson</li>
+        <li><strong>Amass (OWASP)</strong> &mdash; L'outil le plus complet, avec corrélation horizontale via whois inversé</li>
+        <li><strong>censys-enumeration</strong> &mdash; Extraction via les certificats SSL/TLS, trouve des sous-domaines invisibles aux autres outils</li>
+        <li><strong>altdns</strong> &mdash; Génération de permutations de sous-domaines</li>
+        <li><strong>massdns</strong> &mdash; Résolution DNS ultra-rapide pour valider vos découvertes</li>
+      </ul>
+
+      <p>Un conseil de growth hacker : <strong>combinez ces outils</strong>. Chacun a ses sources et ses angles morts. Amass pour le deep scan, censys pour les certificats, altdns pour les permutations. C'est l'agrégation qui fait la différence.</p>
+
+      <h3>Étape 2 : Découverte de contenu</h3>
+
+      <p>Une fois vos sous-domaines identifiés, il faut creuser chaque domaine :</p>
+
+      <ul>
+        <li>Vérifiez <code>robots.txt</code> pour les répertoires cachés</li>
+        <li>Scrapez l'hôte pour découvrir les endpoints d'API</li>
+        <li>Testez les ports alternatifs (8443, 8080)</li>
+        <li>Vérifiez si <code>/admin/</code> renvoie un 403 — puis bruteforcez son contenu</li>
+      </ul>
+
+      <p>Outils recommandés : <strong>ffuf</strong> (fuzzer ultra-rapide en Go), <strong>dirsearch</strong>, <strong>Gobuster</strong>, <strong>wfuzz</strong>. Mon préféré ? ffuf, pour sa vitesse et sa flexibilité avec les listes de mots multiples.</p>
+
+      <h3>Étape 3 : Screenshots et cartographie visuelle</h3>
+
+      <p>Prenez des captures d'écran de chaque sous-domaine résolu. Ça paraît basique, mais c'est redoutablement efficace pour identifier visuellement les panneaux d'admin, les pages par défaut, les applications oubliées.</p>
+
+      <ul>
+        <li><strong>Aquatone</strong> &mdash; Génère un rapport HTML avec captures de tous vos sous-domaines</li>
+        <li><strong>EyeWitness</strong> &mdash; Alternative robuste avec support headless</li>
+      </ul>
+
+      <p>Regardez les en-têtes HTTP : <code>X-XSS-Protection</code>, <code>X-Frame-Options</code>, <code>Content-Security-Policy</code>. Connaître les mesures de sécurité en place, c'est connaître vos limites — et vos opportunités.</p>
+
+      <h3>Étape 4 : GitHub, la mine d'or</h3>
+
+      <p>C'est ici que mon réflexe de growth engineer entre en jeu. GitHub est comme une base de données de leads qualifiés, sauf que les "leads" sont des secrets oubliés dans le code.</p>
+
+      <p>Recherchez dans les repos de votre cible :</p>
+
+      <ul>
+        <li><code>API</code>, <code>key</code>, <code>token</code>, <code>secret</code>, <code>password</code></li>
+        <li><code>TODO</code> (les développeurs y notent souvent les failles connues)</li>
+        <li><code>CSRF</code>, <code>random</code>, <code>hash</code>, <code>MD5</code>, <code>HMAC</code></li>
+        <li>Les <strong>Issues</strong> — la vraie mine d'or. Les équipes partagent des infos sur leur infra dans les discussions</li>
+      </ul>
+
+      <p>Outils : <strong>gitrob</strong>, <strong>shhgit</strong> (surveillance en temps réel), <strong>TruffleHog</strong> (fouille l'historique des commits), <strong>gitGraber</strong> (monitoring continu).</p>
+
+      <h3>Étape 5 : Fichiers JavaScript</h3>
+
+      <p>Les fichiers JS sont souvent négligés. C'est une erreur. Ils contiennent régulièrement des clés d'API hardcodées, des endpoints internes, des buckets S3 avec des permissions trop larges.</p>
+
+      <ul>
+        <li><strong>LinkFinder</strong> &mdash; Découvre les endpoints et leurs paramètres dans les fichiers JS</li>
+        <li><strong>getJS</strong> &mdash; Récupère rapidement tous les fichiers JS d'un domaine</li>
+        <li><strong>JSParser</strong> &mdash; Parse et analyse les fichiers JS avec interface web</li>
+      </ul>
+
+      <h3>Étape 6 : Wayback Machine</h3>
+
+      <p>La Wayback Machine est un trésor. On y trouve des fichiers JS abandonnés, d'anciens endpoints d'API, des sous-domaines oubliés, des pages de staging avec des commentaires juteux dans le code source. Si vous obtenez un 403 sur une page, cherchez-la dans la Wayback Machine — parfois elle y est exposée avec des infos sensibles.</p>
+
+      <h3>Étape 7 : Port scanning et ASN</h3>
+
+      <p>Analysez chaque adresse IP associée à vos sous-domaines. Recherchez les services sur des ports inhabituels, les versions obsolètes potentiellement vulnérables.</p>
+
+      <ul>
+        <li><strong>Masscan</strong> &mdash; Scanner de ports à l'échelle d'Internet. Peut scanner tout Internet en moins de 6 minutes</li>
+        <li><strong>Nmap</strong> &mdash; Pour le scan de version et l'analyse détaillée</li>
+      </ul>
+
+      <p>N'oubliez pas de récupérer les numéros ASN de votre cible pour découvrir toutes les plages IP qui lui appartiennent.</p>
+
+      <h2>Le workflow complet : ma recette</h2>
+
+      <p>Voici mon processus de bout en bout, celui que j'applique à chaque nouvelle cible :</p>
+
+      <ol>
+        <li><strong>Vérifier le scope</strong> — Définir précisément le périmètre (<code>*.example.com</code>)</li>
+        <li><strong>Énumérer les sous-domaines</strong> — Amass + subfinder + assetfinder en parallèle</li>
+        <li><strong>Générer les permutations</strong> — CommonSpeak2 + dnsgen pour les combinaisons probables</li>
+        <li><strong>Résoudre avec massdns</strong> — Valider quels domaines pointent vers une IP</li>
+        <li><strong>Scanner les ports</strong> — Masscan pour le balayage large, Nmap pour la version</li>
+        <li><strong>Capturer les écrans</strong> — Aquatone pour la cartographie visuelle</li>
+        <li><strong>Recon GitHub</strong> — Secrets, endpoints, discussions internes</li>
+        <li><strong>Analyser les JS</strong> — LinkFinder + getJS pour les endpoints cachés</li>
+        <li><strong>Explorer la Wayback Machine</strong> — Anciens fichiers, endpoints abandonnés</li>
+        <li><strong>Directory bruteforce</strong> — ffuf avec des wordlists ciblées</li>
+        <li><strong>Tester les subdomain takeovers</strong> — SubOver ou subjack</li>
+        <li><strong>Importer dans Burp</strong> — Tout passe dans Burp pour le test manuel</li>
+      </ol>
+
+      <h2>Outils web indispensables</h2>
+
+      <p>Avant de sortir le terminal, ces outils en ligne vous donnent déjà énormément d'informations :</p>
+
+      <ul>
+        <li><a href="https://pentest-tools.com/">pentest-tools.com</a> &mdash; Suite complète en ligne</li>
+        <li><a href="https://www.virustotal.com/">VirusTotal</a> &mdash; Analyse de domaines et IPs</li>
+        <li><a href="https://www.shodan.io/">Shodan</a> &mdash; Moteur de recherche pour les appareils connectés</li>
+        <li><a href="https://crt.sh/">crt.sh</a> &mdash; Transparence des certificats</li>
+        <li><a href="https://dnsdumpster.com/">DNSDumpster</a> &mdash; Cartographie DNS</li>
+        <li><a href="https://censys.io">Censys</a> &mdash; Données SSL/TLS</li>
+      </ul>
+
+      <h2>Ce que le growth m'a appris sur la sécurité</h2>
+
+      <p>En growth engineering, on parle souvent de "compounding effects" — les petits gains qui s'accumulent. La reconnaissance en sécurité fonctionne exactement pareil. Chaque sous-domaine trouvé ouvre de nouvelles pistes. Chaque fichier JS analysé peut révéler un endpoint. Chaque endpoint peut mener à une vulnérabilité.</p>
+
+      <p>La clé, c'est la <strong>persévérance méthodique</strong>. Ne vous accrochez pas à une piste pendant des heures si elle ne mène nulle part — c'est le plus grand tueur de motivation. Prenez-en note, passez à autre chose, et revenez-y plus tard si un nouvel élément apparaît.</p>
+
+      <p>Et souvenez-vous : un bon growth engineer, comme un bon pentester, ne se contente pas de suivre un playbook. Il observe, il comprend, il s'adapte. La reconnaissance, c'est l'art de voir ce que tout le monde regarde sans le remarquer.</p>
+
+      <p><em>Cet article est inspiré et adapté du guide "Recon Everything" avec des ajouts personnels issus de mon expérience en tant que growth engineer et professeur.</em></p>
+
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+
+        <section id="extras" class="body">
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+                            <li><a href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>
