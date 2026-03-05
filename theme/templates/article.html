@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}{{ article.title }}{% endblock %}
+{% block content %}
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="{{ SITEURL }}/{{ article.url }}" rel="bookmark"
+           title="Permalink to {{ article.title|striptags }}">{{ article.title }}</a></h1>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="{{ article.date.isoformat() }}">
+                Published: {{ article.locale_date }}
+        </abbr>
+        {% if article.modified %}
+		<br />
+        <abbr class="modified" title="{{ article.modified.isoformat() }}">
+                Updated: {{ article.locale_modified }}
+        </abbr>
+        {% endif %}
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="{{ SITEURL }}/{{ article.author.url }}">{{ article.author }}</a>
+        </address>
+<p>In <a href="{{ SITEURL }}/{{ article.category.url }}">{{ article.category }}</a>.</p>
+{% if article.tags %}
+<p>tags: {% for tag in article.tags %}<a href="{{ SITEURL }}/{{ tag.url }}">{{ tag }}</a> {% endfor %}</p>
+{% endif %}
+</footer><!-- /.post-info -->      {{ article.content }}
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+{% endblock %}

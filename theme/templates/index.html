@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if articles %}
+            <aside id="featured" class="body">
+                <article>
+                    <h1 class="entry-title"><a href="{{ SITEURL }}/{{ articles[0].url }}">{{ articles[0].title }}</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="{{ articles[0].date.isoformat() }}">
+                Published: {{ articles[0].locale_date }}
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="{{ SITEURL }}/{{ articles[0].author.url }}">{{ articles[0].author }}</a>
+        </address>
+<p>In <a href="{{ SITEURL }}/{{ articles[0].category.url }}">{{ articles[0].category }}</a>.</p>
+{% if articles[0].tags %}
+<p>tags: {% for tag in articles[0].tags %}<a href="{{ SITEURL }}/{{ tag.url }}">{{ tag }}</a> {% endfor %}</p>
+{% endif %}
+</footer><!-- /.post-info -->{{ articles[0].summary }}
+<p><a class="readmore" href="{{ SITEURL }}/{{ articles[0].url }}">Lire la suite</a></p>                </article>
+            </aside><!-- /#featured -->
+{% endif %}
+
+{% if articles|length > 1 %}
+                <ol id="posts-list" class="body">
+{% for article in articles[1:] %}
+                    <li><article class="hentry">
+                        <header>
+                            <h1 class="entry-title"><a href="{{ SITEURL }}/{{ article.url }}">{{ article.title }}</a></h1>
+                        </header>
+
+                        <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="{{ article.date.isoformat() }}">
+                Published: {{ article.locale_date }}
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="{{ SITEURL }}/{{ article.author.url }}">{{ article.author }}</a>
+        </address>
+<p>In <a href="{{ SITEURL }}/{{ article.category.url }}">{{ article.category }}</a>.</p>
+{% if article.tags %}
+<p>tags: {% for tag in article.tags %}<a href="{{ SITEURL }}/{{ tag.url }}">{{ tag }}</a> {% endfor %}</p>
+{% endif %}
+</footer><!-- /.post-info -->
+{{ article.summary }}
+                        </div><!-- /.entry-content -->
+                    </article></li>
+{% endfor %}
+                </ol><!-- /#posts-list -->
+{% endif %}
+{% endblock content %}
