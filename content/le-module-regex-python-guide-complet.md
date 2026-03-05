@@ -6,7 +6,7 @@ Slug: le-module-regex-python-guide-complet
 Author: Mikael Monjour
 Summary: Le module re de Python est un outil essentiel pour la manipulation de texte et la recherche de motifs. Ce guide couvre les bases du module re, les fonctions principales, et les cas d'utilisation courants.
 
-## Les Expressions Régulières : C'est Quoi ?
+## Les expressions régulières : c'est quoi ?
 
 Les expressions régulières (ou **regex**) sont un langage de motifs utilisé pour rechercher, valider ou manipuler du texte. Elles permettent de décrire des modèles complexes en quelques caractères.
 
@@ -16,7 +16,7 @@ En Python, le module `re` fournit toutes les fonctions nécessaires pour travail
 import re
 ```
 
-## Les Caractères Spéciaux (Métacaractères)
+## Les caractères spéciaux (métacaractères)
 
 Voici les caractères qui ont une signification particulière dans les regex :
 
@@ -34,7 +34,7 @@ Voici les caractères qui ont une signification particulière dans les regex :
 | `\|` | Ou (alternance) |
 | `()` | Groupe de capture |
 
-## Les Séquences Spéciales
+## Les séquences spéciales
 
 Les séquences spéciales commencent par `\` et ont une signification prédéfinie :
 
@@ -49,7 +49,7 @@ Les séquences spéciales commencent par `\` et ont une signification prédéfin
 | `\b` | Frontière de mot | `\bcat\b` → "cat" dans "the cat sat" |
 | `\B` | Pas une frontière de mot | `\Bcat\B` → "cat" dans "concatenate" |
 
-## La Fonction `re.match()`
+## La fonction `re.match()`
 
 `re.match()` vérifie si le **début** de la chaîne correspond au motif. Si oui, elle retourne un objet `Match`. Sinon, elle retourne `None`.
 
@@ -76,7 +76,7 @@ result = re.match(r"World", "Hello, World!")
 print(result)  # None
 ```
 
-## La Fonction `re.search()`
+## La fonction `re.search()`
 
 `re.search()` parcourt **toute** la chaîne et retourne le premier match trouvé.
 
@@ -103,7 +103,7 @@ print(re.match(r"\d+", text))   # None
 print(re.search(r"\d+", text))  # <re.Match object; span=(13, 15), match='42'>
 ```
 
-## La Fonction `re.findall()`
+## La fonction `re.findall()`
 
 `re.findall()` retourne **tous** les matches sous forme de liste de chaînes.
 
@@ -123,7 +123,7 @@ emails = re.findall(r"(\w+)@(\w+\.\w+)", text)
 print(emails)  # [('alice', 'mail.com'), ('bob', 'company.org')]
 ```
 
-## La Fonction `re.finditer()`
+## La fonction `re.finditer()`
 
 `re.finditer()` retourne un **itérateur** d'objets `Match`, ce qui permet d'accéder aux positions et aux groupes de chaque match.
 
@@ -141,7 +141,7 @@ for match in re.finditer(pattern, text):
     print(f"  Position : {match.start()}-{match.end()}")
 ```
 
-## La Fonction `re.sub()`
+## La fonction `re.sub()`
 
 `re.sub()` remplace les occurrences du motif par une chaîne de remplacement.
 
@@ -167,7 +167,7 @@ result = re.sub(r"\d+", double_number, text)
 print(result)  # "Les scores sont 20, 50 et 84"
 ```
 
-## La Fonction `re.split()`
+## La fonction `re.split()`
 
 `re.split()` découpe une chaîne selon un motif regex.
 
@@ -188,7 +188,7 @@ result = re.split(r"[,;\s]+", text, maxsplit=2)
 print(result)  # ['pomme', 'orange', 'banane   kiwi']
 ```
 
-## La Fonction `re.compile()`
+## La fonction `re.compile()`
 
 `re.compile()` pré-compile un motif regex en objet `Pattern`. Utile quand on réutilise le même motif plusieurs fois.
 
@@ -212,7 +212,7 @@ for text in texts:
         print("Pas d'email")
 ```
 
-## Les Groupes de Capture
+## Les groupes de capture
 
 Les parenthèses `()` créent des **groupes de capture** qui permettent d'extraire des parties spécifiques du match.
 
@@ -233,7 +233,7 @@ if match:
     print(f"Seconde : {match.group(6)}")         # "45"
 ```
 
-### Groupes Nommés
+### Groupes nommés
 
 Les groupes nommés utilisent la syntaxe `(?P<nom>...)` pour donner un nom au groupe :
 
@@ -251,7 +251,7 @@ if match:
     print(f"Message : {match.group('message')}")  # "Login failed for user admin"
 ```
 
-### Groupes Non-Capturants
+### Groupes non capturants
 
 `(?:...)` crée un groupe sans le capturer (utile pour le regroupement logique) :
 
@@ -266,7 +266,7 @@ matches = re.findall(pattern, urls)
 print(matches)  # ['http://example.com', 'https://secure.com']
 ```
 
-## Les Drapeaux (Flags)
+## Les drapeaux (flags)
 
 Les drapeaux modifient le comportement de la regex :
 
@@ -301,11 +301,11 @@ result = re.findall(r"^hello", "Hello\nhello\nHELLO", re.IGNORECASE | re.MULTILI
 print(result)  # ['Hello', 'hello', 'HELLO']
 ```
 
-## Les Assertions (Lookahead et Lookbehind)
+## Les assertions (lookahead et lookbehind)
 
 Les assertions vérifient une condition sans consommer de caractères.
 
-### Lookahead Positif `(?=...)`
+### Lookahead positif `(?=...)`
 
 Vérifie que le motif est **suivi** par quelque chose :
 
@@ -318,7 +318,7 @@ matches = re.findall(r"\d+(?=€)", text)
 print(matches)  # ['42', '25']
 ```
 
-### Lookahead Négatif `(?!...)`
+### Lookahead négatif `(?!...)`
 
 Vérifie que le motif n'est **pas suivi** par quelque chose :
 
@@ -328,7 +328,7 @@ matches = re.findall(r"\d+(?!€)", text)
 print(matches)  # ['100']
 ```
 
-### Lookbehind Positif `(?<=...)`
+### Lookbehind positif `(?<=...)`
 
 Vérifie que le motif est **précédé** par quelque chose :
 
@@ -339,7 +339,7 @@ matches = re.findall(r"(?<=Prix : )\d+", text)
 print(matches)  # ['42']
 ```
 
-### Lookbehind Négatif `(?<!...)`
+### Lookbehind négatif `(?<!...)`
 
 Vérifie que le motif n'est **pas précédé** par quelque chose :
 
@@ -349,7 +349,7 @@ matches = re.findall(r"(?<!Prix : )\d+", text)
 print(matches)  # ['10']
 ```
 
-## Quantificateurs Gourmands vs Paresseux
+## Quantificateurs gourmands et paresseux
 
 Par défaut, les quantificateurs (`*`, `+`, `?`) sont **gourmands** : ils matchent le plus de caractères possible.
 
@@ -367,7 +367,7 @@ lazy = re.findall(r"<.+?>", html)
 print(lazy)  # ['<b>', '</b>', '<i>', '</i>']
 ```
 
-## Cas d'Utilisation Courants
+## Cas d'utilisation courants
 
 ### Valider un email
 
@@ -428,7 +428,7 @@ for match in re.finditer(pattern, logs):
         print(f"⚠️ [{level}] {timestamp} - {module}: {message}")
 ```
 
-## Comparaison Rapide des Fonctions
+## Comparaison rapide des fonctions
 
 | Fonction | Recherche où ? | Retourne quoi ? | Cas d'usage |
 |---|---|---|---|
@@ -440,7 +440,7 @@ for match in re.finditer(pattern, logs):
 | `split()` | Toute la chaîne | Liste de strings | Découpage |
 | `compile()` | — | Objet Pattern | Réutilisation du motif |
 
-## Bonnes Pratiques
+## Bonnes pratiques
 
 1. **Utilisez les raw strings** (`r"..."`) pour éviter les problèmes d'échappement.
 2. **Compilez** vos regex si vous les utilisez plusieurs fois dans votre code.

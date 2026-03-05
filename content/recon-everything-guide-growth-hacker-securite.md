@@ -96,7 +96,7 @@ Deux types de corrélation :
 
 **Rappel :** préférez l'utilisation des outils dans un environnement virtuel :
 
-    :::python
+    :::bash
     $ cd home/user/dossier/
     $ python3 -m venv venv
     $ source venv/bin/activate
@@ -106,21 +106,21 @@ Deux types de corrélation :
 
 [github.com/aboul3la/Sublist3r](https://github.com/aboul3la/Sublist3r)
 
-    :::python
+    :::bash
     $ git clone https://github.com/aboul3la/Sublist3r.git
     $ sudo pip install -r requirements.txt
     $ python sublist3r.py -d example.com
 
 Alias utile :
 
-    :::python
+    :::bash
     $ alias sublist3r='python /path/to/Sublist3r/sublist3r.py -d '
 
 ### subfinder
 
 [github.com/subfinder/subfinder](https://github.com/subfinder/subfinder)
 
-    :::python
+    :::bash
     $ go get github.com/subfinder/subfinder
     $ subfinder -d freelancer.com
     $ subfinder -d <domain> -recursive -silent -t 200 -v -o <outfile>
@@ -129,7 +129,7 @@ Alias utile :
 
 [github.com/Edu4rdSHL/findomain](https://github.com/Edu4rdSHL/findomain) — Surveillance de sous-domaines avec webhooks Slack/Discord.
 
-    :::python
+    :::bash
     $ wget https://github.com/Edu4rdSHL/findomain/releases/latest/download/findomain-linux
     $ chmod +x findomain-linux
     $ findomain -t example.com
@@ -138,7 +138,7 @@ Alias utile :
 
 [github.com/tomnomnom/assetfinder](https://github.com/tomnomnom/assetfinder)
 
-    :::python
+    :::bash
     $ go get -u github.com/tomnomnom/assetfinder
     $ assetfinder --subs-only <domain>
     $ cat domains | assetfinder --subs-only
@@ -147,7 +147,7 @@ Alias utile :
 
 [github.com/OWASP/Amass](https://github.com/OWASP/Amass)
 
-    :::python
+    :::bash
     $ go get -u github.com/OWASP/Amass/...
     $ amass enum -o subdomains.txt -d output_file.txt
     $ amass intel -whois -d example.com
@@ -156,7 +156,7 @@ Alias utile :
 
 [github.com/0xbharath/censys-enumeration](https://github.com/0xbharath/censys-enumeration) — L'étape la plus importante : les sous-domaines trouvés ici sont souvent invisibles aux autres outils car votre wordlist n'a pas les patterns nécessaires.
 
-    :::python
+    :::bash
     $ git clone git@github.com:yamakira/censys-enumeration.git
     $ pip install -r requirements.txt
     $ python censys_enumeration.py --no-emails --verbose --outfile results.json domains.txt
@@ -165,7 +165,7 @@ Alias utile :
 
 [github.com/infosec-au/altdns](https://github.com/infosec-au/altdns) — Génère les combinaisons possibles du domaine d'origine avec les mots d'une wordlist.
 
-    :::python
+    :::bash
     $ pip install py-altdns
     $ altdns -i subdomains.txt -o data_output -w words.txt -s results_output.txt
 
@@ -173,7 +173,7 @@ Alias utile :
 
 [github.com/blechschmidt/massdns](https://github.com/blechschmidt/massdns)
 
-    :::python
+    :::bash
     $ git clone https://github.com/blechschmidt/massdns.git
     $ cd massdns && make
     $ ./bin/massdns -r lists/resolvers.txt -t A domains.txt > results.txt
@@ -182,7 +182,7 @@ Alias utile :
 
 [github.com/0xbharath/domains-from-csp](https://github.com/0xbharath/domains-from-csp) — Extrait les domaines autorisés depuis l'en-tête Content-Security-Policy.
 
-    :::python
+    :::bash
     $ python csp_parser.py target_url
     $ python csp_parser.py target_url --resolve
 
@@ -190,13 +190,13 @@ Alias utile :
 
 [github.com/0xbharath/assets-from-spf](https://github.com/0xbharath/assets-from-spf/) — Analyse les netblocks et noms de domaine depuis l'enregistrement DNS SPF.
 
-    :::python
+    :::bash
     $ python assets_from_spf.py target_url
     $ python assets_from_spf.py target_url --asn
 
 ### Récupérer les numéros ASN
 
-    :::python
+    :::bash
     $ curl -s http://ip-api.com/json/192.30.253.113 | jq -r .as
     $ whois -h whois.radb.net -- '-i origin AS36459' | grep -Eo "([0-9.]+){4}/[0-9]+" | uniq
     $ nmap --script targets-asn --script-args targets-asn.asn=17012 > paypal.txt
@@ -222,7 +222,7 @@ Alias utile :
 
 [github.com/ffuf/ffuf](https://github.com/ffuf/ffuf) — Fuzzer web ultra-rapide écrit en Go.
 
-    :::python
+    :::bash
     $ go get github.com/ffuf/ffuf
 
     # Découverte de répertoires
@@ -244,19 +244,19 @@ Alias utile :
 
 [github.com/maurosoria/dirsearch](https://github.com/maurosoria/dirsearch)
 
-    :::python
+    :::bash
     $ git clone https://github.com/maurosoria/dirsearch.git
     $ python3 dirsearch.py -e php,txt,zip -u https://target -w db/dicc.txt --recursive -R 2
 
 ### Gobuster
 
-    :::python
+    :::bash
     $ go get github.com/OJ/gobuster
     $ gobuster dir -u https://mysite.com/path -c 'session=123456' -t 50 -w common-files.txt -x .php,.html
 
 ### wfuzz
 
-    :::python
+    :::bash
     $ pip install wfuzz
     $ wfuzz -w raft-large-directories.txt --sc 200,403,302 http://testphp.vulnweb.com/FUZZ
 
@@ -266,20 +266,20 @@ Regardez les en-têtes pour voir quelles mesures de sécurité sont en place : `
 
 ### Aquatone
 
-    :::python
+    :::bash
     $ go get -u github.com/michenriksen/aquatone
     $ cat hosts.txt | aquatone -out ~/aquatone/example.com
 
 ### EyeWitness
 
-    :::python
+    :::bash
     $ git clone https://github.com/FortyNorthSecurity/EyeWitness.git
     $ ./EyeWitness -f urls.txt --web
     $ ./EyeWitness -x urls.xml --timeout 8 --headless
 
 ### Webscreenshot
 
-    :::python
+    :::bash
     $ pip install webscreenshot
     $ python webscreenshot.py -i list.txt -v
 
@@ -294,7 +294,7 @@ Regardez les en-têtes pour voir quelles mesures de sécurité sont en place : `
 
 Quelques dorks utiles pour la reconnaissance :
 
-    :::python
+    :::bash
     # Trouver des programmes de bug bounty
     site:.eu responsible disclosure
     site:.nl bug bounty
@@ -325,7 +325,7 @@ Recherchez dans les repos de votre cible :
 
 ### gitrob
 
-    :::python
+    :::bash
     $ go get github.com/michenriksen/gitrob
     $ gitrob [options] target [target2] ... [targetN]
 
@@ -333,7 +333,7 @@ Recherchez dans les repos de votre cible :
 
 Trouve les secrets en temps réel en écoutant l'API GitHub Events.
 
-    :::python
+    :::bash
     $ go get github.com/eth0izzle/shhgit
     $ shhgit
     $ shhgit --search-query AWS_ACCESS_KEY_ID=AKIA
@@ -342,7 +342,7 @@ Trouve les secrets en temps réel en écoutant l'API GitHub Events.
 
 Fouille l'historique des commits à la recherche de secrets.
 
-    :::python
+    :::bash
     $ pip install truffleHog
     $ truffleHog --regex --entropy=False https://github.com/dxa4481/truffleHog.git
 
@@ -350,7 +350,7 @@ Fouille l'historique des commits à la recherche de secrets.
 
 Surveillance en temps réel pour Google, Amazon, Paypal, Github, Mailgun, Facebook, Twitter, Heroku, Stripe...
 
-    :::python
+    :::bash
     $ git clone https://github.com/hisxo/gitGraber.git
     $ pip3 install -r requirements.txt
     $ python3 gitGraber.py -k wordlists/keywords.txt -q "uber" -s
@@ -363,7 +363,7 @@ Les fichiers JS contiennent souvent des informations sensibles : secrets, jetons
 
 Découvre les endpoints et leurs paramètres dans les fichiers JS.
 
-    :::python
+    :::bash
     $ git clone https://github.com/GerbenJavado/LinkFinder.git
     $ pip3 install -r requirements.txt
     $ python linkfinder.py -i https://example.com/1.js -o results.html
@@ -371,7 +371,7 @@ Découvre les endpoints et leurs paramètres dans les fichiers JS.
 
 ### getJS
 
-    :::python
+    :::bash
     $ go get github.com/003random/getJS
     $ cat domains.txt | getJS | tojson
     $ getJS -input=domains.txt
@@ -382,7 +382,7 @@ En cherchant dans la Wayback Machine, on peut trouver : des fichiers JS anciens 
 
 ### waybackurls
 
-    :::python
+    :::bash
     $ go get github.com/tomnomnom/waybackurls
     $ cat domains.txt | waybackurls > urls
 
@@ -401,7 +401,7 @@ Analysez chaque adresse IP associée aux sous-domaines. Recherchez les services 
 
 Scanner de ports à l'échelle d'Internet — peut scanner tout Internet en moins de 6 minutes.
 
-    :::python
+    :::bash
     $ sudo apt-get install git gcc make libpcap-dev
     $ git clone https://github.com/robertdavidgraham/masscan
     $ cd masscan && make -j8
@@ -412,7 +412,7 @@ Scanner de ports à l'échelle d'Internet — peut scanner tout Internet en moin
 
 ### Nmap
 
-    :::python
+    :::bash
     $ nmap -p- -sV -iL targets.txt -oX output.xml
     $ sudo nmap -sS -T4 -sC -oA report --stylesheet \
       https://raw.githubusercontent.com/honze-net/nmap-bootstrap-xsl/master/nmap-bootstrap.xsl -iL subdomain.txt
@@ -421,13 +421,13 @@ Scanner de ports à l'échelle d'Internet — peut scanner tout Internet en moin
 
 ### SubOver
 
-    :::python
+    :::bash
     $ go get github.com/Ice3man543/SubOver
     $ ./SubOver -l subdomains.txt
 
 ### subjack
 
-    :::python
+    :::bash
     $ go get github.com/haccer/subjack
     $ ./subjack -w subdomains.txt -t 100 -timeout 30 -o results.txt -ssl
 
@@ -435,45 +435,45 @@ Scanner de ports à l'échelle d'Internet — peut scanner tout Internet en moin
 
 ### Parameth — Découverte de paramètres
 
-    :::python
+    :::bash
     $ git clone https://github.com/maK-/parameth.git
     $ ./parameth.py -u http://example.com/test.php
 
 ### Arjun — Suite de découverte de paramètres HTTP
 
-    :::python
+    :::bash
     $ git clone https://github.com/s0md3v/Arjun.git
     $ python3 arjun.py -u https://api.example.com/endpoint --get
     $ python3 arjun.py --urls targets.txt --get
 
 ### XSStrike — Scanner XSS avancé
 
-    :::python
+    :::bash
     $ git clone https://github.com/s0md3v/XSStrike.git
     $ python xsstrike.py -u "http://example.com/search.php?q=query"
 
 ### Commix — Injection de commandes OS
 
-    :::python
+    :::bash
     $ git clone https://github.com/commixproject/commix.git commix
     $ python commix.py --url="http://target/vuln.php" --data="param=value"
 
 ### Bolt — Scanner CSRF
 
-    :::python
+    :::bash
     $ git clone https://github.com/s0md3v/Bolt.git
     $ python3 bolt.py -u https://github.com -l 2
 
 ### CORS Scanner
 
-    :::python
+    :::bash
     $ git clone https://github.com/chenjj/CORScanner.git
     $ python cors_scan.py -u example.com
     $ python cors_scan.py -i top_100_domains.txt -t 100
 
 ### SSRFmap
 
-    :::python
+    :::bash
     $ git clone https://github.com/swisskyrepo/SSRFmap
     $ pip3 install -r requirements.txt
     $ python ssrfmap.py -r data/request.txt -p url -m readfiles,portscan

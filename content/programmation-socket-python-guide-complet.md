@@ -10,7 +10,7 @@ Les sockets et l'API socket sont utilisés pour envoyer des messages sur un rés
 
 Le réseau peut être logique et local pour l'ordinateur, ou physiquement connecté à un réseau externe, avec ses propres connexions à d'autres réseaux. L'exemple le plus évident est l'Internet, auquel vous vous connectez par l'intermédiaire de votre fournisseur d'accès.
 
-Ce tutoriel comporte trois itérations différentes de la construction d'un serveur et d'un client socket avec Python :
+Ce tutoriel comporte trois étapes successives de la construction d'un serveur et d'un client socket avec Python :
 
 1. Nous commencerons le tutoriel en examinant un simple serveur et un client de socket.
 2. Une fois que vous aurez vu l'API et la façon dont les choses fonctionnent dans ce premier exemple, nous examinerons une version améliorée qui gère plusieurs connexions simultanément.
@@ -353,7 +353,7 @@ Lorsque vous utilisez une adresse IP autre que `127.0.0.1` ou `::1` dans vos app
 
 > **Attention.** C'est un monde méchant et cruel. Assurez-vous de lire la section Utilisation des noms d'hôtes avant de vous aventurer au-delà des limites de sécurité de "localhost".
 
-## Handling Multiple Connections
+## Gestion de connexions multiples
 
 Le serveur écho a certainement ses limites. La plus importante est qu'il ne dessert qu'un seul client et qu'il se termine ensuite. Le client écho a aussi cette limitation, mais il y a un problème supplémentaire.
 
@@ -1000,7 +1000,7 @@ Avec le protocole TCP, il est légal pour le client ou le serveur de fermer son 
 
 Lors de la conception de votre application, déterminez comment les connexions seront fermées. Assurez-vous que les sockets sont toujours fermées en temps voulu.
 
-### Byte Endianness
+### Ordre des octets (endianness)
 
 L'ordre des octets utilisé dans le TCP/IP est **big-endian** et est appelé **ordre de réseau**.
 
