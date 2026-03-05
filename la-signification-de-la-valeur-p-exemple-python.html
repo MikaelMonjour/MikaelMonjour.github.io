@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+        <title>La signification de la valeur p (p-value) — Exemple avec Python</title>
+        <link rel="stylesheet" href="/theme/css/main.css?v=3" />
+        <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Blog de Mikael Atom Feed" />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="/">Blog de Mikael </a></h1>
+                <nav><ul>
+                    <li><a href="/category/misc.html">misc</a></li>
+                    <li class="active"><a href="/category/tech.html">tech</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="/la-signification-de-la-valeur-p-exemple-python.html" rel="bookmark"
+           title="Permalink to La signification de la valeur p (p-value) — Exemple avec Python">La signification de la valeur p (p-value) — Exemple avec Python</a></h1>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2026-03-05T16:00:00+01:00">
+                Published: mer. 05 mars 2026
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="/author/mikael-monjour.html">Mikael Monjour</a>
+        </address>
+<p>In <a href="/category/tech.html">tech</a>.</p>
+<p>tags: <a href="/tag/python.html">python</a> <a href="/tag/data.html">data</a> <a href="/tag/statistiques.html">statistiques</a> <a href="/tag/tech.html">tech</a> </p>
+</footer><!-- /.post-info -->
+
+      <!-- ATTENTION -->
+      <p>Imaginez la scène. Vous êtes un lundi matin en réunion. Le product manager affiche un dashboard et annonce, triomphant : <em>"Notre nouveau bouton vert a augmenté le taux de conversion de 12%. La p-value est de 0.03. C'est statistiquement significatif. On déploie en prod."</em></p>
+
+      <p>Tout le monde applaudit. Sauf vous. Parce que vous savez qu'un test A/B lancé un vendredi soir sur 200 utilisateurs avec une p-value de 0.03 ne veut probablement pas dire ce que tout le monde pense. Et pourtant, des décisions à plusieurs millions d'euros sont prises chaque jour sur la base de ce petit nombre mal compris.</p>
+
+      <p><strong>La p-value est sans doute le concept statistique le plus utilisé — et le plus mal interprété — dans le monde de la tech.</strong></p>
+
+      <!-- INTÉRÊT -->
+      <h2>Qu'est-ce que la valeur p, vraiment ?</h2>
+
+      <p>Oubliez les définitions académiques pendant une seconde. Voici ce que la p-value fait concrètement :</p>
+
+      <p>C'est la probabilité que vous obteniez un résultat de test <strong>au moins aussi extrême que celui observé</strong>, en supposant que votre hypothèse de départ est vraie.</p>
+
+      <p>Prenons un exemple concret que tout growth engineer connaît par cœur.</p>
+
+      <p>Vous travaillez sur une plateforme e-commerce. La valeur moyenne des commandes de vos clients est de <strong>170 €</strong>. C'est votre hypothèse de départ — ce que les statisticiens appellent l'<strong>hypothèse nulle</strong>. L'écart type est de 5 €.</p>
+
+      <p>Vous lancez un test. Vous prenez un échantillon de clients. Et vous obtenez une valeur moyenne de commande de <strong>183 €</strong>.</p>
+
+      <p>La question : <em>est-ce que ça veut dire que quelque chose a changé, ou est-ce juste du bruit ?</em></p>
+
+      <p>C'est exactement à cette question que la p-value répond.</p>
+
+      <h2>Le théorème qui change tout</h2>
+
+      <p>Si vous tirez des échantillons suffisamment souvent, la distribution des moyennes de ces échantillons forme une <strong>distribution normale</strong> (une belle courbe en cloche) dont la moyenne s'approche de la moyenne de la population. C'est le théorème de la limite centrale, et c'est la base de tout ce qui suit.</p>
+
+      <p>Si on tire <strong>10 000 échantillons</strong> de notre population de clients (dont la moyenne est de 170 €), les moyennes de ces échantillons vont varier entre environ 150 € et 190 €. La plupart seront proches de 170 €. Quelques-unes seront plus éloignées.</p>
+
+      <p>La question naturelle devient alors : <strong>quelle est la probabilité d'observer une moyenne d'échantillon de 183 € ou plus, si la vraie moyenne est bien de 170 € ?</strong></p>
+
+      <!-- DÉSIR -->
+      <h2>Calculons-le avec Python</h2>
+
+      <p>Voici une fonction Python qui simule exactement ce scénario :</p>
+
+<pre><code>import numpy as np
+import matplotlib.pyplot as plt
+
+def pvalue_101(mu, sigma, samp_size, samp_mean=0, deltam=0):
+    np.random.seed(1234)
+    s1 = np.random.normal(mu, sigma, samp_size)
+
+    if samp_mean > 0:
+        print(len(s1[s1>samp_mean]))
+        outliers = float(len(s1[s1>samp_mean])*100) / float(len(s1))
+        print('Percentage of numbers larger than {} is {}%'
+              .format(samp_mean, outliers))
+
+    if deltam == 0:
+        deltam = abs(mu - samp_mean)
+
+    if deltam > 0:
+        outliers = (float(len(s1[s1>(mu+deltam)]))
+                    + float(len(s1[s1<(mu-deltam)]))) * 100.0 / float(len(s1))
+        print("""Percentage of numbers further than the population mean
+              of {} by +/-{} is {}%""".format(mu, deltam, outliers))
+
+    fig, ax = plt.subplots(figsize=(8, 8))
+    fig.suptitle('Normal Distribution: population_mean={}'.format(mu))
+    plt.hist(s1)
+    plt.axvline(x=mu+deltam, color='red')
+    plt.axvline(x=mu-deltam, color='green')
+    plt.show()</code></pre>
+
+      <p>Lançons notre test :</p>
+
+<pre><code>pvalue_101(170.0, 5.0, 10000, 183.0)</code></pre>
+
+      <p>Résultat : <strong>le pourcentage de nombres supérieurs à 183 est de 0,35%</strong>.</p>
+
+      <p>C'est minuscule, mais ce n'est pas zéro. Et c'est là que les choses deviennent intéressantes.</p>
+
+      <h2>Le piège du test bilatéral</h2>
+
+      <p>Si on pose la question différemment : quelle est la probabilité d'obtenir une moyenne d'échantillon <strong>éloignée de plus de 13 €</strong> de la moyenne de population de 170 € ? C'est-à-dire : inférieure à 157 € <strong>ou</strong> supérieure à 183 € ?</p>
+
+      <p>Réponse : <strong>0,77%</strong>. Environ le double. Logique : la distribution normale est symétrique autour de la moyenne.</p>
+
+      <p>C'est un point crucial. Dans un vrai test A/B, on utilise presque toujours un test bilatéral. La variation peut être meilleure <em>ou</em> pire que le contrôle.</p>
+
+      <h2>La règle 68-95-99,7</h2>
+
+      <p>Pour comprendre intuitivement où se situent les moyennes d'échantillon :</p>
+
+      <ul>
+        <li><strong>68,2%</strong> des moyennes d'échantillon tombent dans l'intervalle μ ± σ. Dans notre cas : entre <strong>165 € et 175 €</strong></li>
+        <li><strong>95,4%</strong> tombent dans μ ± 2σ : entre <strong>160 € et 180 €</strong></li>
+        <li><strong>99,7%</strong> tombent dans μ ± 3σ : entre <strong>155 € et 185 €</strong></li>
+      </ul>
+
+      <p>Notre échantillon à 183 € se situe au-delà de 2 écarts types. C'est rare — mais ça arrive.</p>
+
+      <h2>Comment (mal) comprendre la p-value</h2>
+
+      <p>C'est ici que 90% des équipes product et growth se trompent. Voici le raisonnement classique :</p>
+
+      <p><em>"On veut un niveau de confiance de 95%. Notre seuil est donc une p-value de 5%. La moyenne d'échantillon est de 183 € et sa p-value est de 0,35%. Comme 0,35% < 5%, on rejette l'hypothèse que la moyenne de la population est de 170 €."</em></p>
+
+      <p><strong>C'est une conclusion erronée.</strong></p>
+
+      <p>Pourquoi ? Parce que nous avons <em>littéralement</em> tiré cet échantillon d'une population dont la moyenne EST 170 €. L'échantillon à 183 € est rare, mais il existe. Rejeter l'hypothèse sur la base d'un seul échantillon, c'est prendre une décision avec une seule carte retournée au poker.</p>
+
+      <p>La p-value nous dit la probabilité d'observer ce que nous avons constaté <strong>si l'hypothèse est vraie</strong>. Elle ne nous dit <strong>pas</strong> la probabilité que l'hypothèse soit vraie.</p>
+
+      <p>C'est la nuance qui vaut des millions.</p>
+
+      <h2>Un cas réel : le test A/B qui a presque tout cassé</h2>
+
+      <p>Une équipe growth lance un test A/B sur la page de pricing. La variation B affiche le prix barré avec une réduction de 20%. Après 3 jours, la p-value tombe sous 0.05. Le PM veut déployer immédiatement.</p>
+
+      <p>Mais en creusant les données, on découvre que le test a été lancé un vendredi — et que le trafic du week-end est dominé par un segment de clients qui achètent naturellement plus. La "significativité statistique" n'était que du bruit saisonnier.</p>
+
+      <p>Si l'équipe avait attendu un cycle complet (7 jours minimum) et vérifié que la taille d'échantillon était suffisante, elle aurait vu que l'effet disparaissait complètement.</p>
+
+      <p><strong>Leçon :</strong> une p-value basse ne signifie rien si le design expérimental est bancal.</p>
+
+      <h2>Ce que la p-value nous dit (et ne nous dit pas)</h2>
+
+      <p>Résumons :</p>
+
+      <ul>
+        <li>Une p-value de <strong>0,35%</strong> = la probabilité d'obtenir une moyenne d'échantillon supérieure à 183 €, <em>si</em> la moyenne de la population est de 170 €</li>
+        <li>Une p-value de <strong>0,77%</strong> = la probabilité d'obtenir une moyenne d'échantillon à plus de ±13 € de la moyenne de 170 €</li>
+        <li>Ça <strong>ne nous dit pas</strong> si l'hypothèse est vraie ou fausse</li>
+        <li>On <strong>ne peut pas</strong> rejeter une hypothèse sur un seul point de données</li>
+      </ul>
+
+      <!-- ACTION -->
+      <h2>Checklist avant de conclure sur une p-value</h2>
+
+      <p>La prochaine fois que quelqu'un brandit une p-value en réunion, posez ces questions :</p>
+
+      <ol>
+        <li><strong>La taille d'échantillon est-elle suffisante ?</strong> — Un test sur 200 utilisateurs ne prouve rien</li>
+        <li><strong>Le test a-t-il tourné assez longtemps ?</strong> — Minimum un cycle business complet (7 jours pour du B2C, souvent 14+)</li>
+        <li><strong>Le test est-il bilatéral ou unilatéral ?</strong> — La plupart du temps, il devrait être bilatéral</li>
+        <li><strong>Y a-t-il des biais de segmentation ?</strong> — Le trafic du week-end n'est pas le même que celui de la semaine</li>
+        <li><strong>A-t-on regardé la p-value une seule fois, ou la surveille-t-on en continu ?</strong> — Le "peeking" gonfle artificiellement la significativité</li>
+      </ol>
+
+      <h2>Le code complet</h2>
+
+      <p>Pour reproduire les graphiques et les calculs de cet article :</p>
+
+<pre><code>import numpy as np
+import matplotlib.pyplot as plt
+
+def pvalue_101(mu, sigma, samp_size, samp_mean=0, deltam=0):
+    np.random.seed(1234)
+    s1 = np.random.normal(mu, sigma, samp_size)
+
+    if samp_mean > 0:
+        print(len(s1[s1>samp_mean]))
+        outliers = float(len(s1[s1>samp_mean])*100) / float(len(s1))
+        print('Percentage of numbers larger than {} is {}%'
+              .format(samp_mean, outliers))
+
+    if deltam == 0:
+        deltam = abs(mu - samp_mean)
+
+    if deltam > 0:
+        outliers = (float(len(s1[s1>(mu+deltam)]))
+                    + float(len(s1[s1<(mu-deltam)]))) * 100.0 / float(len(s1))
+        print("""Percentage of numbers further than the population mean
+              of {} by +/-{} is {}%""".format(mu, deltam, outliers))
+
+    fig, ax = plt.subplots(figsize=(8, 8))
+    fig.suptitle('Normal Distribution: population_mean={}'.format(mu))
+    plt.hist(s1)
+    plt.axvline(x=mu+deltam, color='red')
+    plt.axvline(x=mu-deltam, color='green')
+    plt.show()
+
+# Test 1 : probabilité d'une moyenne > 183
+pvalue_101(170.0, 5.0, 10000, 183.0)
+
+# Test 2 : probabilité d'une moyenne à +/- 13 de 170
+pvalue_101(170.0, 5.0, 10000, 0, 13.0)</code></pre>
+
+      <p><em>La p-value est un outil puissant — à condition de savoir ce qu'elle mesure et ce qu'elle ne mesure pas. La prochaine fois que vous voyez "p < 0.05" dans un rapport, prenez une seconde pour vous demander si le test mérite qu'on lui fasse confiance.</em></p>
+
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+
+        <section id="extras" class="body">
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+                            <li><a href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>
