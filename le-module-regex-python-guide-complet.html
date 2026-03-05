@@ -7,13 +7,14 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
         <title>Le module regex en Python : le guide complet pour aller au-delà de re</title>
-        <link rel="stylesheet" href="/theme/css/main.css?v=3" />
+        <link rel="stylesheet" href="/theme/css/main.css?v=4" />
         <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Blog de Mikael Atom Feed" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/catppuccin-mocha.min.css">
 </head>
 
 <body id="index" class="home">
         <header id="banner" class="body">
-                <h1><a href="/">Blog de Mikael </a></h1>
+                <h1><a href="/" class="home-icon" title="Accueil"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></a><a href="/">Blog de Mikael</a></h1>
                 <nav><ul>
                     <li><a href="/category/misc.html">misc</a></li>
                     <li class="active"><a href="/category/tech.html">tech</a></li>
@@ -65,11 +66,11 @@
 
       <h2>Installation</h2>
 
-<pre><code>pip install regex</code></pre>
+<pre><code class="language-bash">pip install regex</code></pre>
 
       <p>Ensuite, dans votre code :</p>
 
-<pre><code>import regex
+<pre><code class="language-python">import regex
 
 # Il remplace re — même syntaxe, mêmes méthodes
 result = regex.search(r'\d+', 'Il y a 42 pommes')
@@ -88,7 +89,7 @@ print(result.group())  # 42</code></pre>
 
       <p>Pour activer la V1, deux options :</p>
 
-<pre><code># Via un flag dans le code
+<pre><code class="language-python"># Via un flag dans le code
 regex.search(pattern, text, flags=regex.V1)
 
 # Ou directement dans le pattern
@@ -96,7 +97,7 @@ regex.search(r'(?V1)mon_pattern', text)</code></pre>
 
       <p>La principale différence entre les deux versions concerne les <strong>correspondances de largeur zéro</strong> — c'est-à-dire les cas où le pattern correspond à "rien" (un espace vide entre deux caractères). En V0, ces cas sont parfois mal gérés. En V1, le comportement est corrigé :</p>
 
-<pre><code># V0 : comportement de re (ancien)
+<pre><code class="language-python"># V0 : comportement de re (ancien)
 regex.sub('(?V0).*', 'x', 'test')
 # Résultat : 'x'
 
@@ -111,7 +112,7 @@ regex.sub('(?V1).*', 'x', 'test')
 
       <p>Le module <code>regex</code> gère ces cas grâce au <strong>full case-folding</strong> (conversion complète des majuscules/minuscules) :</p>
 
-<pre><code># En V1, le full case-folding est activé par défaut
+<pre><code class="language-python"># En V1, le full case-folding est activé par défaut
 regex.match(r"(?iV1)strasse", "straße").span()
 # Résultat : (0, 6) — ça matche !
 
@@ -133,13 +134,13 @@ regex.match(r"(?iV1)straße", "STRASSE").span()
 
       <p>Exemple concret : vous voulez extraire toutes les lettres minuscules sauf les voyelles :</p>
 
-<pre><code># Toutes les lettres a-z SAUF les voyelles
+<pre><code class="language-python"># Toutes les lettres a-z SAUF les voyelles
 regex.findall(r'(?V1)[[a-z]--[aeiou]]', 'bonjour le monde')
 # Résultat : ['b', 'n', 'j', 'r', 'l', 'm', 'n', 'd']</code></pre>
 
       <p>Autre cas utile : extraire tous les caractères qui sont à la fois ASCII et des lettres :</p>
 
-<pre><code>regex.findall(r'(?V1)[\p{ASCII}&&\p{Letter}]', 'café 123 naïf')
+<pre><code class="language-python">regex.findall(r'(?V1)[\p{ASCII}&&\p{Letter}]', 'café 123 naïf')
 # Les lettres ASCII uniquement (pas les é, ï)</code></pre>
 
       <h2>Les flags : scopés vs globaux</h2>
@@ -153,7 +154,7 @@ regex.findall(r'(?V1)[[a-z]--[aeiou]]', 'bonjour le monde')
 
       <p>L'intérêt des flags scopés, c'est de pouvoir appliquer un comportement à une sous-partie du pattern seulement :</p>
 
-<pre><code># IGNORECASE seulement sur la première partie
+<pre><code class="language-python"># IGNORECASE seulement sur la première partie
 regex.search(r'(?i:hello) world', 'HELLO world')
 # Matche — "HELLO" est insensible à la casse, mais "world" doit être en minuscules</code></pre>
 
@@ -172,7 +173,7 @@ regex.search(r'(?i:hello) world', 'HELLO world')
 
       <p>La syntaxe : on ajoute <code>{erreurs}</code> après l'élément à rendre flou :</p>
 
-<pre><code># Chercher "bonjour" avec au maximum 1 erreur
+<pre><code class="language-python"># Chercher "bonjour" avec au maximum 1 erreur
 regex.search(r'(bonjour){e<=1}', 'bonjoure le monde')
 # Matche "bonjoure" (1 insertion)
 
@@ -182,7 +183,7 @@ regex.search(r'(bonjour){e<=2}', 'bonjuor le monde')
 
       <p>Cas concret en growth : vous avez une liste de noms d'entreprises dans votre CRM et vous voulez dédupliquer. "Microsft", "Microsoftt", "Microsoft" — c'est la même boîte :</p>
 
-<pre><code>import regex
+<pre><code class="language-python">import regex
 
 companies = ['Microsoft', 'Microsft', 'Microsoftt', 'Google', 'Gogle', 'Googl']
 
@@ -209,7 +210,7 @@ for name in companies:
         <li><code>BESTMATCH</code> — cherche le meilleur match possible au lieu du premier trouvé.</li>
       </ul>
 
-<pre><code># Sans ENHANCEMATCH : le premier match trouvé
+<pre><code class="language-python"># Sans ENHANCEMATCH : le premier match trouvé
 regex.search("(dog){e}", "cat and dog")[1]
 # Résultat : 'cat' — car "cat" matche "dog" avec 3 substitutions (illimité)
 
@@ -223,7 +224,7 @@ regex.search("(?e)(dog){e<=1}", "cat and dog")[1]
 
       <p>On peut aussi assigner des <strong>coûts</strong> à chaque type d'erreur :</p>
 
-<pre><code># Chaque insertion coûte 2, chaque suppression coûte 2,
+<pre><code class="language-python"># Chaque insertion coûte 2, chaque suppression coûte 2,
 # chaque substitution coûte 1, coût total max de 4
 regex.search(r'(bonjour){2i+2d+1s<=4}', texte)</code></pre>
 
@@ -231,7 +232,7 @@ regex.search(r'(bonjour){2i+2d+1s<=4}', texte)</code></pre>
 
       <p>Un <strong>pattern récursif</strong> est un pattern qui peut se référencer lui-même. C'est utile pour analyser des structures imbriquées comme du JSON, du HTML ou des expressions mathématiques avec des parenthèses.</p>
 
-<pre><code># (?R) essaie de matcher l'ensemble du pattern récursivement
+<pre><code class="language-python"># (?R) essaie de matcher l'ensemble du pattern récursivement
 regex.match(r"(Tarzan|Jane) loves (?1)", "Tarzan loves Jane").groups()
 # Résultat : ('Tarzan',)
 # (?1) réutilise le sous-pattern du groupe 1 : (Tarzan|Jane)
@@ -247,7 +248,7 @@ m.group(0)
 
       <p>Le bloc <code>(?(DEFINE)...)</code> permet de déclarer des sous-patterns sans qu'ils ne correspondent à rien par eux-mêmes. Ils sont ensuite appelés ailleurs dans le pattern :</p>
 
-<pre><code># Déclarer un pattern "prix" réutilisable
+<pre><code class="language-python"># Déclarer un pattern "prix" réutilisable
 pattern = regex.compile(r'''(?x)
     (?(DEFINE)
         (?P&lt;price&gt;\$\d+\.\d{2}\b)
@@ -264,7 +265,7 @@ pattern.search('total: $1.99+$2.99=$4.98')
 
       <p>Avec le module standard <code>re</code>, quand un groupe de capture est répété (par exemple <code>(\w+)+</code>), seule la <em>dernière</em> capture est conservée. Le module <code>regex</code> conserve <strong>toutes les captures</strong> :</p>
 
-<pre><code>m = regex.search(r"(\w{3})+", "123456789")
+<pre><code class="language-python">m = regex.search(r"(\w{3})+", "123456789")
 
 # re ne garderait que la dernière capture :
 m.group(1)
@@ -281,7 +282,7 @@ m.spans(1)    # [(0, 3), (3, 6), (6, 9)]</code></pre>
 
       <p>Avec <code>capturesdict</code>, on récupère un dictionnaire complet des captures par nom de groupe :</p>
 
-<pre><code>m = regex.match(
+<pre><code class="language-python">m = regex.match(
     r"(?:(?P&lt;word&gt;\w+) (?P&lt;digits&gt;\d+)\n)+",
     "one 1\ntwo 2\nthree 3\n"
 )
@@ -296,7 +297,7 @@ m.capturesdict()
 
       <p>Les <strong>correspondances partielles</strong> (partial matches) sont utiles quand vous validez une saisie en temps réel — par exemple, un formulaire où l'utilisateur tape un numéro de carte bancaire chiffre par chiffre :</p>
 
-<pre><code>pattern = regex.compile(r'\d{4}')
+<pre><code class="language-python">pattern = regex.compile(r'\d{4}')
 
 # L'utilisateur n'a encore rien tapé :
 pattern.fullmatch('', partial=True)
@@ -328,7 +329,7 @@ pattern.fullmatch('12345', partial=True)
 
       <p>Par défaut, les regex retournent le <strong>premier match</strong> trouvé. Avec le flag <code>POSIX</code> (<code>(?p)</code>), le module cherche le <strong>match le plus long possible à la position la plus à gauche</strong> — c'est la norme POSIX :</p>
 
-<pre><code>regex.search(r'(?p)one(self)?(selfsufficient)?', 'oneselfsufficient')
+<pre><code class="language-python">regex.search(r'(?p)one(self)?(selfsufficient)?', 'oneselfsufficient')
 # Résultat : 'oneselfsufficient' — le match le plus long</code></pre>
 
       <p>Attention : le matching POSIX est plus lent car il ne s'arrête pas au premier résultat. Il continue à chercher pour s'assurer qu'il n'y a pas de match plus long.</p>
@@ -341,7 +342,7 @@ pattern.fullmatch('12345', partial=True)
 
       <p>En pratique, ces deux fonctionnalités permettent d'éviter des regex qui prennent un temps exponentiel sur certains textes (le fameux "catastrophic backtracking") :</p>
 
-<pre><code># Sans groupe atomique : peut être très lent sur de longues chaînes
+<pre><code class="language-python"># Sans groupe atomique : peut être très lent sur de longues chaînes
 regex.search(r'(a+)+b', 'aaaaaaaaaaac')
 
 # Avec groupe atomique : échoue immédiatement
@@ -353,7 +354,7 @@ regex.search(r'(?>a+)+b', 'aaaaaaaaaaac')</code></pre>
 
       <p><code>\K</code> réinitialise le début du match. Tout ce qui est avant <code>\K</code> dans le pattern doit correspondre, mais n'est pas inclus dans le résultat :</p>
 
-<pre><code>m = regex.search(r'(\w\w\K\w\w\w)', 'abcdef')
+<pre><code class="language-python">m = regex.search(r'(\w\w\K\w\w\w)', 'abcdef')
 m[0]   # 'cde' — le match commence après \K
 m[1]   # 'abcde' — mais le groupe capture tout</code></pre>
 
@@ -361,7 +362,7 @@ m[1]   # 'abcde' — mais le groupe capture tout</code></pre>
 
       <p>Au lieu de construire un pattern avec des alternatives séparées par <code>|</code>, vous pouvez passer une liste directement :</p>
 
-<pre><code>options = ["premier", "deuxième", "troisième", "quatrième"]
+<pre><code class="language-python">options = ["premier", "deuxième", "troisième", "quatrième"]
 p = regex.compile(r"\L<options>", options=options)
 
 p.search("le deuxième choix")
@@ -373,7 +374,7 @@ p.search("le deuxième choix")
 
       <p>Le module <code>re</code> exige que les lookbehinds (assertions arrière) aient une longueur fixe. Le module <code>regex</code> n'a pas cette limitation :</p>
 
-<pre><code># Impossible avec re, possible avec regex :
+<pre><code class="language-python"># Impossible avec re, possible avec regex :
 regex.search(r'(?<=\d+\.)\d+', '3.14')
 # Matche '14' — lookbehind de longueur variable</code></pre>
 
@@ -381,14 +382,14 @@ regex.search(r'(?<=\d+\.)\d+', '3.14')
 
       <p>Le module <code>regex</code> libère le GIL (verrou global de Python) pendant les recherches sur des chaînes immuables. Cela permet à d'autres threads de s'exécuter en parallèle, ce qui peut accélérer le traitement de gros volumes de texte :</p>
 
-<pre><code># Forcer la libération du GIL
+<pre><code class="language-python"># Forcer la libération du GIL
 regex.search(pattern, text, concurrent=True)</code></pre>
 
       <h3>Ancre de recherche \G</h3>
 
       <p><code>\G</code> correspond à la position où la recherche précédente s'est terminée. Utile pour des correspondances contiguës :</p>
 
-<pre><code>regex.findall(r"\w{2}", "abcd ef")
+<pre><code class="language-python">regex.findall(r"\w{2}", "abcd ef")
 # Résultat : ['ab', 'cd', 'ef']
 
 regex.findall(r"\G\w{2}", "abcd ef")
@@ -398,7 +399,7 @@ regex.findall(r"\G\w{2}", "abcd ef")
 
       <p>Le module supporte les propriétés Unicode pour des recherches très précises :</p>
 
-<pre><code># Toutes les lettres du script latin
+<pre><code class="language-python"># Toutes les lettres du script latin
 regex.findall(r'\p{Script=Latin}+', 'café こんにちは hello')
 # Résultat : ['café', 'hello']
 
@@ -473,5 +474,7 @@ regex.findall(r'[[:alpha:]]+', 'hello 123 world')</code></pre>
                 <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
         </footer><!-- /#contentinfo -->
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
 </body>
 </html>

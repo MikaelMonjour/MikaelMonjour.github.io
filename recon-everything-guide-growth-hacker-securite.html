@@ -7,13 +7,14 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
         <title>Recon Everything : le guide complet de la reconnaissance en sécurité offensive</title>
-        <link rel="stylesheet" href="/theme/css/main.css?v=3" />
+        <link rel="stylesheet" href="/theme/css/main.css?v=4" />
         <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Blog de Mikael Atom Feed" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/catppuccin-mocha.min.css">
 </head>
 
 <body id="index" class="home">
         <header id="banner" class="body">
-                <h1><a href="/">Blog de Mikael </a></h1>
+                <h1><a href="/" class="home-icon" title="Accueil"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></a><a href="/">Blog de Mikael</a></h1>
                 <nav><ul>
                     <li><a href="/category/misc.html">misc</a></li>
                     <li class="active"><a href="/category/tech.html">tech</a></li>
@@ -140,72 +141,72 @@
       </ul>
 
       <p><strong>Rappel :</strong> préférez l'utilisation des outils dans un environnement virtuel :</p>
-<pre><code>$ cd home/user/dossier/
+<pre><code class="language-python">$ cd home/user/dossier/
 $ python3 -m venv venv
 $ source venv/bin/activate
 $ pip install toolname</code></pre>
 
       <h3>Sublist3r</h3>
       <p><a href="https://github.com/aboul3la/Sublist3r">github.com/aboul3la/Sublist3r</a></p>
-<pre><code>$ git clone https://github.com/aboul3la/Sublist3r.git
+<pre><code class="language-python">$ git clone https://github.com/aboul3la/Sublist3r.git
 $ sudo pip install -r requirements.txt
 $ python sublist3r.py -d example.com</code></pre>
       <p>Alias utile :</p>
-<pre><code>$ alias sublist3r='python /path/to/Sublist3r/sublist3r.py -d '</code></pre>
+<pre><code class="language-python">$ alias sublist3r='python /path/to/Sublist3r/sublist3r.py -d '</code></pre>
 
       <h3>subfinder</h3>
       <p><a href="https://github.com/subfinder/subfinder">github.com/subfinder/subfinder</a></p>
-<pre><code>$ go get github.com/subfinder/subfinder
+<pre><code class="language-python">$ go get github.com/subfinder/subfinder
 $ subfinder -d freelancer.com
 $ subfinder -d &lt;domain&gt; -recursive -silent -t 200 -v -o &lt;outfile&gt;</code></pre>
 
       <h3>findomain</h3>
       <p><a href="https://github.com/Edu4rdSHL/findomain">github.com/Edu4rdSHL/findomain</a> — Surveillance de sous-domaines avec webhooks Slack/Discord.</p>
-<pre><code>$ wget https://github.com/Edu4rdSHL/findomain/releases/latest/download/findomain-linux
+<pre><code class="language-python">$ wget https://github.com/Edu4rdSHL/findomain/releases/latest/download/findomain-linux
 $ chmod +x findomain-linux
 $ findomain -t example.com</code></pre>
 
       <h3>assetfinder</h3>
       <p><a href="https://github.com/tomnomnom/assetfinder">github.com/tomnomnom/assetfinder</a></p>
-<pre><code>$ go get -u github.com/tomnomnom/assetfinder
+<pre><code class="language-python">$ go get -u github.com/tomnomnom/assetfinder
 $ assetfinder --subs-only &lt;domain&gt;
 $ cat domains | assetfinder --subs-only</code></pre>
 
       <h3>Amass (OWASP)</h3>
       <p><a href="https://github.com/OWASP/Amass">github.com/OWASP/Amass</a></p>
-<pre><code>$ go get -u github.com/OWASP/Amass/...
+<pre><code class="language-python">$ go get -u github.com/OWASP/Amass/...
 $ amass enum -o subdomains.txt -d output_file.txt
 $ amass intel -whois -d example.com</code></pre>
 
       <h3>censys-enumeration</h3>
       <p><a href="https://github.com/0xbharath/censys-enumeration">github.com/0xbharath/censys-enumeration</a> — L'étape la plus importante : les sous-domaines trouvés ici sont souvent invisibles aux autres outils car votre wordlist n'a pas les patterns nécessaires.</p>
-<pre><code>$ git clone git@github.com:yamakira/censys-enumeration.git
+<pre><code class="language-python">$ git clone git@github.com:yamakira/censys-enumeration.git
 $ pip install -r requirements.txt
 $ python censys_enumeration.py --no-emails --verbose --outfile results.json domains.txt</code></pre>
 
       <h3>altdns</h3>
       <p><a href="https://github.com/infosec-au/altdns">github.com/infosec-au/altdns</a> — Génère les combinaisons possibles du domaine d'origine avec les mots d'une wordlist.</p>
-<pre><code>$ pip install py-altdns
+<pre><code class="language-python">$ pip install py-altdns
 $ altdns -i subdomains.txt -o data_output -w words.txt -s results_output.txt</code></pre>
 
       <h3>massdns</h3>
       <p><a href="https://github.com/blechschmidt/massdns">github.com/blechschmidt/massdns</a></p>
-<pre><code>$ git clone https://github.com/blechschmidt/massdns.git
+<pre><code class="language-python">$ git clone https://github.com/blechschmidt/massdns.git
 $ cd massdns && make
 $ ./bin/massdns -r lists/resolvers.txt -t A domains.txt > results.txt</code></pre>
 
       <h3>domains-from-csp</h3>
       <p><a href="https://github.com/0xbharath/domains-from-csp">github.com/0xbharath/domains-from-csp</a> — Extrait les domaines autorisés depuis l'en-tête Content-Security-Policy.</p>
-<pre><code>$ python csp_parser.py target_url
+<pre><code class="language-python">$ python csp_parser.py target_url
 $ python csp_parser.py target_url --resolve</code></pre>
 
       <h3>SPF Records</h3>
       <p><a href="https://github.com/0xbharath/assets-from-spf/">github.com/0xbharath/assets-from-spf</a> — Analyse les netblocks et noms de domaine depuis l'enregistrement DNS SPF.</p>
-<pre><code>$ python assets_from_spf.py target_url
+<pre><code class="language-python">$ python assets_from_spf.py target_url
 $ python assets_from_spf.py target_url --asn</code></pre>
 
       <h3>Récupérer les numéros ASN</h3>
-<pre><code>$ curl -s http://ip-api.com/json/192.30.253.113 | jq -r .as
+<pre><code class="language-python">$ curl -s http://ip-api.com/json/192.30.253.113 | jq -r .as
 $ whois -h whois.radb.net -- '-i origin AS36459' | grep -Eo "([0-9.]+){4}/[0-9]+" | uniq
 $ nmap --script targets-asn --script-args targets-asn.asn=17012 > paypal.txt</code></pre>
 
@@ -231,7 +232,7 @@ $ nmap --script targets-asn --script-args targets-asn.asn=17012 > paypal.txt</co
 
       <h3>ffuf</h3>
       <p><a href="https://github.com/ffuf/ffuf">github.com/ffuf/ffuf</a> — Fuzzer web ultra-rapide écrit en Go.</p>
-<pre><code>$ go get github.com/ffuf/ffuf
+<pre><code class="language-python">$ go get github.com/ffuf/ffuf
 
 # Découverte de répertoires
 $ ffuf -w /path/to/wordlist -u https://target/FUZZ
@@ -250,15 +251,15 @@ $ ffuf -w /path/to/postdata.txt -X POST -d "username=admin\&password=FUZZ" -u ht
 
       <h3>dirsearch</h3>
       <p><a href="https://github.com/maurosoria/dirsearch">github.com/maurosoria/dirsearch</a></p>
-<pre><code>$ git clone https://github.com/maurosoria/dirsearch.git
+<pre><code class="language-python">$ git clone https://github.com/maurosoria/dirsearch.git
 $ python3 dirsearch.py -e php,txt,zip -u https://target -w db/dicc.txt --recursive -R 2</code></pre>
 
       <h3>Gobuster</h3>
-<pre><code>$ go get github.com/OJ/gobuster
+<pre><code class="language-python">$ go get github.com/OJ/gobuster
 $ gobuster dir -u https://mysite.com/path -c 'session=123456' -t 50 -w common-files.txt -x .php,.html</code></pre>
 
       <h3>wfuzz</h3>
-<pre><code>$ pip install wfuzz
+<pre><code class="language-python">$ pip install wfuzz
 $ wfuzz -w raft-large-directories.txt --sc 200,403,302 http://testphp.vulnweb.com/FUZZ</code></pre>
 
       <h2>3. Screenshots et cartographie visuelle</h2>
@@ -266,16 +267,16 @@ $ wfuzz -w raft-large-directories.txt --sc 200,403,302 http://testphp.vulnweb.co
       <p>Regardez les en-têtes pour voir quelles mesures de sécurité sont en place : <code>X-XSS-Protection</code>, <code>X-Frame-Options: deny</code>. Connaître ses limites, c'est connaître ses opportunités.</p>
 
       <h3>Aquatone</h3>
-<pre><code>$ go get -u github.com/michenriksen/aquatone
+<pre><code class="language-python">$ go get -u github.com/michenriksen/aquatone
 $ cat hosts.txt | aquatone -out ~/aquatone/example.com</code></pre>
 
       <h3>EyeWitness</h3>
-<pre><code>$ git clone https://github.com/FortyNorthSecurity/EyeWitness.git
+<pre><code class="language-python">$ git clone https://github.com/FortyNorthSecurity/EyeWitness.git
 $ ./EyeWitness -f urls.txt --web
 $ ./EyeWitness -x urls.xml --timeout 8 --headless</code></pre>
 
       <h3>Webscreenshot</h3>
-<pre><code>$ pip install webscreenshot
+<pre><code class="language-python">$ pip install webscreenshot
 $ python webscreenshot.py -i list.txt -v</code></pre>
 
       <h2>4. Vérifier le CMS et les WAF</h2>
@@ -291,7 +292,7 @@ $ python webscreenshot.py -i list.txt -v</code></pre>
 
       <p>Quelques dorks utiles pour la reconnaissance :</p>
 
-<pre><code># Trouver des programmes de bug bounty
+<pre><code class="language-python"># Trouver des programmes de bug bounty
 site:.eu responsible disclosure
 site:.nl bug bounty
 
@@ -321,23 +322,23 @@ site:gitlab "keyword"</code></pre>
       </ul>
 
       <h3>gitrob</h3>
-<pre><code>$ go get github.com/michenriksen/gitrob
+<pre><code class="language-python">$ go get github.com/michenriksen/gitrob
 $ gitrob [options] target [target2] ... [targetN]</code></pre>
 
       <h3>shhgit</h3>
       <p>Trouve les secrets en temps réel en écoutant l'API GitHub Events.</p>
-<pre><code>$ go get github.com/eth0izzle/shhgit
+<pre><code class="language-python">$ go get github.com/eth0izzle/shhgit
 $ shhgit
 $ shhgit --search-query AWS_ACCESS_KEY_ID=AKIA</code></pre>
 
       <h3>TruffleHog</h3>
       <p>Fouille l'historique des commits à la recherche de secrets.</p>
-<pre><code>$ pip install truffleHog
+<pre><code class="language-python">$ pip install truffleHog
 $ truffleHog --regex --entropy=False https://github.com/dxa4481/truffleHog.git</code></pre>
 
       <h3>gitGraber</h3>
       <p>Surveillance en temps réel pour Google, Amazon, Paypal, Github, Mailgun, Facebook, Twitter, Heroku, Stripe...</p>
-<pre><code>$ git clone https://github.com/hisxo/gitGraber.git
+<pre><code class="language-python">$ git clone https://github.com/hisxo/gitGraber.git
 $ pip3 install -r requirements.txt
 $ python3 gitGraber.py -k wordlists/keywords.txt -q "uber" -s</code></pre>
 
@@ -347,13 +348,13 @@ $ python3 gitGraber.py -k wordlists/keywords.txt -q "uber" -s</code></pre>
 
       <h3>LinkFinder</h3>
       <p>Découvre les endpoints et leurs paramètres dans les fichiers JS.</p>
-<pre><code>$ git clone https://github.com/GerbenJavado/LinkFinder.git
+<pre><code class="language-python">$ git clone https://github.com/GerbenJavado/LinkFinder.git
 $ pip3 install -r requirements.txt
 $ python linkfinder.py -i https://example.com/1.js -o results.html
 $ python linkfinder.py -i https://example.com -d</code></pre>
 
       <h3>getJS</h3>
-<pre><code>$ go get github.com/003random/getJS
+<pre><code class="language-python">$ go get github.com/003random/getJS
 $ cat domains.txt | getJS | tojson
 $ getJS -input=domains.txt</code></pre>
 
@@ -362,11 +363,11 @@ $ getJS -input=domains.txt</code></pre>
       <p>En cherchant dans la Wayback Machine, on peut trouver : des fichiers JS anciens et abandonnés, d'anciens endpoints d'API, des endpoints de staging avec des commentaires juteux dans le code source. Si vous obtenez un 403 sur une page, cherchez-la dans la Wayback Machine — parfois elle y est exposée.</p>
 
       <h3>waybackurls</h3>
-<pre><code>$ go get github.com/tomnomnom/waybackurls
+<pre><code class="language-python">$ go get github.com/tomnomnom/waybackurls
 $ cat domains.txt | waybackurls > urls</code></pre>
 
       <h3>Générer une wordlist depuis le Wayback</h3>
-<pre><code>$ curl -s "http://web.archive.org/cdx/search/cdx?url=hackerone.com/*&output=text&fl=original&collapse=urlkey" \
+<pre><code class="language-python">$ curl -s "http://web.archive.org/cdx/search/cdx?url=hackerone.com/*&output=text&fl=original&collapse=urlkey" \
   | sed 's/\//\n/g' | sort -u \
   | grep -v 'svg\|.png\|.img\|.ttf\|http:\|:\|.eot\|woff\|ico\|css\|bootstrap\|wordpress\|.jpg\|.jpeg' > wordlist.txt</code></pre>
 
@@ -376,7 +377,7 @@ $ cat domains.txt | waybackurls > urls</code></pre>
 
       <h3>Masscan</h3>
       <p>Scanner de ports à l'échelle d'Internet — peut scanner tout Internet en moins de 6 minutes.</p>
-<pre><code>$ sudo apt-get install git gcc make libpcap-dev
+<pre><code class="language-python">$ sudo apt-get install git gcc make libpcap-dev
 $ git clone https://github.com/robertdavidgraham/masscan
 $ cd masscan && make -j8
 
@@ -385,50 +386,50 @@ $ masscan -p1-65535 -iL $TARGET_LIST --max-rate 10000 -oG $TARGET_OUTPUT
 $ masscan -p80,8000-8100 10.0.0.0/8</code></pre>
 
       <h3>Nmap</h3>
-<pre><code>$ nmap -p- -sV -iL targets.txt -oX output.xml
+<pre><code class="language-python">$ nmap -p- -sV -iL targets.txt -oX output.xml
 $ sudo nmap -sS -T4 -sC -oA report --stylesheet \
   https://raw.githubusercontent.com/honze-net/nmap-bootstrap-xsl/master/nmap-bootstrap.xsl -iL subdomain.txt</code></pre>
 
       <h2>10. Subdomain Takeover</h2>
 
       <h3>SubOver</h3>
-<pre><code>$ go get github.com/Ice3man543/SubOver
+<pre><code class="language-python">$ go get github.com/Ice3man543/SubOver
 $ ./SubOver -l subdomains.txt</code></pre>
 
       <h3>subjack</h3>
-<pre><code>$ go get github.com/haccer/subjack
+<pre><code class="language-python">$ go get github.com/haccer/subjack
 $ ./subjack -w subdomains.txt -t 100 -timeout 30 -o results.txt -ssl</code></pre>
 
       <h2>11. Outils complémentaires</h2>
 
       <h3>Parameth — Découverte de paramètres</h3>
-<pre><code>$ git clone https://github.com/maK-/parameth.git
+<pre><code class="language-python">$ git clone https://github.com/maK-/parameth.git
 $ ./parameth.py -u http://example.com/test.php</code></pre>
 
       <h3>Arjun — Suite de découverte de paramètres HTTP</h3>
-<pre><code>$ git clone https://github.com/s0md3v/Arjun.git
+<pre><code class="language-python">$ git clone https://github.com/s0md3v/Arjun.git
 $ python3 arjun.py -u https://api.example.com/endpoint --get
 $ python3 arjun.py --urls targets.txt --get</code></pre>
 
       <h3>XSStrike — Scanner XSS avancé</h3>
-<pre><code>$ git clone https://github.com/s0md3v/XSStrike.git
+<pre><code class="language-python">$ git clone https://github.com/s0md3v/XSStrike.git
 $ python xsstrike.py -u "http://example.com/search.php?q=query"</code></pre>
 
       <h3>Commix — Injection de commandes OS</h3>
-<pre><code>$ git clone https://github.com/commixproject/commix.git commix
+<pre><code class="language-python">$ git clone https://github.com/commixproject/commix.git commix
 $ python commix.py --url="http://target/vuln.php" --data="param=value"</code></pre>
 
       <h3>Bolt — Scanner CSRF</h3>
-<pre><code>$ git clone https://github.com/s0md3v/Bolt.git
+<pre><code class="language-python">$ git clone https://github.com/s0md3v/Bolt.git
 $ python3 bolt.py -u https://github.com -l 2</code></pre>
 
       <h3>CORS Scanner</h3>
-<pre><code>$ git clone https://github.com/chenjj/CORScanner.git
+<pre><code class="language-python">$ git clone https://github.com/chenjj/CORScanner.git
 $ python cors_scan.py -u example.com
 $ python cors_scan.py -i top_100_domains.txt -t 100</code></pre>
 
       <h3>SSRFmap</h3>
-<pre><code>$ git clone https://github.com/swisskyrepo/SSRFmap
+<pre><code class="language-python">$ git clone https://github.com/swisskyrepo/SSRFmap
 $ pip3 install -r requirements.txt
 $ python ssrfmap.py -r data/request.txt -p url -m readfiles,portscan</code></pre>
 
@@ -495,5 +496,7 @@ $ python ssrfmap.py -r data/request.txt -p url -m readfiles,portscan</code></pre
                 <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
         </footer><!-- /#contentinfo -->
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
 </body>
 </html>
