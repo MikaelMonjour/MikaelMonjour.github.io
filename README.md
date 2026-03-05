@@ -10,6 +10,15 @@ Blog technique de **Mikael Monjour** — développeur Python et passionné de s�
 
 ---
 
+## Aperçu
+
+| Desktop | Mobile |
+|---------|--------|
+| ![Accueil desktop](.playwright/screenshots/accueil_desktop.png) | ![Accueil mobile](.playwright/screenshots/accueil_mobile.png) |
+| ![tcpdump desktop](.playwright/screenshots/tcpdump_desktop.png) | ![tcpdump mobile](.playwright/screenshots/tcpdump_mobile.png) |
+
+---
+
 ## Articles
 
 ### Python & data
@@ -147,6 +156,19 @@ git push origin master
 ## Tags
 
 `python` · `regex` · `data` · `statistiques` · `securite` · `reseau` · `outils` · `bug-bounty` · `recon` · `tech` · `livres`
+
+## Screenshots
+
+Les captures sont générées automatiquement avec **Playwright** (Python) :
+
+```bash
+cd .playwright
+pip install playwright
+playwright install chromium
+python take_screenshots.py
+```
+
+Les 16 screenshots (8 pages × desktop + mobile) sont enregistrés dans `.playwright/screenshots/`.
 
 ## Auteur
 
