@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+        <title>Le module regex en Python : le guide complet pour aller au-delà de re</title>
+        <link rel="stylesheet" href="/theme/css/main.css?v=3" />
+        <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Blog de Mikael Atom Feed" />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="/">Blog de Mikael </a></h1>
+                <nav><ul>
+                    <li><a href="/category/misc.html">misc</a></li>
+                    <li class="active"><a href="/category/tech.html">tech</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="/le-module-regex-python-guide-complet.html" rel="bookmark"
+           title="Permalink to Le module regex en Python : le guide complet pour aller au-delà de re">Le module regex en Python : le guide complet pour aller au-delà de re</a></h1>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2026-03-05T18:00:00+01:00">
+                Published: mer. 05 mars 2026
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="/author/mikael-monjour.html">Mikael Monjour</a>
+        </address>
+<p>In <a href="/category/tech.html">tech</a>.</p>
+<p>tags: <a href="/tag/python.html">python</a> <a href="/tag/regex.html">regex</a> <a href="/tag/data.html">data</a> <a href="/tag/tech.html">tech</a> </p>
+</footer><!-- /.post-info -->
+
+      <!-- ATTENTION -->
+      <p>Vous nettoyez des données dans un CRM. Des milliers de numéros de téléphone, d'adresses e-mail et de noms de sociétés — chacun saisi à la main par un commercial pressé. <code>+33 6 12 34 56 78</code>, <code>06-12-34-56-78</code>, <code>0612345678</code> : trois écritures pour le même numéro. Votre mission : tout normaliser en un seul format.</p>
+
+      <p>Avec le module standard <code>re</code> de Python, vous y arrivez — tant que les cas restent simples. Mais dès que les patterns deviennent complexes (du texte approximatif, des jeux de caractères Unicode, des groupes récursifs), <code>re</code> atteint ses limites.</p>
+
+      <p>C'est là qu'entre en jeu le module <strong><code>regex</code></strong> — une alternative rétrocompatible avec <code>re</code>, mais avec des fonctionnalités que <code>re</code> n'a tout simplement pas.</p>
+
+      <p><strong>Ce guide couvre tout ce que le module <code>regex</code> apporte de plus que <code>re</code>, avec des explications simples et des exemples concrets.</strong></p>
+
+      <!-- INTÉRÊT -->
+      <h2>Avant de commencer : les bases</h2>
+
+      <p>Quelques termes utilisés dans cet article :</p>
+
+      <ul>
+        <li><strong>Regex (expression régulière) :</strong> un motif de texte qui décrit un ensemble de chaînes de caractères. Par exemple, <code>\d{3}</code> correspond à n'importe quel nombre de 3 chiffres (123, 456, 789...).</li>
+        <li><strong>Pattern :</strong> le motif qu'on cherche dans le texte. C'est la regex elle-même.</li>
+        <li><strong>Match :</strong> quand le texte correspond au pattern. "Le texte matche le pattern" = "le texte correspond au motif".</li>
+        <li><strong>Flag :</strong> une option qui modifie le comportement de la regex. Par exemple, le flag <code>IGNORECASE</code> rend la recherche insensible aux majuscules/minuscules.</li>
+        <li><strong>Groupe de capture :</strong> une partie du pattern entourée de parenthèses <code>()</code>. Permet d'extraire une sous-partie du texte trouvé.</li>
+        <li><strong>GIL (Global Interpreter Lock) :</strong> un mécanisme interne de Python qui empêche deux threads d'exécuter du code Python en même temps. Le module <code>regex</code> peut le libérer pendant la recherche, ce qui accélère le traitement en parallèle.</li>
+      </ul>
+
+      <h2>Installation</h2>
+
+<pre><code>pip install regex</code></pre>
+
+      <p>Ensuite, dans votre code :</p>
+
+<pre><code>import regex
+
+# Il remplace re — même syntaxe, mêmes méthodes
+result = regex.search(r'\d+', 'Il y a 42 pommes')
+print(result.group())  # 42</code></pre>
+
+      <p>Tout ce qui fonctionne avec <code>re</code> fonctionne avec <code>regex</code>. Vous pouvez remplacer <code>import re</code> par <code>import regex</code> sans rien casser.</p>
+
+      <h2>Version 0 vs Version 1 : deux comportements</h2>
+
+      <p>Le module <code>regex</code> propose deux modes de fonctionnement :</p>
+
+      <ul>
+        <li><strong>Version 0 (V0) :</strong> compatible avec le module <code>re</code> standard. C'est le mode par défaut. Si vous avez du code existant qui utilise <code>re</code>, il fonctionnera à l'identique en V0.</li>
+        <li><strong>Version 1 (V1) :</strong> active les fonctionnalités avancées (ensembles imbriqués, meilleure gestion des correspondances de largeur zéro, flags scopés). C'est le mode recommandé pour les nouveaux projets.</li>
+      </ul>
+
+      <p>Pour activer la V1, deux options :</p>
+
+<pre><code># Via un flag dans le code
+regex.search(pattern, text, flags=regex.V1)
+
+# Ou directement dans le pattern
+regex.search(r'(?V1)mon_pattern', text)</code></pre>
+
+      <p>La principale différence entre les deux versions concerne les <strong>correspondances de largeur zéro</strong> — c'est-à-dire les cas où le pattern correspond à "rien" (un espace vide entre deux caractères). En V0, ces cas sont parfois mal gérés. En V1, le comportement est corrigé :</p>
+
+<pre><code># V0 : comportement de re (ancien)
+regex.sub('(?V0).*', 'x', 'test')
+# Résultat : 'x'
+
+# V1 : comportement corrigé
+regex.sub('(?V1).*', 'x', 'test')
+# Résultat : 'xx'</code></pre>
+
+      <!-- DÉSIR -->
+      <h2>Les correspondances insensibles à la casse en Unicode</h2>
+
+      <p>En français et dans beaucoup de langues, la gestion des majuscules/minuscules est plus complexe qu'en anglais. Par exemple, en allemand, le caractère <code>ß</code> (eszett) équivaut à <code>SS</code> en majuscules.</p>
+
+      <p>Le module <code>regex</code> gère ces cas grâce au <strong>full case-folding</strong> (conversion complète des majuscules/minuscules) :</p>
+
+<pre><code># En V1, le full case-folding est activé par défaut
+regex.match(r"(?iV1)strasse", "straße").span()
+# Résultat : (0, 6) — ça matche !
+
+regex.match(r"(?iV1)straße", "STRASSE").span()
+# Résultat : (0, 7) — dans l'autre sens aussi</code></pre>
+
+      <p>Le flag <code>FULLCASE</code> (ou <code>F</code>) contrôle ce comportement. En V1, il est activé par défaut. En V0, il est désactivé pour rester compatible avec <code>re</code>.</p>
+
+      <h2>Ensembles imbriqués et opérations sur les ensembles</h2>
+
+      <p>C'est l'une des fonctionnalités les plus puissantes du module <code>regex</code>. En V1, vous pouvez combiner des ensembles de caractères avec des opérations logiques :</p>
+
+      <ul>
+        <li><code>||</code> — <strong>union</strong> : "x ou y"</li>
+        <li><code>&&</code> — <strong>intersection</strong> : "x et y"</li>
+        <li><code>--</code> — <strong>différence</strong> : "x mais pas y"</li>
+        <li><code>~~</code> — <strong>différence symétrique</strong> : "x ou y, mais pas les deux"</li>
+      </ul>
+
+      <p>Exemple concret : vous voulez extraire toutes les lettres minuscules sauf les voyelles :</p>
+
+<pre><code># Toutes les lettres a-z SAUF les voyelles
+regex.findall(r'(?V1)[[a-z]--[aeiou]]', 'bonjour le monde')
+# Résultat : ['b', 'n', 'j', 'r', 'l', 'm', 'n', 'd']</code></pre>
+
+      <p>Autre cas utile : extraire tous les caractères qui sont à la fois ASCII et des lettres :</p>
+
+<pre><code>regex.findall(r'(?V1)[\p{ASCII}&&\p{Letter}]', 'café 123 naïf')
+# Les lettres ASCII uniquement (pas les é, ï)</code></pre>
+
+      <h2>Les flags : scopés vs globaux</h2>
+
+      <p>Un <strong>flag</strong> modifie le comportement d'une regex. Le module <code>regex</code> distingue deux types :</p>
+
+      <ul>
+        <li><strong>Flags scopés</strong> (portée limitée) : ils s'appliquent à une partie du pattern et peuvent être activés <em>ou</em> désactivés. Exemples : <code>IGNORECASE</code>, <code>DOTALL</code>, <code>VERBOSE</code>, <code>FULLCASE</code>, <code>MULTILINE</code>, <code>WORD</code>.</li>
+        <li><strong>Flags globaux</strong> (tout le pattern) : ils s'appliquent à l'ensemble du pattern et peuvent seulement être activés. Exemples : <code>ASCII</code>, <code>UNICODE</code>, <code>REVERSE</code>, <code>BESTMATCH</code>, <code>ENHANCEMATCH</code>, <code>POSIX</code>, <code>VERSION0</code>, <code>VERSION1</code>.</li>
+      </ul>
+
+      <p>L'intérêt des flags scopés, c'est de pouvoir appliquer un comportement à une sous-partie du pattern seulement :</p>
+
+<pre><code># IGNORECASE seulement sur la première partie
+regex.search(r'(?i:hello) world', 'HELLO world')
+# Matche — "HELLO" est insensible à la casse, mais "world" doit être en minuscules</code></pre>
+
+      <h2>Le fuzzy matching : la correspondance approximative</h2>
+
+      <p>C'est probablement la fonctionnalité la plus utile pour le nettoyage de données. Le <strong>fuzzy matching</strong> permet de trouver des correspondances même quand le texte contient des fautes de frappe.</p>
+
+      <p>Trois types d'erreurs sont gérés :</p>
+
+      <ul>
+        <li><code>i</code> — <strong>insertion</strong> : un caractère en trop</li>
+        <li><code>d</code> — <strong>suppression</strong> : un caractère manquant</li>
+        <li><code>s</code> — <strong>substitution</strong> : un caractère remplacé par un autre</li>
+        <li><code>e</code> — <strong>n'importe quel type d'erreur</strong></li>
+      </ul>
+
+      <p>La syntaxe : on ajoute <code>{erreurs}</code> après l'élément à rendre flou :</p>
+
+<pre><code># Chercher "bonjour" avec au maximum 1 erreur
+regex.search(r'(bonjour){e<=1}', 'bonjoure le monde')
+# Matche "bonjoure" (1 insertion)
+
+# Chercher "bonjour" avec au maximum 2 erreurs de n'importe quel type
+regex.search(r'(bonjour){e<=2}', 'bonjuor le monde')
+# Matche "bonjuor" (1 substitution + potentiellement 1 autre erreur)</code></pre>
+
+      <p>Cas concret en growth : vous avez une liste de noms d'entreprises dans votre CRM et vous voulez dédupliquer. "Microsft", "Microsoftt", "Microsoft" — c'est la même boîte :</p>
+
+<pre><code>import regex
+
+companies = ['Microsoft', 'Microsft', 'Microsoftt', 'Google', 'Gogle', 'Googl']
+
+for name in companies:
+    m = regex.fullmatch(r'(?:Microsoft){e<=1}', name)
+    if m:
+        print(f'{name} → Microsoft (erreurs: {m.fuzzy_counts})')
+
+# Microsft → Microsoft (erreurs: (0, 0, 1))   # 1 suppression
+# Microsoftt → Microsoft (erreurs: (0, 1, 0)) # 1 insertion
+# Microsoft → Microsoft (erreurs: (0, 0, 0))  # correspondance exacte</code></pre>
+
+      <p>L'objet match contient deux attributs utiles :</p>
+
+      <ul>
+        <li><code>fuzzy_counts</code> — un tuple <code>(substitutions, insertions, suppressions)</code> qui donne le nombre d'erreurs.</li>
+        <li><code>fuzzy_changes</code> — un tuple qui donne les <em>positions</em> exactes des erreurs dans le texte.</li>
+      </ul>
+
+      <p>Deux flags améliorent le fuzzy matching :</p>
+
+      <ul>
+        <li><code>ENHANCEMATCH</code> — essaie d'améliorer la qualité du match trouvé (réduire le nombre d'erreurs).</li>
+        <li><code>BESTMATCH</code> — cherche le meilleur match possible au lieu du premier trouvé.</li>
+      </ul>
+
+<pre><code># Sans ENHANCEMATCH : le premier match trouvé
+regex.search("(dog){e}", "cat and dog")[1]
+# Résultat : 'cat' — car "cat" matche "dog" avec 3 substitutions (illimité)
+
+# Avec une limite d'erreurs
+regex.search("(dog){e<=1}", "cat and dog")[1]
+# Résultat : ' dog' (avec un espace devant) — 1 suppression
+
+# Avec ENHANCEMATCH : on affine le résultat
+regex.search("(?e)(dog){e<=1}", "cat and dog")[1]
+# Résultat : 'dog' (sans espace) — correspondance améliorée</code></pre>
+
+      <p>On peut aussi assigner des <strong>coûts</strong> à chaque type d'erreur :</p>
+
+<pre><code># Chaque insertion coûte 2, chaque suppression coûte 2,
+# chaque substitution coûte 1, coût total max de 4
+regex.search(r'(bonjour){2i+2d+1s<=4}', texte)</code></pre>
+
+      <h2>Les patterns récursifs</h2>
+
+      <p>Un <strong>pattern récursif</strong> est un pattern qui peut se référencer lui-même. C'est utile pour analyser des structures imbriquées comme du JSON, du HTML ou des expressions mathématiques avec des parenthèses.</p>
+
+<pre><code># (?R) essaie de matcher l'ensemble du pattern récursivement
+regex.match(r"(Tarzan|Jane) loves (?1)", "Tarzan loves Jane").groups()
+# Résultat : ('Tarzan',)
+# (?1) réutilise le sous-pattern du groupe 1 : (Tarzan|Jane)
+
+# Détecter des palindromes
+m = regex.search(r"(\w)(?:(?R)|(\w?))\1", "kayak")
+m.group(0)
+# Résultat : 'kayak'</code></pre>
+
+      <p>En clair : <code>(?1)</code>, <code>(?2)</code>, etc. réutilisent le sous-pattern d'un groupe de capture. <code>(?R)</code> ou <code>(?0)</code> réutilisent le pattern entier. <code>(?&amp;nom)</code> réutilisent un groupe nommé.</p>
+
+      <h2>DEFINE : déclarer des sous-patterns réutilisables</h2>
+
+      <p>Le bloc <code>(?(DEFINE)...)</code> permet de déclarer des sous-patterns sans qu'ils ne correspondent à rien par eux-mêmes. Ils sont ensuite appelés ailleurs dans le pattern :</p>
+
+<pre><code># Déclarer un pattern "prix" réutilisable
+pattern = regex.compile(r'''(?x)
+    (?(DEFINE)
+        (?P&lt;price&gt;\$\d+\.\d{2}\b)
+    )
+    (?&amp;price)[-+](?&amp;price)=(?&amp;price)
+''')
+
+pattern.search('total: $1.99+$2.99=$4.98')
+# Matche "$1.99+$2.99=$4.98"</code></pre>
+
+      <p>L'avantage : au lieu de répéter <code>\$\d+\.\d{2}\b</code> trois fois dans le pattern (ce qui le rend illisible), on le déclare une fois sous le nom "price" et on le réutilise avec <code>(?&amp;price)</code>.</p>
+
+      <h2>Les captures multiples</h2>
+
+      <p>Avec le module standard <code>re</code>, quand un groupe de capture est répété (par exemple <code>(\w+)+</code>), seule la <em>dernière</em> capture est conservée. Le module <code>regex</code> conserve <strong>toutes les captures</strong> :</p>
+
+<pre><code>m = regex.search(r"(\w{3})+", "123456789")
+
+# re ne garderait que la dernière capture :
+m.group(1)
+# Résultat : '789'
+
+# regex conserve TOUTES les captures :
+m.captures(1)
+# Résultat : ['123', '456', '789']
+
+# Positions de début et de fin de chaque capture :
+m.starts(1)   # [0, 3, 6]
+m.ends(1)     # [3, 6, 9]
+m.spans(1)    # [(0, 3), (3, 6), (6, 9)]</code></pre>
+
+      <p>Avec <code>capturesdict</code>, on récupère un dictionnaire complet des captures par nom de groupe :</p>
+
+<pre><code>m = regex.match(
+    r"(?:(?P&lt;word&gt;\w+) (?P&lt;digits&gt;\d+)\n)+",
+    "one 1\ntwo 2\nthree 3\n"
+)
+
+m.groupdict()
+# {'word': 'three', 'digits': '3'} — seulement la dernière capture
+
+m.capturesdict()
+# {'word': ['one', 'two', 'three'], 'digits': ['1', '2', '3']} — tout !</code></pre>
+
+      <h2>Les correspondances partielles</h2>
+
+      <p>Les <strong>correspondances partielles</strong> (partial matches) sont utiles quand vous validez une saisie en temps réel — par exemple, un formulaire où l'utilisateur tape un numéro de carte bancaire chiffre par chiffre :</p>
+
+<pre><code>pattern = regex.compile(r'\d{4}')
+
+# L'utilisateur n'a encore rien tapé :
+pattern.fullmatch('', partial=True)
+# Match partiel — c'est encore possible
+
+# L'utilisateur tape une lettre :
+pattern.fullmatch('a', partial=True)
+# None — ça ne correspondra jamais
+
+# L'utilisateur tape un chiffre :
+pattern.fullmatch('1', partial=True)
+# Match partiel — en bonne voie
+
+# Trois chiffres :
+pattern.fullmatch('123', partial=True)
+# Match partiel — presque
+
+# Quatre chiffres :
+pattern.fullmatch('1234', partial=True)
+# Match complet !
+
+# Cinq chiffres :
+pattern.fullmatch('12345', partial=True)
+# None — trop long</code></pre>
+
+      <p>L'objet match a un attribut <code>partial</code> qui vaut <code>True</code> si c'est un match partiel et <code>False</code> si c'est un match complet.</p>
+
+      <h2>Le matching POSIX : le plus long match d'abord</h2>
+
+      <p>Par défaut, les regex retournent le <strong>premier match</strong> trouvé. Avec le flag <code>POSIX</code> (<code>(?p)</code>), le module cherche le <strong>match le plus long possible à la position la plus à gauche</strong> — c'est la norme POSIX :</p>
+
+<pre><code>regex.search(r'(?p)one(self)?(selfsufficient)?', 'oneselfsufficient')
+# Résultat : 'oneselfsufficient' — le match le plus long</code></pre>
+
+      <p>Attention : le matching POSIX est plus lent car il ne s'arrête pas au premier résultat. Il continue à chercher pour s'assurer qu'il n'y a pas de match plus long.</p>
+
+      <h2>Les groupes atomiques et quantificateurs possessifs</h2>
+
+      <p>Un <strong>groupe atomique</strong> <code>(?&gt;...)</code> empêche le moteur de regex de revenir en arrière (backtracking) dans le sous-pattern. Si le reste du pattern échoue, le groupe atomique échoue en bloc au lieu de tester d'autres possibilités.</p>
+
+      <p>Les <strong>quantificateurs possessifs</strong> (<code>?+</code>, <code>*+</code>, <code>++</code>) font la même chose pour les répétitions : ils ne rendent jamais ce qu'ils ont consommé.</p>
+
+      <p>En pratique, ces deux fonctionnalités permettent d'éviter des regex qui prennent un temps exponentiel sur certains textes (le fameux "catastrophic backtracking") :</p>
+
+<pre><code># Sans groupe atomique : peut être très lent sur de longues chaînes
+regex.search(r'(a+)+b', 'aaaaaaaaaaac')
+
+# Avec groupe atomique : échoue immédiatement
+regex.search(r'(?>a+)+b', 'aaaaaaaaaaac')</code></pre>
+
+      <h2>Autres fonctionnalités utiles</h2>
+
+      <h3>\K — garder seulement une partie du match</h3>
+
+      <p><code>\K</code> réinitialise le début du match. Tout ce qui est avant <code>\K</code> dans le pattern doit correspondre, mais n'est pas inclus dans le résultat :</p>
+
+<pre><code>m = regex.search(r'(\w\w\K\w\w\w)', 'abcdef')
+m[0]   # 'cde' — le match commence après \K
+m[1]   # 'abcde' — mais le groupe capture tout</code></pre>
+
+      <h3>Les listes nommées : \L&lt;nom&gt;</h3>
+
+      <p>Au lieu de construire un pattern avec des alternatives séparées par <code>|</code>, vous pouvez passer une liste directement :</p>
+
+<pre><code>options = ["premier", "deuxième", "troisième", "quatrième"]
+p = regex.compile(r"\L<options>", options=options)
+
+p.search("le deuxième choix")
+# Matche "deuxième"</code></pre>
+
+      <p>L'avantage : le module gère automatiquement l'ordre et l'échappement des caractères spéciaux.</p>
+
+      <h3>Lookbehind de longueur variable</h3>
+
+      <p>Le module <code>re</code> exige que les lookbehinds (assertions arrière) aient une longueur fixe. Le module <code>regex</code> n'a pas cette limitation :</p>
+
+<pre><code># Impossible avec re, possible avec regex :
+regex.search(r'(?<=\d+\.)\d+', '3.14')
+# Matche '14' — lookbehind de longueur variable</code></pre>
+
+      <h3>Multithreading</h3>
+
+      <p>Le module <code>regex</code> libère le GIL (verrou global de Python) pendant les recherches sur des chaînes immuables. Cela permet à d'autres threads de s'exécuter en parallèle, ce qui peut accélérer le traitement de gros volumes de texte :</p>
+
+<pre><code># Forcer la libération du GIL
+regex.search(pattern, text, concurrent=True)</code></pre>
+
+      <h3>Ancre de recherche \G</h3>
+
+      <p><code>\G</code> correspond à la position où la recherche précédente s'est terminée. Utile pour des correspondances contiguës :</p>
+
+<pre><code>regex.findall(r"\w{2}", "abcd ef")
+# Résultat : ['ab', 'cd', 'ef']
+
+regex.findall(r"\G\w{2}", "abcd ef")
+# Résultat : ['ab', 'cd'] — s'arrête à l'espace car \G exige la contiguïté</code></pre>
+
+      <h3>Propriétés Unicode</h3>
+
+      <p>Le module supporte les propriétés Unicode pour des recherches très précises :</p>
+
+<pre><code># Toutes les lettres du script latin
+regex.findall(r'\p{Script=Latin}+', 'café こんにちは hello')
+# Résultat : ['café', 'hello']
+
+# Tous les chiffres, toutes écritures confondues
+regex.findall(r'\p{Number}+', 'prix: 42€ ou ٤٢ dinars')
+
+# Classes POSIX
+regex.findall(r'[[:alpha:]]+', 'hello 123 world')</code></pre>
+
+      <!-- ACTION -->
+      <h2>Récapitulatif : quand utiliser regex au lieu de re</h2>
+
+      <p>Voici les situations où le module <code>regex</code> justifie le remplacement de <code>re</code> :</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Besoin</th>
+            <th>re</th>
+            <th>regex</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Recherches simples (email, téléphone, URL)</td><td>Oui</td><td>Oui</td></tr>
+          <tr><td>Fuzzy matching (fautes de frappe)</td><td>Non</td><td>Oui</td></tr>
+          <tr><td>Patterns récursifs (JSON, HTML imbriqué)</td><td>Non</td><td>Oui</td></tr>
+          <tr><td>Opérations sur les ensembles de caractères</td><td>Non</td><td>Oui</td></tr>
+          <tr><td>Captures multiples d'un groupe répété</td><td>Non</td><td>Oui</td></tr>
+          <tr><td>Lookbehind de longueur variable</td><td>Non</td><td>Oui</td></tr>
+          <tr><td>Correspondances partielles (validation en temps réel)</td><td>Non</td><td>Oui</td></tr>
+          <tr><td>Full case-folding Unicode</td><td>Non</td><td>Oui</td></tr>
+          <tr><td>Groupes atomiques / quantificateurs possessifs</td><td>Non</td><td>Oui</td></tr>
+          <tr><td>Multithreading (libération du GIL)</td><td>Non</td><td>Oui</td></tr>
+        </tbody>
+      </table>
+
+      <h2>Checklist : migrer de re à regex</h2>
+
+      <ol>
+        <li><strong>Installer le module :</strong> <code>pip install regex</code></li>
+        <li><strong>Remplacer l'import :</strong> <code>import regex</code> au lieu de <code>import re</code>. Tout votre code existant continue de fonctionner.</li>
+        <li><strong>Tester en V0 d'abord :</strong> vérifiez que rien ne casse avec le comportement par défaut (compatible <code>re</code>).</li>
+        <li><strong>Passer en V1 progressivement :</strong> activez <code>(?V1)</code> dans les patterns qui ont besoin des fonctionnalités avancées.</li>
+        <li><strong>Utiliser le fuzzy matching</strong> pour le nettoyage de données (CRM, déduplication, normalisation de texte).</li>
+        <li><strong>Utiliser les captures multiples</strong> quand vous parsez des structures répétées (logs, CSV, données semi-structurées).</li>
+        <li><strong>Utiliser les groupes atomiques</strong> si vous avez des regex lentes sur certaines entrées (catastrophic backtracking).</li>
+        <li><strong>Documenter les changements :</strong> notez dans votre code pourquoi vous utilisez <code>regex</code> au lieu de <code>re</code>, pour que vos collègues comprennent la dépendance.</li>
+      </ol>
+
+      <p><em>Le module <code>regex</code> est un remplacement transparent de <code>re</code> avec des fonctionnalités que le module standard n'a tout simplement pas. Si vous travaillez avec de la donnée texte — nettoyage de CRM, parsing de logs, extraction d'informations, validation de saisie — il devrait faire partie de votre boîte à outils.</em></p>
+
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+
+        <section id="extras" class="body">
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+                            <li><a href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

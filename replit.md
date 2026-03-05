@@ -5,6 +5,7 @@ A static HTML blog by Mikael Monjour, originally generated with Pelican (Python 
 
 ## Project Structure
 - `index.html` — Home page with featured article and posts list
+- `le-module-regex-python-guide-complet.html` — Module regex Python : guide complet (fuzzy matching, patterns récursifs, captures multiples, etc.)
 - `la-signification-de-la-valeur-p-exemple-python.html` — P-value expliquée avec Python (AIDA + growth storytelling)
 - `recon-everything-guide-growth-hacker-securite.html` — Recon Everything security guide article
 - `mes-lectures-tech-incontournables-top-10.html` — Top 10 tech reads article
@@ -16,7 +17,7 @@ A static HTML blog by Mikael Monjour, originally generated with Pelican (Python 
 - `images/` — Blog images (eduba.png)
 - `feeds/` — Atom RSS feeds
 - `category/` — Category pages (misc, tech)
-- `tag/` — Tag pages (first, misc, python, livres, tech, lectures, securite, recon, bug-bounty, outils, data, statistiques)
+- `tag/` — Tag pages (first, misc, python, livres, tech, lectures, securite, recon, bug-bounty, outils, data, statistiques, regex)
 - `author/` — Author pages (your-name, mikael-monjour)
 - `archives.html`, `tags.html`, `categories.html`, `authors.html` — Index pages
 
