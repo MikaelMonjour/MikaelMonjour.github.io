@@ -96,14 +96,14 @@ li {
 }
 
 pre {
-    background: #1e1e2e;
-    border: 1px solid #313244;
+    background: #282c34;
+    border: 1px solid #3e4451;
     border-radius: var(--radius-sm);
     padding: 1rem 1.25rem;
     overflow-x: auto;
     font-size: 0.875rem;
     line-height: 1.6;
-    color: #cdd6f4;
+    color: #abb2bf;
 }
 
 pre code {
