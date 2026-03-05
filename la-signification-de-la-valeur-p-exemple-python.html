@@ -292,7 +292,37 @@ pvalue_101(170.0, 5.0, 10000, 0, 13.0)
 # Exemple CRM : probabilité d'un taux de qualification > 26 %
 pvalue_101(18.0, 3.0, 10000, 26.0)</code></pre>
 
-      <p><em>La p-value est un outil puissant — à condition de comprendre ce qu'elle mesure et ce qu'elle ne mesure pas. La prochaine fois que vous voyez "p &lt; 0.05" dans un rapport ou un dashboard, prenez une seconde pour vérifier si le test qui se cache derrière mérite vraiment qu'on lui fasse confiance.</em></p>
+      <h2>Checklist complète : les étapes pour tester correctement une p-value</h2>
+
+      <p>Avant de lancer un test, pendant le test, et après le test — voici la liste des étapes à respecter pour que votre p-value ait réellement du sens.</p>
+
+      <h3>Avant le test</h3>
+      <ol>
+        <li><strong>Formuler une hypothèse claire.</strong> Écrivez noir sur blanc ce que vous testez. Exemple : "L'enrichissement automatique des leads augmente le taux de qualification." Sans hypothèse précise, vous ne saurez pas quoi mesurer.</li>
+        <li><strong>Choisir la métrique principale.</strong> Une seule métrique par test. Taux de conversion ? Panier moyen ? Taux de qualification ? Si vous mesurez 10 choses en même temps, vous trouverez forcément un résultat "significatif" par pur hasard (c'est le problème des <strong>comparaisons multiples</strong>).</li>
+        <li><strong>Calculer la taille d'échantillon nécessaire.</strong> Utilisez un calculateur de puissance statistique (comme celui de <a href="https://www.evanmiller.org/ab-testing/sample-size.html">Evan Miller</a>). Un test sur 50 personnes ne prouvera rien. La taille dépend de l'effet minimum que vous voulez détecter et de la variabilité de vos données.</li>
+        <li><strong>Définir le seuil de significativité (α).</strong> En général, on fixe α à 0,05 (soit 5 %). Cela signifie qu'on accepte 5 % de risque de conclure à tort qu'il y a un effet alors qu'il n'y en a pas. Ce seuil doit être décidé <em>avant</em> de regarder les résultats.</li>
+        <li><strong>Choisir entre test unilatéral et bilatéral.</strong> Si vous voulez savoir si le changement est meilleur <em>ou</em> pire, utilisez un test bilatéral (c'est le cas le plus courant). Un test unilatéral ne se justifie que si vous êtes certain que l'effet ne peut aller que dans un sens.</li>
+        <li><strong>Fixer la durée du test à l'avance.</strong> Un cycle business complet au minimum : 7 jours pour couvrir les variations jour/week-end, 14 jours ou plus si votre cycle de vente est long (B2B par exemple).</li>
+      </ol>
+
+      <h3>Pendant le test</h3>
+      <ol>
+        <li><strong>Ne pas regarder les résultats avant la fin.</strong> Vérifier la p-value tous les jours (le "peeking") augmente artificiellement vos chances de trouver un faux positif. Si vous devez absolument surveiller le test en cours, utilisez des méthodes de correction comme le <strong>test séquentiel</strong> ou la <strong>correction de Bonferroni</strong>.</li>
+        <li><strong>Vérifier que les groupes sont comparables.</strong> Le groupe A et le groupe B doivent recevoir le même type de trafic. Si un groupe reçoit surtout des visiteurs mobiles et l'autre des visiteurs desktop, la comparaison est biaisée.</li>
+        <li><strong>Ne rien changer en cours de route.</strong> Si vous modifiez la page, le ciblage ou les critères pendant le test, les résultats ne sont plus interprétables. Relancez un nouveau test propre.</li>
+      </ol>
+
+      <h3>Après le test</h3>
+      <ol>
+        <li><strong>Lire la p-value correctement.</strong> Une p-value de 0,03 signifie : "Si rien n'a changé, il y a 3 % de chance d'observer un résultat aussi extrême." Ça ne signifie <em>pas</em> : "Il y a 97 % de chance que notre changement fonctionne."</li>
+        <li><strong>Vérifier la taille de l'effet.</strong> La p-value vous dit si le résultat est statistiquement significatif, mais pas s'il est <em>important</em>. Un test peut être significatif avec un effet de +0,1 % de conversion — trop faible pour justifier le coût du changement. Regardez aussi l'<strong>intervalle de confiance</strong> pour connaître la fourchette probable de l'effet réel.</li>
+        <li><strong>Chercher les biais.</strong> Posez-vous ces questions : le test a-t-il couvert un cycle complet ? Les groupes étaient-ils homogènes ? Y a-t-il eu un événement extérieur (promotion, bug, pic de trafic) qui fausse les résultats ?</li>
+        <li><strong>Reproduire avant de généraliser.</strong> Un seul test positif ne suffit pas. Si l'enjeu est important, relancez le test sur une autre période ou un autre segment pour confirmer le résultat. La reproductibilité est la base de toute démarche scientifique.</li>
+        <li><strong>Documenter le test.</strong> Notez l'hypothèse, la métrique, la taille d'échantillon, la durée, la p-value, la taille de l'effet et votre conclusion. Un test non documenté est un test perdu — pour vous et pour votre équipe.</li>
+      </ol>
+
+      <p><em>La p-value est un outil puissant — à condition de comprendre ce qu'elle mesure et ce qu'elle ne mesure pas. La prochaine fois que vous voyez "p &lt; 0.05" dans un rapport ou un dashboard, reprenez cette checklist et vérifiez si le test qui se cache derrière mérite vraiment qu'on lui fasse confiance.</em></p>
 
     </div><!-- /.entry-content -->
 
