@@ -1024,7 +1024,929 @@ Capturing&lt;span class="w"&gt; &lt;/span&gt;on&lt;span class="w"&gt; &lt;/span&
 &lt;p&gt;Vous pouvez utiliser cette classe et vous en inspirer pour apprendre et aider à créer vos propres applications socket plus facilement et plus rapidement.&lt;/p&gt;
 &lt;p&gt;Félicitations pour être allé jusqu'au bout ! Vous êtes maintenant en bonne voie pour utiliser les sockets dans vos propres applications.&lt;/p&gt;
 &lt;script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"&gt;&lt;/script&gt;
-&lt;script&gt;mermaid.initialize({startOnLoad: true, theme: 'dark'});&lt;/script&gt;</content><category term="tech"/><category term="python"/><category term="reseau"/><category term="tech"/></entry><entry><title>La librairie regex Python : guide complet</title><link href="/le-module-regex-python-guide-complet.html" rel="alternate"/><published>2026-03-05T17:00:00+01:00</published><updated>2026-03-05T17:00:00+01:00</updated><author><name>Mikael Monjour</name></author><id>tag:None,2026-03-05:/le-module-regex-python-guide-complet.html</id><summary type="html">&lt;p&gt;La librairie regex (pip install regex) est une implémentation avancée et rétrocompatible avec le module standard re de Python. Ce guide couvre toutes ses fonctionnalités : matching flou, patterns récursifs, propriétés Unicode, ensembles imbriqués, lookbehind de longueur variable, et bien plus.&lt;/p&gt;</summary><content type="html">&lt;div class="toc"&gt;
+&lt;script&gt;mermaid.initialize({startOnLoad: true, theme: 'dark'});&lt;/script&gt;</content><category term="tech"/><category term="python"/><category term="reseau"/><category term="tech"/></entry><entry><title>tcpdump : guide complet de l'analyseur de paquets réseau</title><link href="/tcpdump-guide-complet.html" rel="alternate"/><published>2026-03-05T18:00:00+01:00</published><updated>2026-03-05T18:00:00+01:00</updated><author><name>Mikael Monjour</name></author><id>tag:None,2026-03-05:/tcpdump-guide-complet.html</id><summary type="html">&lt;p&gt;Guide complet de tcpdump, le puissant outil en ligne de commande pour l'analyse des paquets réseau sous Linux. Couvre les commandes de base, les filtres avancés, l'analyse de protocoles, les requêtes HTTP, les drapeaux TCP, et l'intégration avec Wireshark.&lt;/p&gt;</summary><content type="html">&lt;div class="toc"&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="#introduction"&gt;Introduction&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#cas-dutilisation"&gt;Cas d'utilisation&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#partie-1-commandes-de-base"&gt;Partie 1 — Commandes de base&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#options-et-aide"&gt;Options et aide&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#lister-les-interfaces-reseau"&gt;Lister les interfaces réseau&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#capture-par-defaut"&gt;Capture par défaut&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#capturer-sur-une-interface-specifique-i"&gt;Capturer sur une interface spécifique (-i)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#limiter-le-nombre-de-paquets-c"&gt;Limiter le nombre de paquets (-c)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#mode-verbeux-v-vv-vvv"&gt;Mode verbeux (-v, -vv, -vvv)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#affichage-ascii-a"&gt;Affichage ASCII (-A)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#ne-pas-convertir-les-adresses-nn"&gt;Ne pas convertir les adresses (-nn)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#mode-rapide-q"&gt;Mode rapide (-q)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#partie-2-filtres"&gt;Partie 2 — Filtres&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#filtre-de-port"&gt;Filtre de port&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#plage-de-ports-portrange"&gt;Plage de ports (portrange)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#filtre-dhote"&gt;Filtre d'hôte&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#filtre-de-reseau"&gt;Filtre de réseau&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#filtre-de-protocole"&gt;Filtre de protocole&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#direction-des-paquets-q"&gt;Direction des paquets (-Q)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#partie-3-affichage-avance-des-paquets"&gt;Partie 3 — Affichage avancé des paquets&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#en-tete-de-chaque-paquet-x"&gt;En-tête de chaque paquet (-X)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#numero-de-sequence-tcp-s"&gt;Numéro de séquence TCP (-S)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#comptage-en-direct-number"&gt;Comptage en direct (--number)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#en-tete-de-niveau-liaison-e"&gt;En-tête de niveau liaison (-e)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#affichage-hexadecimal-x-xx-x-xx"&gt;Affichage hexadécimal (-x, -xx, -X, -XX)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#partie-4-horodatage-timestamp"&gt;Partie 4 — Horodatage (timestamp)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#partie-5-lecture-ecriture-et-snaplen"&gt;Partie 5 — Lecture, écriture et snaplen&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#ecrire-dans-un-fichier-pcap-w"&gt;Écrire dans un fichier .pcap (-w)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#lire-un-fichier-pcap-r"&gt;Lire un fichier .pcap (-r)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#longueur-de-capture-snaplen-s"&gt;Longueur de capture — snaplen (-s)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#partie-6-mode-dump-et-scan-utilisateur"&gt;Partie 6 — Mode dump et scan utilisateur&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#mode-dump-d-dd-ddd"&gt;Mode dump (-d, -dd, -ddd)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#changement-dutilisateur-z"&gt;Changement d'utilisateur (-Z)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#partie-7-forcer-linterpretation-de-protocoles-t"&gt;Partie 7 — Forcer l'interprétation de protocoles (-T)&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#protocoles-supportes"&gt;Protocoles supportés&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#partie-8-mode-promiscuous"&gt;Partie 8 — Mode promiscuous&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#activer-le-mode-promiscuous"&gt;Activer le mode promiscuous&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#desactiver-le-mode-promiscuous"&gt;Désactiver le mode promiscuous&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#partie-9-capturer-les-requetes-http"&gt;Partie 9 — Capturer les requêtes HTTP&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#requetes-get"&gt;Requêtes GET&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#requetes-post"&gt;Requêtes POST&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#capturer-toutes-les-requetes-http-get-post-host"&gt;Capturer toutes les requêtes HTTP (GET + POST + Host)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#identifier-le-user-agent"&gt;Identifier le User-Agent&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#partie-10-drapeaux-tcp"&gt;Partie 10 — Drapeaux TCP&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#syn-synchronisation"&gt;SYN — Synchronisation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#rst-reinitialisation"&gt;RST — Réinitialisation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#ack-accuse-de-reception"&gt;ACK — Accusé de réception&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#combinaisons-courantes"&gt;Combinaisons courantes&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#partie-11-tcpdump-vers-wireshark"&gt;Partie 11 — tcpdump vers Wireshark&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#workflow-recommande"&gt;Workflow recommandé&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#aide-memoire-cheat-sheet"&gt;Aide-mémoire (cheat sheet)&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#capture-de-base"&gt;Capture de base&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#filtres"&gt;Filtres&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#fichiers-et-timestamps"&gt;Fichiers et timestamps&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#drapeaux-tcp-et-http"&gt;Drapeaux TCP et HTTP&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#conclusion"&gt;Conclusion&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;h2 id="introduction"&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;tcpdump&lt;/strong&gt; est un puissant outil en ligne de commande pour l'analyse des paquets réseau. Il permet d'afficher les paquets TCP/IP et autres protocoles qui sont reçus et transmis sur une interface réseau.&lt;/p&gt;
+&lt;p&gt;tcpdump a été initialement développé en &lt;strong&gt;1988&lt;/strong&gt; par Van Jacobson, Sally Floyd, Vern Paxson et Steven McCanne au &lt;strong&gt;Lawrence Berkeley Laboratory&lt;/strong&gt; (Network Research Group). Il fonctionne sur la plupart des systèmes d'exploitation basés sur Linux et utilise la bibliothèque &lt;strong&gt;libpcap&lt;/strong&gt; (C/C++) pour capturer les paquets.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Note :&lt;/strong&gt; l'équivalent Windows s'appelle &lt;strong&gt;WinDump&lt;/strong&gt; et utilise la bibliothèque WinPcap/Npcap.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id="cas-dutilisation"&gt;Cas d'utilisation&lt;/h3&gt;
+&lt;p&gt;tcpdump est indispensable pour :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Diagnostiquer&lt;/strong&gt; les problèmes réseau (perte de paquets, latence, erreurs de routage)&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Analyser&lt;/strong&gt; le fonctionnement d'outils de sécurité (pare-feu, IDS/IPS)&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Capturer&lt;/strong&gt; du trafic pour analyse ultérieure (fichiers &lt;code&gt;.pcap&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Déboguer&lt;/strong&gt; des applications réseau (API, services web, DNS)&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Auditer&lt;/strong&gt; la sécurité d'un réseau (reniflage, détection d'anomalies)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="mermaid"&gt;
+graph LR
+    A[Interface réseau&lt;br/&gt;eth0, wlan0...] --&gt;|libpcap| B[tcpdump]
+    B --&gt; C[Affichage terminal]
+    B --&gt; D[Fichier .pcap]
+    D --&gt; E[Wireshark]
+    D --&gt; F[Analyse offline&lt;br/&gt;tcpdump -r]
+    style B fill:#2196F3,stroke:#1565C0,color:#fff
+    style D fill:#FF9800,stroke:#E65100,color:#fff
+    style E fill:#4CAF50,stroke:#2E7D32,color:#fff
+&lt;/div&gt;
+
+&lt;hr&gt;
+&lt;h2 id="partie-1-commandes-de-base"&gt;Partie 1 — Commandes de base&lt;/h2&gt;
+&lt;h3 id="options-et-aide"&gt;Options et aide&lt;/h3&gt;
+&lt;p&gt;Pour afficher les options disponibles ou la version :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# Afficher l&amp;#39;aide&lt;/span&gt;
+tcpdump&lt;span class="w"&gt; &lt;/span&gt;-h
+tcpdump&lt;span class="w"&gt; &lt;/span&gt;--help
+
+&lt;span class="c1"&gt;# Afficher la version de tcpdump, libpcap et OpenSSL&lt;/span&gt;
+tcpdump&lt;span class="w"&gt; &lt;/span&gt;--version
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3 id="lister-les-interfaces-reseau"&gt;Lister les interfaces réseau&lt;/h3&gt;
+&lt;p&gt;Une &lt;strong&gt;interface&lt;/strong&gt; est le point d'interconnexion entre un ordinateur et un réseau. On peut lister les interfaces disponibles avec :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;tcpdump&lt;span class="w"&gt; &lt;/span&gt;--list-interfaces
+tcpdump&lt;span class="w"&gt; &lt;/span&gt;-D
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Chaque interface reçoit un numéro qui peut être utilisé avec le paramètre &lt;code&gt;-i&lt;/code&gt; pour cibler une interface particulière.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Astuce :&lt;/strong&gt; si &lt;code&gt;ifconfig -a&lt;/code&gt; ne fonctionne pas, &lt;code&gt;tcpdump -D&lt;/code&gt; reste une alternative fiable pour lister les interfaces.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id="capture-par-defaut"&gt;Capture par défaut&lt;/h3&gt;
+&lt;p&gt;La forme la plus simple lance une capture sur l'interface par défaut :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;tcpdump
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Par défaut, tcpdump capture sur la première interface active et affiche les paquets en continu jusqu'à interruption (&lt;code&gt;Ctrl+C&lt;/code&gt;).&lt;/p&gt;
+&lt;h3 id="capturer-sur-une-interface-specifique-i"&gt;Capturer sur une interface spécifique (&lt;code&gt;-i&lt;/code&gt;)&lt;/h3&gt;
+&lt;p&gt;Pour capturer le trafic sur une interface particulière (par exemple &lt;code&gt;eth0&lt;/code&gt; pour Ethernet) :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;tcpdump&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;eth0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3 id="limiter-le-nombre-de-paquets-c"&gt;Limiter le nombre de paquets (&lt;code&gt;-c&lt;/code&gt;)&lt;/h3&gt;
+&lt;p&gt;Le paramètre &lt;code&gt;-c&lt;/code&gt; permet de capturer un nombre précis de paquets, puis de s'arrêter :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# Capturer exactement 10 paquets sur eth0&lt;/span&gt;
+tcpdump&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;eth0&lt;span class="w"&gt; &lt;/span&gt;-c&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;10&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3 id="mode-verbeux-v-vv-vvv"&gt;Mode verbeux (&lt;code&gt;-v&lt;/code&gt;, &lt;code&gt;-vv&lt;/code&gt;, &lt;code&gt;-vvv&lt;/code&gt;)&lt;/h3&gt;
+&lt;p&gt;Le mode verbeux fournit des informations supplémentaires sur les paquets capturés.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Paramètre&lt;/th&gt;
+&lt;th&gt;Niveau&lt;/th&gt;
+&lt;th&gt;Informations&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;-v&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Verbeux&lt;/td&gt;
+&lt;td&gt;TTL, identification, longueur totale, options IP, checksums IP/ICMP&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;-vv&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Très verbeux&lt;/td&gt;
+&lt;td&gt;+ champs NFS, décodage complet des paquets SMB&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;-vvv&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Maximum&lt;/td&gt;
+&lt;td&gt;+ options Telnet et données supplémentaires&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# Mode verbeux simple&lt;/span&gt;
+tcpdump&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;eth0&lt;span class="w"&gt; &lt;/span&gt;-c&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;5&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-v
+
+&lt;span class="c1"&gt;# Mode très verbeux&lt;/span&gt;
+tcpdump&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;eth0&lt;span class="w"&gt; &lt;/span&gt;-c&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;5&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-vv
+
+&lt;span class="c1"&gt;# Mode maximum&lt;/span&gt;
+tcpdump&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;eth0&lt;span class="w"&gt; &lt;/span&gt;-c&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;5&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-vvv
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3 id="affichage-ascii-a"&gt;Affichage ASCII (&lt;code&gt;-A&lt;/code&gt;)&lt;/h3&gt;
+&lt;p&gt;Le paramètre &lt;code&gt;-A&lt;/code&gt; affiche le contenu de chaque paquet en &lt;strong&gt;code ASCII&lt;/strong&gt;, ce qui est utile pour lire le contenu textuel des échanges (requêtes HTTP, en-têtes, etc.) :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;tcpdump&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;eth0&lt;span class="w"&gt; &lt;/span&gt;-c&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;5&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-A
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3 id="ne-pas-convertir-les-adresses-nn"&gt;Ne pas convertir les adresses (&lt;code&gt;-nn&lt;/code&gt;)&lt;/h3&gt;
+&lt;p&gt;Par défaut, tcpdump tente de résoudre les adresses IP en noms d'hôtes et les numéros de port en noms de services. Le paramètre &lt;code&gt;-nn&lt;/code&gt; désactive cette résolution pour afficher les &lt;strong&gt;adresses et ports bruts&lt;/strong&gt; :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# Avec résolution (par défaut)&lt;/span&gt;
+tcpdump&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;eth0&lt;span class="w"&gt; &lt;/span&gt;-c&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;5&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Sans résolution — adresses IP et ports numériques&lt;/span&gt;
+tcpdump&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;eth0&lt;span class="w"&gt; &lt;/span&gt;-c&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;5&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-nn
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3 id="mode-rapide-q"&gt;Mode rapide (&lt;code&gt;-q&lt;/code&gt;)&lt;/h3&gt;
+&lt;p&gt;Le paramètre &lt;code&gt;-q&lt;/code&gt; (quick) affiche moins d'informations par paquet, ce qui accélère l'affichage :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;tcpdump&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;eth0&lt;span class="w"&gt; &lt;/span&gt;-c&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;5&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-q
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;hr&gt;
+&lt;h2 id="partie-2-filtres"&gt;Partie 2 — Filtres&lt;/h2&gt;
+&lt;p&gt;Les filtres sont au cœur de la puissance de tcpdump. Ils permettent de cibler précisément le trafic à analyser.&lt;/p&gt;
+&lt;div class="mermaid"&gt;
+graph TD
+    A[Filtres tcpdump] --&gt; B[Par hôte]
+    A --&gt; C[Par port]
+    A --&gt; D[Par protocole]
+    A --&gt; E[Par réseau]
+    A --&gt; F[Par direction]
+    B --&gt; B1["host 192.168.1.1"]
+    B --&gt; B2["src / dst"]
+    C --&gt; C1["port 80"]
+    C --&gt; C2["portrange 21-80"]
+    D --&gt; D1["tcp / udp / icmp"]
+    E --&gt; E1["net 192.168.0.0/24"]
+    F --&gt; F1["-Q in / -Q out"]
+    style A fill:#9C27B0,stroke:#6A1B9A,color:#fff
+&lt;/div&gt;
+
+&lt;h3 id="filtre-de-port"&gt;Filtre de port&lt;/h3&gt;
+&lt;p&gt;Pour analyser le trafic sur un &lt;strong&gt;port spécifique&lt;/strong&gt; :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# Trafic HTTP (port 80)&lt;/span&gt;
+tcpdump&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;eth0&lt;span class="w"&gt; &lt;/span&gt;-c&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;5&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-v&lt;span class="w"&gt; &lt;/span&gt;port&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;80&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Trafic HTTPS (port 443)&lt;/span&gt;
+tcpdump&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;eth0&lt;span class="w"&gt; &lt;/span&gt;-c&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;5&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;port&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;443&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Trafic DNS (port 53)&lt;/span&gt;
+tcpdump&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;eth0&lt;span class="w"&gt; &lt;/span&gt;-c&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;5&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;port&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;53&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3 id="plage-de-ports-portrange"&gt;Plage de ports (&lt;code&gt;portrange&lt;/code&gt;)&lt;/h3&gt;
+&lt;p&gt;Pour surveiller une &lt;strong&gt;gamme de ports&lt;/strong&gt; :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# Surveiller les ports 21 à 80&lt;/span&gt;
+tcpdump&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;eth0&lt;span class="w"&gt; &lt;/span&gt;portrange&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;21&lt;/span&gt;-80
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3 id="filtre-dhote"&gt;Filtre d'hôte&lt;/h3&gt;
+&lt;p&gt;Pour analyser le trafic &lt;strong&gt;vers ou depuis&lt;/strong&gt; un hôte particulier :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# Tout le trafic lié à un hôte&lt;/span&gt;
+tcpdump&lt;span class="w"&gt; &lt;/span&gt;host&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;104&lt;/span&gt;.28.6.89&lt;span class="w"&gt; &lt;/span&gt;-c&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;10&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-A&lt;span class="w"&gt; &lt;/span&gt;-n
+
+&lt;span class="c1"&gt;# Uniquement le trafic VERS une destination&lt;/span&gt;
+tcpdump&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;eth0&lt;span class="w"&gt; &lt;/span&gt;dst&lt;span class="w"&gt; &lt;/span&gt;google.com
+
+&lt;span class="c1"&gt;# Uniquement le trafic DEPUIS une source&lt;/span&gt;
+tcpdump&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;eth0&lt;span class="w"&gt; &lt;/span&gt;src&lt;span class="w"&gt; &lt;/span&gt;google.com
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3 id="filtre-de-reseau"&gt;Filtre de réseau&lt;/h3&gt;
+&lt;p&gt;Pour capturer les paquets en provenance ou à destination d'un &lt;strong&gt;réseau entier&lt;/strong&gt; :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;tcpdump&lt;span class="w"&gt; &lt;/span&gt;net&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;192&lt;/span&gt;.168.0.0/24&lt;span class="w"&gt; &lt;/span&gt;-c&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;5&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3 id="filtre-de-protocole"&gt;Filtre de protocole&lt;/h3&gt;
+&lt;p&gt;Pour filtrer par &lt;strong&gt;protocole&lt;/strong&gt; (ICMP, TCP, UDP, etc.) :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# Paquets ICMP uniquement (ping)&lt;/span&gt;
+tcpdump&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;eth0&lt;span class="w"&gt; &lt;/span&gt;icmp&lt;span class="w"&gt; &lt;/span&gt;-c&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;10&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Paquets UDP uniquement&lt;/span&gt;
+tcpdump&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;eth0&lt;span class="w"&gt; &lt;/span&gt;udp&lt;span class="w"&gt; &lt;/span&gt;-c&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;10&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3 id="direction-des-paquets-q"&gt;Direction des paquets (&lt;code&gt;-Q&lt;/code&gt;)&lt;/h3&gt;
+&lt;p&gt;Pour filtrer par &lt;strong&gt;direction&lt;/strong&gt; du flux de données :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# Paquets entrants uniquement&lt;/span&gt;
+tcpdump&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;eth0&lt;span class="w"&gt; &lt;/span&gt;icmp&lt;span class="w"&gt; &lt;/span&gt;-c&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;5&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-Q&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;in&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Paquets sortants uniquement&lt;/span&gt;
+tcpdump&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;eth0&lt;span class="w"&gt; &lt;/span&gt;icmp&lt;span class="w"&gt; &lt;/span&gt;-c&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;5&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-Q&lt;span class="w"&gt; &lt;/span&gt;out
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;hr&gt;
+&lt;h2 id="partie-3-affichage-avance-des-paquets"&gt;Partie 3 — Affichage avancé des paquets&lt;/h2&gt;
+&lt;h3 id="en-tete-de-chaque-paquet-x"&gt;En-tête de chaque paquet (&lt;code&gt;-X&lt;/code&gt;)&lt;/h3&gt;
+&lt;p&gt;Le paramètre &lt;code&gt;-X&lt;/code&gt; affiche les en-têtes et le contenu des paquets en &lt;strong&gt;hexadécimal et ASCII&lt;/strong&gt; simultanément :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;tcpdump&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;eth0&lt;span class="w"&gt; &lt;/span&gt;-c&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;3&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-X
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Les en-têtes contiennent les informations de contrôle : longueur du paquet, drapeaux de synchronisation, valeurs hexadécimales, etc.&lt;/p&gt;
+&lt;h3 id="numero-de-sequence-tcp-s"&gt;Numéro de séquence TCP (&lt;code&gt;-S&lt;/code&gt;)&lt;/h3&gt;
+&lt;p&gt;Le paramètre &lt;code&gt;-S&lt;/code&gt; affiche les &lt;strong&gt;numéros de séquence TCP absolus&lt;/strong&gt; au lieu des numéros relatifs :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;tcpdump&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;eth0&lt;span class="w"&gt; &lt;/span&gt;-nnXS
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Chaque connexion TCP commence avec un numéro de séquence initial (ISN) choisi aléatoirement. Les données commencent à ISN+1.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id="comptage-en-direct-number"&gt;Comptage en direct (&lt;code&gt;--number&lt;/code&gt;)&lt;/h3&gt;
+&lt;p&gt;Le paramètre &lt;code&gt;--number&lt;/code&gt; numérote chaque paquet capturé en temps réel :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;tcpdump&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;eth0&lt;span class="w"&gt; &lt;/span&gt;--number
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3 id="en-tete-de-niveau-liaison-e"&gt;En-tête de niveau liaison (&lt;code&gt;-e&lt;/code&gt;)&lt;/h3&gt;
+&lt;p&gt;Le paramètre &lt;code&gt;-e&lt;/code&gt; affiche les &lt;strong&gt;en-têtes de couche liaison&lt;/strong&gt; (layer 2), notamment les adresses MAC pour Ethernet et IEEE 802.11 :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# Sans en-tête de liaison&lt;/span&gt;
+tcpdump&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;eth0&lt;span class="w"&gt; &lt;/span&gt;-c&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;5&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Avec en-tête de liaison (adresses MAC)&lt;/span&gt;
+tcpdump&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;eth0&lt;span class="w"&gt; &lt;/span&gt;-c&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;5&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-e
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3 id="affichage-hexadecimal-x-xx-x-xx"&gt;Affichage hexadécimal (&lt;code&gt;-x&lt;/code&gt;, &lt;code&gt;-xx&lt;/code&gt;, &lt;code&gt;-X&lt;/code&gt;, &lt;code&gt;-XX&lt;/code&gt;)&lt;/h3&gt;
+&lt;p&gt;tcpdump propose plusieurs niveaux d'affichage hexadécimal :&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Paramètre&lt;/th&gt;
+&lt;th&gt;Affichage&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;-x&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;En-têtes en hexadécimal&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;-xx&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;En-têtes + en-tête de liaison en hexadécimal&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;-X&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;En-têtes en hexadécimal &lt;strong&gt;+ ASCII&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;-XX&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;En-têtes + en-tête de liaison en hexadécimal &lt;strong&gt;+ ASCII&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;tcpdump&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;eth0&lt;span class="w"&gt; &lt;/span&gt;-c&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-x
+tcpdump&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;eth0&lt;span class="w"&gt; &lt;/span&gt;-c&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-xx
+tcpdump&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;eth0&lt;span class="w"&gt; &lt;/span&gt;-c&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-X
+tcpdump&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;eth0&lt;span class="w"&gt; &lt;/span&gt;-c&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-XX
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;hr&gt;
+&lt;h2 id="partie-4-horodatage-timestamp"&gt;Partie 4 — Horodatage (timestamp)&lt;/h2&gt;
+&lt;p&gt;tcpdump offre un contrôle précis sur l'affichage des &lt;strong&gt;timestamps&lt;/strong&gt; :&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Paramètre&lt;/th&gt;
+&lt;th&gt;Comportement&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;-t&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Pas de timestamp&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;-tt&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Timestamp Unix (secondes depuis l'epoch)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;-ttt&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Delta depuis le paquet &lt;strong&gt;précédent&lt;/strong&gt; (microsecondes)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;-tttt&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Date et heure complètes (lisible)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;-ttttt&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Delta depuis le &lt;strong&gt;premier paquet&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# Pas de timestamp&lt;/span&gt;
+tcpdump&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;eth0&lt;span class="w"&gt; &lt;/span&gt;-c&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-t
+
+&lt;span class="c1"&gt;# Timestamp Unix&lt;/span&gt;
+tcpdump&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;eth0&lt;span class="w"&gt; &lt;/span&gt;-c&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-tt
+
+&lt;span class="c1"&gt;# Delta entre paquets&lt;/span&gt;
+tcpdump&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;eth0&lt;span class="w"&gt; &lt;/span&gt;-c&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-ttt
+
+&lt;span class="c1"&gt;# Date et heure lisibles&lt;/span&gt;
+tcpdump&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;eth0&lt;span class="w"&gt; &lt;/span&gt;-c&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-tttt
+
+&lt;span class="c1"&gt;# Delta depuis le début de la capture&lt;/span&gt;
+tcpdump&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;eth0&lt;span class="w"&gt; &lt;/span&gt;-c&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-ttttt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;div class="mermaid"&gt;
+graph LR
+    subgraph "Formats de timestamp"
+    A["-t&lt;br/&gt;(aucun)"] ~~~ B["-tt&lt;br/&gt;1709654321.123456"]
+    B ~~~ C["-ttt&lt;br/&gt;0.003215"]
+    C ~~~ D["-tttt&lt;br/&gt;2026-03-05 14:25:21"]
+    D ~~~ E["-ttttt&lt;br/&gt;0.125432"]
+    end
+&lt;/div&gt;
+
+&lt;hr&gt;
+&lt;h2 id="partie-5-lecture-ecriture-et-snaplen"&gt;Partie 5 — Lecture, écriture et snaplen&lt;/h2&gt;
+&lt;h3 id="ecrire-dans-un-fichier-pcap-w"&gt;Écrire dans un fichier &lt;code&gt;.pcap&lt;/code&gt; (&lt;code&gt;-w&lt;/code&gt;)&lt;/h3&gt;
+&lt;p&gt;Pour sauvegarder les paquets bruts dans un fichier pour analyse ultérieure :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# Sauvegarder 10 paquets ICMP dans un fichier&lt;/span&gt;
+tcpdump&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;eth0&lt;span class="w"&gt; &lt;/span&gt;icmp&lt;span class="w"&gt; &lt;/span&gt;-c&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;10&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-w&lt;span class="w"&gt; &lt;/span&gt;capture.pcap
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3 id="lire-un-fichier-pcap-r"&gt;Lire un fichier &lt;code&gt;.pcap&lt;/code&gt; (&lt;code&gt;-r&lt;/code&gt;)&lt;/h3&gt;
+&lt;p&gt;Pour relire un fichier de capture :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;tcpdump&lt;span class="w"&gt; &lt;/span&gt;-r&lt;span class="w"&gt; &lt;/span&gt;capture.pcap
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Astuce :&lt;/strong&gt; les fichiers &lt;code&gt;.pcap&lt;/code&gt; peuvent aussi être ouverts dans &lt;strong&gt;Wireshark&lt;/strong&gt; pour une analyse graphique.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id="longueur-de-capture-snaplen-s"&gt;Longueur de capture — snaplen (&lt;code&gt;-s&lt;/code&gt;)&lt;/h3&gt;
+&lt;p&gt;Le &lt;strong&gt;snaplen&lt;/strong&gt; (snapshot length) définit le nombre d'octets capturés par paquet. Par défaut : &lt;strong&gt;262 144 octets&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Réduire le snaplen accélère la capture et réduit la taille des fichiers, mais tronque les données :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# Capturer seulement 10 octets par paquet&lt;/span&gt;
+tcpdump&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;eth0&lt;span class="w"&gt; &lt;/span&gt;icmp&lt;span class="w"&gt; &lt;/span&gt;-s&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;10&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-c&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Capturer 25 octets&lt;/span&gt;
+tcpdump&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;eth0&lt;span class="w"&gt; &lt;/span&gt;icmp&lt;span class="w"&gt; &lt;/span&gt;-s&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;25&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-c&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Capturer 96 octets (en-têtes uniquement pour la plupart des protocoles)&lt;/span&gt;
+tcpdump&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;eth0&lt;span class="w"&gt; &lt;/span&gt;icmp&lt;span class="w"&gt; &lt;/span&gt;-s&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;96&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-c&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Capturer le paquet complet (snaplen 0 = illimité)&lt;/span&gt;
+tcpdump&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;eth0&lt;span class="w"&gt; &lt;/span&gt;-s&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-c&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;div class="mermaid"&gt;
+graph LR
+    A["Paquet complet&lt;br/&gt;1500 octets"] --&gt; B{"-s snaplen"}
+    B --&gt;|"-s 10"| C["10 octets&lt;br/&gt;⚡ Rapide"]
+    B --&gt;|"-s 96"| D["96 octets&lt;br/&gt;En-têtes"]
+    B --&gt;|"-s 0"| E["Tout&lt;br/&gt;📦 Complet"]
+    style C fill:#4CAF50,color:#fff
+    style D fill:#FF9800,color:#fff
+    style E fill:#F44336,color:#fff
+&lt;/div&gt;
+
+&lt;hr&gt;
+&lt;h2 id="partie-6-mode-dump-et-scan-utilisateur"&gt;Partie 6 — Mode dump et scan utilisateur&lt;/h2&gt;
+&lt;h3 id="mode-dump-d-dd-ddd"&gt;Mode dump (&lt;code&gt;-d&lt;/code&gt;, &lt;code&gt;-dd&lt;/code&gt;, &lt;code&gt;-ddd&lt;/code&gt;)&lt;/h3&gt;
+&lt;p&gt;Le mode dump permet de visualiser le &lt;strong&gt;filtre BPF&lt;/strong&gt; (Berkeley Packet Filter) compilé :&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Paramètre&lt;/th&gt;
+&lt;th&gt;Format de sortie&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;-d&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Code assembleur lisible&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;-dd&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Fragment de programme C&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;-ddd&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Nombres décimaux avec compteur&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;tcpdump&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;eth0&lt;span class="w"&gt; &lt;/span&gt;-c&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;5&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-d
+tcpdump&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;eth0&lt;span class="w"&gt; &lt;/span&gt;-c&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;5&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-dd
+tcpdump&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;eth0&lt;span class="w"&gt; &lt;/span&gt;-c&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;5&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-ddd
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3 id="changement-dutilisateur-z"&gt;Changement d'utilisateur (&lt;code&gt;-Z&lt;/code&gt;)&lt;/h3&gt;
+&lt;p&gt;Lorsque tcpdump est exécuté en tant que &lt;code&gt;root&lt;/code&gt;, il peut changer d'utilisateur après l'ouverture de l'interface de capture (sécurité par moindre privilège) :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# Exécuter en tant que root, puis passer à l&amp;#39;utilisateur kali&lt;/span&gt;
+tcpdump&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;eth0&lt;span class="w"&gt; &lt;/span&gt;-c&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-Z&lt;span class="w"&gt; &lt;/span&gt;kali
+
+&lt;span class="c1"&gt;# Alternative avec --relinquish-privileges&lt;/span&gt;
+tcpdump&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;eth0&lt;span class="w"&gt; &lt;/span&gt;-c&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;--relinquish-privileges&lt;span class="o"&gt;=&lt;/span&gt;kali
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;hr&gt;
+&lt;h2 id="partie-7-forcer-linterpretation-de-protocoles-t"&gt;Partie 7 — Forcer l'interprétation de protocoles (&lt;code&gt;-T&lt;/code&gt;)&lt;/h2&gt;
+&lt;p&gt;Le paramètre &lt;code&gt;-T&lt;/code&gt; force tcpdump à interpréter les paquets selon un &lt;strong&gt;protocole spécifique&lt;/strong&gt;. Cela permet d'analyser du trafic encapsulé ou non standard.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;tcpdump&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;eth0&lt;span class="w"&gt; &lt;/span&gt;-c&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;5&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-T&lt;span class="w"&gt; &lt;/span&gt;&amp;lt;protocole&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3 id="protocoles-supportes"&gt;Protocoles supportés&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Protocole&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;th&gt;Commande&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;RADIUS&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;Remote Authentication Dial-in User Service (port 1812). Authentification centralisée&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;tcpdump -i eth0 -c5 -T radius&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;AODV&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;Ad-hoc On-demand Distance Vector. Routage pour réseaux sans fil ad hoc&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;tcpdump -i eth0 -c5 -T aodv&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;RPC&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;Remote Procedure Call. Appel de procédure à distance&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;tcpdump -i eth0 -c5 -T rpc&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;CNFP&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;Cisco NetFlow Protocol. Collecte et surveillance du trafic réseau&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;tcpdump -i eth0 -c5 -T cnfp&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;LMP&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;Link Management Protocol. Configuration de périphériques réseau optiques&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;tcpdump -i eth0 -c5 -T lmp&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;PGM&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;Pragmatic General Multicast. Transport multicast fiable&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;tcpdump -i eth0 -c5 -T pgm&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;RTP&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;Real-Time Protocol. Flux multimédia (audio/vidéo)&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;tcpdump -i eth0 -c5 -T rtp&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;RTCP&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;Real-Time Control Protocol. Contrôle pour RTP&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;tcpdump -i eth0 -c5 -T rtcp&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;SNMP&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;Simple Network Management Protocol. Gestion de dispositifs réseau&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;tcpdump -i eth0 -c5 -T snmp&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;TFTP&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;Trivial File Transfer Protocol. Transfert de fichiers simple (boot réseau)&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;tcpdump -i eth0 -c5 -T tftp&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;VAT&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;Visual Audio Tool. Média audio/visuel&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;tcpdump -i eth0 -c5 -T vat&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;WB&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;Distributed White Board. Tableau blanc partagé en réseau&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;tcpdump -i eth0 -c5 -T wb&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;VXLAN&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;Virtual Xtensible LAN. Virtualisation réseau pour le cloud (encapsulation L3)&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;tcpdump -i eth0 -c5 -T vxlan&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;div class="mermaid"&gt;
+graph TB
+    T["-T protocole"] --&gt; L4["Couche 4 — Transport"]
+    T --&gt; L7["Couche 7 — Application"]
+    T --&gt; VIRT["Virtualisation"]
+    L4 --&gt; RTP2["RTP / RTCP"]
+    L4 --&gt; PGM2["PGM"]
+    L7 --&gt; RADIUS2["RADIUS"]
+    L7 --&gt; SNMP2["SNMP"]
+    L7 --&gt; TFTP2["TFTP"]
+    L7 --&gt; RPC2["RPC"]
+    VIRT --&gt; VXLAN2["VXLAN"]
+    style T fill:#673AB7,stroke:#4527A0,color:#fff
+    style L4 fill:#0288D1,color:#fff
+    style L7 fill:#388E3C,color:#fff
+    style VIRT fill:#F57C00,color:#fff
+&lt;/div&gt;
+
+&lt;hr&gt;
+&lt;h2 id="partie-8-mode-promiscuous"&gt;Partie 8 — Mode promiscuous&lt;/h2&gt;
+&lt;h3 id="activer-le-mode-promiscuous"&gt;Activer le mode promiscuous&lt;/h3&gt;
+&lt;p&gt;En mode &lt;strong&gt;promiscuous&lt;/strong&gt;, la carte réseau transmet &lt;strong&gt;tous les paquets&lt;/strong&gt; reçus au système d'exploitation, pas seulement ceux destinés à son adresse MAC. C'est essentiel pour le reniflage de paquets sur un réseau local :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# Activer le mode promiscuous sur eth0&lt;/span&gt;
+ifconfig&lt;span class="w"&gt; &lt;/span&gt;eth0&lt;span class="w"&gt; &lt;/span&gt;promisc
+
+&lt;span class="c1"&gt;# Vérifier l&amp;#39;état&lt;/span&gt;
+ifconfig&lt;span class="w"&gt; &lt;/span&gt;eth0
+
+&lt;span class="c1"&gt;# Capturer en mode promiscuous&lt;/span&gt;
+tcpdump&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;eth0&lt;span class="w"&gt; &lt;/span&gt;-c&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;10&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3 id="desactiver-le-mode-promiscuous"&gt;Désactiver le mode promiscuous&lt;/h3&gt;
+&lt;p&gt;Pour capturer en mode &lt;strong&gt;non-promiscuous&lt;/strong&gt; (multicast uniquement) sans modifier les paramètres de l'interface :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;tcpdump&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;eth0&lt;span class="w"&gt; &lt;/span&gt;-c&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;5&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;--no-promiscuous-mode
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;div class="mermaid"&gt;
+graph LR
+    subgraph "Mode normal"
+    A1[Paquet pour&lt;br/&gt;notre MAC] --&gt;|✅ Capturé| B1[Système]
+    A2[Paquet pour&lt;br/&gt;autre MAC] --&gt;|❌ Ignoré| C1[Rejeté]
+    end
+    subgraph "Mode promiscuous"
+    A3[Paquet pour&lt;br/&gt;notre MAC] --&gt;|✅ Capturé| B2[Système]
+    A4[Paquet pour&lt;br/&gt;autre MAC] --&gt;|✅ Capturé| B2
+    end
+    style B1 fill:#4CAF50,color:#fff
+    style C1 fill:#F44336,color:#fff
+    style B2 fill:#4CAF50,color:#fff
+&lt;/div&gt;
+
+&lt;hr&gt;
+&lt;h2 id="partie-9-capturer-les-requetes-http"&gt;Partie 9 — Capturer les requêtes HTTP&lt;/h2&gt;
+&lt;p&gt;tcpdump peut capturer et décoder les &lt;strong&gt;requêtes HTTP&lt;/strong&gt; en utilisant des filtres sur les octets TCP.&lt;/p&gt;
+&lt;h3 id="requetes-get"&gt;Requêtes GET&lt;/h3&gt;
+&lt;p&gt;La méthode GET récupère des données depuis un serveur. Le filtre cherche la signature hexadécimale &lt;code&gt;0x47455420&lt;/code&gt; (« GET ») dans le payload TCP :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;tcpdump&lt;span class="w"&gt; &lt;/span&gt;-s&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-A&lt;span class="w"&gt; &lt;/span&gt;-vv&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;tcp[((tcp[12:1] &amp;amp; 0xf0) &amp;gt;&amp;gt; 2):4] = 0x47455420&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3 id="requetes-post"&gt;Requêtes POST&lt;/h3&gt;
+&lt;p&gt;La méthode POST envoie des données au serveur. La signature hexadécimale est &lt;code&gt;0x504f5354&lt;/code&gt; (« POST ») :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;tcpdump&lt;span class="w"&gt; &lt;/span&gt;-s&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-A&lt;span class="w"&gt; &lt;/span&gt;-vv&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;tcp[((tcp[12:1] &amp;amp; 0xf0) &amp;gt;&amp;gt; 2):4] = 0x504f5354&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3 id="capturer-toutes-les-requetes-http-get-post-host"&gt;Capturer toutes les requêtes HTTP (GET + POST + Host)&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;tcpdump&lt;span class="w"&gt; &lt;/span&gt;-v&lt;span class="w"&gt; &lt;/span&gt;-n&lt;span class="w"&gt; &lt;/span&gt;-l&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;|&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;egrep&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;POST /|GET /|Host:&amp;quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3 id="identifier-le-user-agent"&gt;Identifier le User-Agent&lt;/h3&gt;
+&lt;p&gt;Pour voir quelle &lt;strong&gt;application&lt;/strong&gt; génère le trafic :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;tcpdump&lt;span class="w"&gt; &lt;/span&gt;-nn&lt;span class="w"&gt; &lt;/span&gt;-A&lt;span class="w"&gt; &lt;/span&gt;-s&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;150&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-l&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;|&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;grep&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;User-Agent:&amp;quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;div class="mermaid"&gt;
+sequenceDiagram
+    participant C as Client
+    participant T as tcpdump
+    participant S as Serveur
+
+    C-&gt;&gt;S: GET /index.html HTTP/1.1
+    Note over T: Capture GET&lt;br/&gt;0x47455420
+    S--&gt;&gt;C: 200 OK + HTML
+
+    C-&gt;&gt;S: POST /api/login HTTP/1.1
+    Note over T: Capture POST&lt;br/&gt;0x504f5354
+    S--&gt;&gt;C: 200 OK + JSON
+
+    Note over T: Filtrage par&lt;br/&gt;User-Agent, Host
+&lt;/div&gt;
+
+&lt;hr&gt;
+&lt;h2 id="partie-10-drapeaux-tcp"&gt;Partie 10 — Drapeaux TCP&lt;/h2&gt;
+&lt;p&gt;Le paquet TCP utilise des &lt;strong&gt;drapeaux&lt;/strong&gt; (flags) pour contrôler l'état des connexions. tcpdump permet de filtrer par drapeau spécifique.&lt;/p&gt;
+&lt;h3 id="syn-synchronisation"&gt;SYN — Synchronisation&lt;/h3&gt;
+&lt;p&gt;Le drapeau &lt;strong&gt;SYN&lt;/strong&gt; initie une connexion TCP (premier paquet du three-way handshake) :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;tcpdump&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;tcp[tcpflags] == tcp-syn&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3 id="rst-reinitialisation"&gt;RST — Réinitialisation&lt;/h3&gt;
+&lt;p&gt;Le drapeau &lt;strong&gt;RST&lt;/strong&gt; (reset) réinitialise une connexion, envoyé quand un paquet arrive pour un port fermé ou une connexion invalide :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;tcpdump&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;tcp[tcpflags] == tcp-rst&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3 id="ack-accuse-de-reception"&gt;ACK — Accusé de réception&lt;/h3&gt;
+&lt;p&gt;Le drapeau &lt;strong&gt;ACK&lt;/strong&gt; confirme la bonne réception d'un paquet :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;tcpdump&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;tcp[tcpflags] == tcp-ack&amp;#39;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-c&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;5&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3 id="combinaisons-courantes"&gt;Combinaisons courantes&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# SYN-ACK (réponse au SYN)&lt;/span&gt;
+tcpdump&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;tcp[tcpflags] &amp;amp; (tcp-syn|tcp-ack) != 0&amp;#39;&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Paquets FIN (fermeture de connexion)&lt;/span&gt;
+tcpdump&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;tcp[tcpflags] &amp;amp; tcp-fin != 0&amp;#39;&lt;/span&gt;
+
+&lt;span class="c1"&gt;# SYN sans ACK (nouvelles connexions uniquement)&lt;/span&gt;
+tcpdump&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;tcp[tcpflags] &amp;amp; tcp-syn != 0 and tcp[tcpflags] &amp;amp; tcp-ack == 0&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;div class="mermaid"&gt;
+sequenceDiagram
+    participant C as Client
+    participant S as Serveur
+
+    Note over C,S: Three-way Handshake TCP
+    C-&gt;&gt;S: SYN (seq=x)
+    Note right of S: tcp-syn
+    S-&gt;&gt;C: SYN-ACK (seq=y, ack=x+1)
+    Note left of C: tcp-syn + tcp-ack
+    C-&gt;&gt;S: ACK (ack=y+1)
+    Note right of S: tcp-ack
+
+    Note over C,S: Transfert de données...
+
+    C-&gt;&gt;S: FIN
+    Note right of S: tcp-fin
+    S-&gt;&gt;C: ACK
+    S-&gt;&gt;C: FIN
+    C-&gt;&gt;S: ACK
+    Note over C,S: Connexion fermée
+&lt;/div&gt;
+
+&lt;hr&gt;
+&lt;h2 id="partie-11-tcpdump-vers-wireshark"&gt;Partie 11 — tcpdump vers Wireshark&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Wireshark&lt;/strong&gt; est l'équivalent graphique de tcpdump. On peut capturer avec tcpdump sur une machine distante et visualiser en temps réel dans Wireshark :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# Capture distante via SSH, affichage local dans Wireshark&lt;/span&gt;
+ssh&lt;span class="w"&gt; &lt;/span&gt;root@machine-distante&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;tcpdump -c 20 -nn -w - not port 22&amp;#39;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;|&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;wireshark&lt;span class="w"&gt; &lt;/span&gt;-k&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Cette commande :&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Se connecte en SSH à la machine distante&lt;/li&gt;
+&lt;li&gt;Lance tcpdump qui écrit sur la sortie standard (&lt;code&gt;-w -&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;Exclut le trafic SSH lui-même (&lt;code&gt;not port 22&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;Pipe le résultat vers Wireshark qui l'affiche en temps réel (&lt;code&gt;-k -i -&lt;/code&gt;)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="workflow-recommande"&gt;Workflow recommandé&lt;/h3&gt;
+&lt;p&gt;Pour une analyse approfondie, il est souvent préférable de capturer d'abord, puis d'analyser :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# 1. Capturer sur le serveur&lt;/span&gt;
+tcpdump&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;eth0&lt;span class="w"&gt; &lt;/span&gt;-w&lt;span class="w"&gt; &lt;/span&gt;capture.pcap&lt;span class="w"&gt; &lt;/span&gt;-c&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;1000&lt;/span&gt;
+
+&lt;span class="c1"&gt;# 2. Transférer le fichier&lt;/span&gt;
+scp&lt;span class="w"&gt; &lt;/span&gt;serveur:/tmp/capture.pcap&lt;span class="w"&gt; &lt;/span&gt;.
+
+&lt;span class="c1"&gt;# 3. Ouvrir dans Wireshark&lt;/span&gt;
+wireshark&lt;span class="w"&gt; &lt;/span&gt;capture.pcap
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;hr&gt;
+&lt;h2 id="aide-memoire-cheat-sheet"&gt;Aide-mémoire (cheat sheet)&lt;/h2&gt;
+&lt;h3 id="capture-de-base"&gt;Capture de base&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Commande&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;tcpdump -D&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Lister les interfaces&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;tcpdump -i eth0&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Capturer sur eth0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;tcpdump -i eth0 -c 10&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Capturer 10 paquets&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;tcpdump -i eth0 -nn&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Sans résolution DNS/ports&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;tcpdump -i eth0 -q&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Mode rapide (moins de détails)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;tcpdump -i eth0 -v&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Mode verbeux&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;tcpdump -i eth0 -A&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Affichage ASCII&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;tcpdump -i eth0 -X&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Affichage hex + ASCII&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;tcpdump -i eth0 -e&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Afficher les en-têtes L2 (MAC)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;tcpdump -i eth0 -S&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Numéros de séquence absolus&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="filtres"&gt;Filtres&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Commande&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;tcpdump host 1.2.3.4&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Trafic vers/depuis un hôte&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;tcpdump src 1.2.3.4&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Trafic depuis une source&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;tcpdump dst 1.2.3.4&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Trafic vers une destination&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;tcpdump net 192.168.0.0/24&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Trafic d'un réseau&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;tcpdump port 80&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Trafic sur un port&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;tcpdump portrange 21-80&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Trafic sur une plage de ports&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;tcpdump icmp&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Trafic ICMP&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;tcpdump tcp&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Trafic TCP&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;tcpdump udp&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Trafic UDP&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;tcpdump -Q in&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Trafic entrant&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;tcpdump -Q out&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Trafic sortant&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="fichiers-et-timestamps"&gt;Fichiers et timestamps&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Commande&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;tcpdump -w fichier.pcap&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Écrire dans un fichier&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;tcpdump -r fichier.pcap&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Lire un fichier&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;tcpdump -s 96&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Snaplen de 96 octets&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;tcpdump -t&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Pas de timestamp&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;tcpdump -tttt&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Timestamp lisible (date + heure)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="drapeaux-tcp-et-http"&gt;Drapeaux TCP et HTTP&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Commande&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;tcpdump 'tcp[tcpflags] == tcp-syn'&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Paquets SYN&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;tcpdump 'tcp[tcpflags] == tcp-rst'&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Paquets RST&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;tcpdump 'tcp[tcpflags] == tcp-ack'&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Paquets ACK&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;tcpdump -s0 -A 'tcp[..] = 0x47455420'&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Requêtes GET&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;tcpdump -s0 -A 'tcp[..] = 0x504f5354'&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Requêtes POST&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;hr&gt;
+&lt;h2 id="conclusion"&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;tcpdump est un outil &lt;strong&gt;indispensable&lt;/strong&gt; pour tout administrateur réseau ou professionnel de la sécurité. Sa force réside dans :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Sa &lt;strong&gt;disponibilité&lt;/strong&gt; sur quasiment tous les systèmes Linux/Unix&lt;/li&gt;
+&lt;li&gt;Sa &lt;strong&gt;légèreté&lt;/strong&gt; (pas d'interface graphique nécessaire)&lt;/li&gt;
+&lt;li&gt;La &lt;strong&gt;puissance&lt;/strong&gt; de ses filtres BPF&lt;/li&gt;
+&lt;li&gt;Sa &lt;strong&gt;compatibilité&lt;/strong&gt; avec Wireshark via les fichiers &lt;code&gt;.pcap&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Pour aller plus loin :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;La &lt;strong&gt;page de manuel&lt;/strong&gt; : &lt;code&gt;man tcpdump&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;La documentation des &lt;strong&gt;filtres BPF&lt;/strong&gt; : &lt;code&gt;man pcap-filter&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Combinaison avec d'autres outils : &lt;code&gt;tshark&lt;/code&gt;, &lt;code&gt;ngrep&lt;/code&gt;, &lt;code&gt;tcpflow&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;</content><category term="tech"/><category term="securite"/><category term="reseau"/><category term="outils"/><category term="tech"/></entry><entry><title>La librairie regex Python : guide complet</title><link href="/le-module-regex-python-guide-complet.html" rel="alternate"/><published>2026-03-05T17:00:00+01:00</published><updated>2026-03-05T17:00:00+01:00</updated><author><name>Mikael Monjour</name></author><id>tag:None,2026-03-05:/le-module-regex-python-guide-complet.html</id><summary type="html">&lt;p&gt;La librairie regex (pip install regex) est une implémentation avancée et rétrocompatible avec le module standard re de Python. Ce guide couvre toutes ses fonctionnalités : matching flou, patterns récursifs, propriétés Unicode, ensembles imbriqués, lookbehind de longueur variable, et bien plus.&lt;/p&gt;</summary><content type="html">&lt;div class="toc"&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="#introduction"&gt;Introduction&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="#ancien-et-nouveau-comportement-version-0-et-version-1"&gt;Ancien et nouveau comportement (version 0 et version 1)&lt;/a&gt;&lt;ul&gt;
