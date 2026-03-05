@@ -1024,519 +1024,1068 @@ Capturing&lt;span class="w"&gt; &lt;/span&gt;on&lt;span class="w"&gt; &lt;/span&
 &lt;p&gt;Vous pouvez utiliser cette classe et vous en inspirer pour apprendre et aider à créer vos propres applications socket plus facilement et plus rapidement.&lt;/p&gt;
 &lt;p&gt;Félicitations pour être allé jusqu'au bout ! Vous êtes maintenant en bonne voie pour utiliser les sockets dans vos propres applications.&lt;/p&gt;
 &lt;script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"&gt;&lt;/script&gt;
-&lt;script&gt;mermaid.initialize({startOnLoad: true, theme: 'dark'});&lt;/script&gt;</content><category term="tech"/><category term="python"/><category term="reseau"/><category term="tech"/></entry><entry><title>Le module Regex Python : Guide Complet</title><link href="/le-module-regex-python-guide-complet.html" rel="alternate"/><published>2026-03-05T17:00:00+01:00</published><updated>2026-03-05T17:00:00+01:00</updated><author><name>Mikael Monjour</name></author><id>tag:None,2026-03-05:/le-module-regex-python-guide-complet.html</id><summary type="html">&lt;p&gt;Le module re de Python est un outil essentiel pour la manipulation de texte et la recherche de motifs. Ce guide couvre les bases du module re, les fonctions principales, et les cas d'utilisation courants.&lt;/p&gt;</summary><content type="html">&lt;h2 id="les-expressions-regulieres-cest-quoi"&gt;Les expressions régulières : c'est quoi ?&lt;/h2&gt;
-&lt;p&gt;Les expressions régulières (ou &lt;strong&gt;regex&lt;/strong&gt;) sont un langage de motifs utilisé pour rechercher, valider ou manipuler du texte. Elles permettent de décrire des modèles complexes en quelques caractères.&lt;/p&gt;
-&lt;p&gt;En Python, le module &lt;code&gt;re&lt;/code&gt; fournit toutes les fonctions nécessaires pour travailler avec les regex.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;re&lt;/span&gt;
+&lt;script&gt;mermaid.initialize({startOnLoad: true, theme: 'dark'});&lt;/script&gt;</content><category term="tech"/><category term="python"/><category term="reseau"/><category term="tech"/></entry><entry><title>La librairie regex Python : guide complet</title><link href="/le-module-regex-python-guide-complet.html" rel="alternate"/><published>2026-03-05T17:00:00+01:00</published><updated>2026-03-05T17:00:00+01:00</updated><author><name>Mikael Monjour</name></author><id>tag:None,2026-03-05:/le-module-regex-python-guide-complet.html</id><summary type="html">&lt;p&gt;La librairie regex (pip install regex) est une implémentation avancée et rétrocompatible avec le module standard re de Python. Ce guide couvre toutes ses fonctionnalités : matching flou, patterns récursifs, propriétés Unicode, ensembles imbriqués, lookbehind de longueur variable, et bien plus.&lt;/p&gt;</summary><content type="html">&lt;div class="toc"&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="#introduction"&gt;Introduction&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#ancien-et-nouveau-comportement-version-0-et-version-1"&gt;Ancien et nouveau comportement (version 0 et version 1)&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#comportement-version-0-ancien-compatible-re"&gt;Comportement version 0 (ancien, compatible re)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#comportement-version-1-nouveau-ameliore"&gt;Comportement version 1 (nouveau, amélioré)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#correspondances-insensibles-a-la-casse-en-unicode"&gt;Correspondances insensibles à la casse en Unicode&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#ensembles-imbriques-et-operations-de-set"&gt;Ensembles imbriqués et opérations de set&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#operateurs-de-set-version-1-uniquement"&gt;Opérateurs de set (version 1 uniquement)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#flags-drapeaux"&gt;Flags (drapeaux)&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#flags-scopes"&gt;Flags scopés&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#flags-globaux"&gt;Flags globaux&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#drapeaux-a-portee-reduite-scoped-flags"&gt;Drapeaux à portée réduite (scoped flags)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#groupes-de-capture-nommes"&gt;Groupes de capture nommés&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#regles-cles"&gt;Règles clés&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#syntaxes-supportees"&gt;Syntaxes supportées&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#reinitialisation-de-branche-branch-reset"&gt;Réinitialisation de branche (branch reset)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#multithreading"&gt;Multithreading&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#matching-posix-le-plus-long-le-plus-a-gauche"&gt;Matching POSIX (le plus long, le plus à gauche)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#matching-flou-fuzzy-matching"&gt;Matching flou (fuzzy matching)&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#les-trois-types-derreurs"&gt;Les trois types d'erreurs&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#limites-derreurs"&gt;Limites d'erreurs&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#couts-derreurs"&gt;Coûts d'erreurs&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#flags-pour-le-matching-flou"&gt;Flags pour le matching flou&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#attributs-fuzzy-de-lobjet-match"&gt;Attributs fuzzy de l'objet match&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#define-definir-des-sous-patterns-reutilisables"&gt;(?(DEFINE)...) : définir des sous-patterns réutilisables&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#prune-skip-et-fail"&gt;(*PRUNE), (*SKIP) et (*FAIL)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#k-garder-une-partie-du-match"&gt;\K : garder une partie du match&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#captures-capturesdict-et-groupdict"&gt;captures(), capturesdict() et groupdict()&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#noms-de-groupes-dupliques"&gt;Noms de groupes dupliqués&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#fullmatch"&gt;fullmatch()&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#subf-subfn-et-expandf"&gt;subf(), subfn() et expandf()&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#indice-de-capture-dans-expandf-et-subfsubfn"&gt;Indice de capture dans expandf et subf/subfn&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#detacher-la-chaine-recherchee-detach_string"&gt;Détacher la chaîne recherchée (detach_string)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#patterns-recursifs"&gt;Patterns récursifs&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#correspondances-partielles-partial-matches"&gt;Correspondances partielles (partial matches)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#lookaround-dans-les-motifs-conditionnels"&gt;Lookaround dans les motifs conditionnels&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#lookbehind-de-longueur-variable"&gt;Lookbehind de longueur variable&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#groupes-atomiques"&gt;Groupes atomiques&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#quantificateurs-possessifs"&gt;Quantificateurs possessifs&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#listes-nommees"&gt;Listes nommées&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#debut-et-fin-de-mot"&gt;Début et fin de mot&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#separateurs-de-ligne-unicode"&gt;Séparateurs de ligne Unicode&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#proprietes-unicode-scripts-et-blocs"&gt;Propriétés Unicode, scripts et blocs&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#caracteres-nommes-unicode"&gt;Caractères nommés Unicode&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#classes-de-caracteres-posix"&gt;Classes de caractères POSIX&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#ancre-de-recherche-g"&gt;Ancre de recherche (\G)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#recherche-inversee"&gt;Recherche inversée&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#correspondance-de-graphemes-unicode"&gt;Correspondance de graphèmes Unicode&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#limite-de-mot-unicode-par-defaut"&gt;Limite de mot Unicode par défaut&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#regexescape-ameliore"&gt;regex.escape() amélioré&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#captures-repetees-repeated-captures"&gt;Captures répétées (repeated captures)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#splititer"&gt;splititer()&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#indexation-dun-objet-match-subscripting"&gt;Indexation d'un objet match (subscripting)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#arguments-supplementaires"&gt;Arguments supplémentaires&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#flag-flags-pour-split-sub-et-subn"&gt;Flag flags pour split, sub et subn&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#arguments-pos-et-endpos-pour-sub-et-subn"&gt;Arguments pos et endpos pour sub et subn&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#argument-overlapped-pour-findall-et-finditer"&gt;Argument overlapped pour findall et finditer&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#timeout-python-3"&gt;Timeout (Python 3)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#resume-des-fonctionnalites-exclusives-a-regex"&gt;Résumé des fonctionnalités exclusives à regex&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#conclusion"&gt;Conclusion&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;h2 id="introduction"&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;La librairie &lt;strong&gt;&lt;code&gt;regex&lt;/code&gt;&lt;/strong&gt; (disponible via &lt;code&gt;pip install regex&lt;/code&gt;) est une implémentation avancée des expressions régulières pour Python, &lt;strong&gt;rétrocompatible&lt;/strong&gt; avec le module standard &lt;code&gt;re&lt;/code&gt;, mais offrant de nombreuses fonctionnalités supplémentaires.&lt;/p&gt;
+&lt;p&gt;Parmi les ajouts majeurs :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Le &lt;strong&gt;matching flou&lt;/strong&gt; (approximatif)&lt;/li&gt;
+&lt;li&gt;Les &lt;strong&gt;patterns récursifs&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Les &lt;strong&gt;propriétés Unicode&lt;/strong&gt; étendues (&lt;code&gt;\p{...}&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;Les &lt;strong&gt;ensembles imbriqués&lt;/strong&gt; et opérations de set&lt;/li&gt;
+&lt;li&gt;Le &lt;strong&gt;lookbehind de longueur variable&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Les &lt;strong&gt;groupes atomiques&lt;/strong&gt; et quantificateurs possessifs&lt;/li&gt;
+&lt;li&gt;Le matching &lt;strong&gt;POSIX&lt;/strong&gt; (le plus long, le plus à gauche)&lt;/li&gt;
+&lt;li&gt;Les &lt;strong&gt;listes nommées&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;La &lt;strong&gt;recherche inversée&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Les &lt;strong&gt;timeouts&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Et bien d'autres...&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# Installation&lt;/span&gt;
+&lt;span class="c1"&gt;# pip install regex&lt;/span&gt;
+
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;regex&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Utilisation identique à re&lt;/span&gt;
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;\w+&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Bonjour le monde&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;  &lt;span class="c1"&gt;# &amp;#39;Bonjour&amp;#39;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;h2 id="les-caracteres-speciaux-metacaracteres"&gt;Les caractères spéciaux (métacaractères)&lt;/h2&gt;
-&lt;p&gt;Voici les caractères qui ont une signification particulière dans les regex :&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="ancien-et-nouveau-comportement-version-0-et-version-1"&gt;Ancien et nouveau comportement (version 0 et version 1)&lt;/h2&gt;
+&lt;p&gt;Afin d'être compatible avec le module &lt;code&gt;re&lt;/code&gt;, le module &lt;code&gt;regex&lt;/code&gt; possède &lt;strong&gt;deux comportements&lt;/strong&gt; :&lt;/p&gt;
+&lt;h3 id="comportement-version-0-ancien-compatible-re"&gt;Comportement version 0 (ancien, compatible &lt;code&gt;re&lt;/code&gt;)&lt;/h3&gt;
+&lt;p&gt;Indiqué par le flag &lt;code&gt;VERSION0&lt;/code&gt; ou &lt;code&gt;V0&lt;/code&gt;, ou &lt;code&gt;(?V0)&lt;/code&gt; dans le pattern.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Les correspondances de largeur zéro ne sont pas gérées correctement (avant Python 3.7).&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;.split&lt;/code&gt; ne divisera pas une chaîne à une largeur égale à zéro.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;.sub&lt;/code&gt; avancera d'un caractère après une correspondance de largeur zéro.&lt;/li&gt;
+&lt;li&gt;Les flags en ligne s'appliquent à l'ensemble du pattern et ne peuvent pas être désactivés.&lt;/li&gt;
+&lt;li&gt;Seuls les ensembles simples sont supportés.&lt;/li&gt;
+&lt;li&gt;Les correspondances insensibles à la casse en Unicode utilisent une mise en forme simple des majuscules par défaut.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="comportement-version-1-nouveau-ameliore"&gt;Comportement version 1 (nouveau, amélioré)&lt;/h3&gt;
+&lt;p&gt;Indiqué par le flag &lt;code&gt;VERSION1&lt;/code&gt; ou &lt;code&gt;V1&lt;/code&gt;, ou &lt;code&gt;(?V1)&lt;/code&gt; dans le pattern.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Les correspondances de largeur zéro sont &lt;strong&gt;gérées correctement&lt;/strong&gt;.&lt;/li&gt;
+&lt;li&gt;Les drapeaux en ligne s'appliquent à la fin du groupe ou du motif et &lt;strong&gt;peuvent être désactivés&lt;/strong&gt;.&lt;/li&gt;
+&lt;li&gt;Les &lt;strong&gt;ensembles imbriqués&lt;/strong&gt; et les &lt;strong&gt;opérations de set&lt;/strong&gt; sont pris en charge.&lt;/li&gt;
+&lt;li&gt;Les correspondances insensibles à la casse en Unicode utilisent le &lt;strong&gt;pliage complet&lt;/strong&gt; (full case-folding) par défaut.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Si aucune version n'est spécifiée, le module utilisera &lt;code&gt;regex.DEFAULT_VERSION&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;regex&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Forcer la version 1&lt;/span&gt;
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;(?V1)[[a-z]--[aeiou]]&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;b&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;  &lt;span class="c1"&gt;# &amp;#39;b&amp;#39; (consonnes uniquement)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;hr&gt;
+&lt;h2 id="correspondances-insensibles-a-la-casse-en-unicode"&gt;Correspondances insensibles à la casse en Unicode&lt;/h2&gt;
+&lt;p&gt;Le module &lt;code&gt;regex&lt;/code&gt; prend en charge la conversion &lt;strong&gt;simple&lt;/strong&gt; et &lt;strong&gt;complète&lt;/strong&gt; (full case-folding) des majuscules et minuscules pour les correspondances insensibles à la casse en Unicode.&lt;/p&gt;
+&lt;p&gt;L'utilisation complète peut être activée à l'aide du flag &lt;code&gt;FULLCASE&lt;/code&gt; ou &lt;code&gt;F&lt;/code&gt;, ou &lt;code&gt;(?f)&lt;/code&gt; dans le pattern.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Note :&lt;/strong&gt; Ce flag affecte le fonctionnement du flag &lt;code&gt;IGNORECASE&lt;/code&gt; ; le flag &lt;code&gt;FULLCASE&lt;/code&gt; lui-même n'active pas la correspondance insensible à la casse.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Version 0 :&lt;/strong&gt; le flag &lt;code&gt;FULLCASE&lt;/code&gt; est &lt;strong&gt;désactivé&lt;/strong&gt; par défaut.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Version 1 :&lt;/strong&gt; le flag &lt;code&gt;FULLCASE&lt;/code&gt; est &lt;strong&gt;activé&lt;/strong&gt; par défaut.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;regex&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Le caractère allemand ß correspond à &amp;quot;SS&amp;quot; en full case-folding&lt;/span&gt;
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;(?fi)strasse&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;die Straße&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;  &lt;span class="c1"&gt;# &amp;#39;Straße&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;hr&gt;
+&lt;h2 id="ensembles-imbriques-et-operations-de-set"&gt;Ensembles imbriqués et opérations de set&lt;/h2&gt;
+&lt;p&gt;Il n'est pas possible de supporter à la fois des ensembles simples (comme dans &lt;code&gt;re&lt;/code&gt;) et des ensembles imbriqués en même temps, à cause d'une différence dans la signification d'un &lt;code&gt;[&lt;/code&gt; non échappé dans un set.&lt;/p&gt;
+&lt;p&gt;Par exemple, le pattern &lt;code&gt;[[a-z]--[aeiou]]&lt;/code&gt; est traité :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;En &lt;strong&gt;version 0&lt;/strong&gt; comme : un set contenant &lt;code&gt;[&lt;/code&gt; et les lettres &lt;code&gt;a-z&lt;/code&gt;, suivi du littéral &lt;code&gt;--&lt;/code&gt;, etc.&lt;/li&gt;
+&lt;li&gt;En &lt;strong&gt;version 1&lt;/strong&gt; comme : un set contenant les lettres &lt;code&gt;a-z&lt;/code&gt; &lt;strong&gt;en excluant&lt;/strong&gt; les lettres &lt;code&gt;a, e, i, o, u&lt;/code&gt; (c'est-à-dire les &lt;strong&gt;consonnes&lt;/strong&gt;).&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="operateurs-de-set-version-1-uniquement"&gt;Opérateurs de set (version 1 uniquement)&lt;/h3&gt;
+&lt;p&gt;Les opérateurs, par ordre de priorité croissant :&lt;/p&gt;
 &lt;table&gt;
 &lt;thead&gt;
 &lt;tr&gt;
-&lt;th&gt;Métacaractère&lt;/th&gt;
-&lt;th&gt;Description&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;code&gt;.&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;N'importe quel caractère (sauf &lt;code&gt;\n&lt;/code&gt;)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;code&gt;^&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;Début de chaîne&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;code&gt;$&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;Fin de chaîne&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;code&gt;*&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;0 ou plusieurs répétitions&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;code&gt;+&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;1 ou plusieurs répétitions&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;code&gt;?&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;0 ou 1 répétition&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;code&gt;{}&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;Nombre exact de répétitions&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;code&gt;[]&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;Ensemble de caractères&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;code&gt;\&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;Séquence spéciale ou échappement&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;code&gt;\|&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;Ou (alternance)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;code&gt;()&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;Groupe de capture&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;h2 id="les-sequences-speciales"&gt;Les séquences spéciales&lt;/h2&gt;
-&lt;p&gt;Les séquences spéciales commencent par &lt;code&gt;\&lt;/code&gt; et ont une signification prédéfinie :&lt;/p&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;Séquence&lt;/th&gt;
-&lt;th&gt;Description&lt;/th&gt;
+&lt;th&gt;Opérateur&lt;/th&gt;
+&lt;th&gt;Signification&lt;/th&gt;
 &lt;th&gt;Exemple&lt;/th&gt;
 &lt;/tr&gt;
 &lt;/thead&gt;
 &lt;tbody&gt;
 &lt;tr&gt;
-&lt;td&gt;&lt;code&gt;\d&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;Un chiffre [0-9]&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;\d+&lt;/code&gt; → "123"&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;\|\|&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Union&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;x\|\|y&lt;/code&gt; → « x ou y »&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;&lt;code&gt;\D&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;Tout sauf un chiffre&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;\D+&lt;/code&gt; → "abc"&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;~~&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Différence symétrique&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;x~~y&lt;/code&gt; → « x ou y, mais pas les deux »&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;&lt;code&gt;\w&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;Un caractère alphanumérique [a-zA-Z0-9_]&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;\w+&lt;/code&gt; → "hello_42"&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;&amp;amp;&amp;amp;&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Intersection&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;x&amp;amp;&amp;amp;y&lt;/code&gt; → « x et y »&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;&lt;code&gt;\W&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;Tout sauf un alphanumérique&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;\W+&lt;/code&gt; → "!@#"&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;code&gt;\s&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;Un espace blanc (espace, tab, newline)&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;\s+&lt;/code&gt; → " "&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;code&gt;\S&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;Tout sauf un espace blanc&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;\S+&lt;/code&gt; → "hello"&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;code&gt;\b&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;Frontière de mot&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;\bcat\b&lt;/code&gt; → "cat" dans "the cat sat"&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;code&gt;\B&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;Pas une frontière de mot&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;\Bcat\B&lt;/code&gt; → "cat" dans "concatenate"&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;--&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Différence&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;x--y&lt;/code&gt; → « x mais pas y »&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-&lt;h2 id="la-fonction-rematch"&gt;La fonction &lt;code&gt;re.match()&lt;/code&gt;&lt;/h2&gt;
-&lt;p&gt;&lt;code&gt;re.match()&lt;/code&gt; vérifie si le &lt;strong&gt;début&lt;/strong&gt; de la chaîne correspond au motif. Si oui, elle retourne un objet &lt;code&gt;Match&lt;/code&gt;. Sinon, elle retourne &lt;code&gt;None&lt;/code&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;re&lt;/span&gt;
+&lt;p&gt;L'union implicite (juxtaposition comme &lt;code&gt;[ab]&lt;/code&gt;) a la &lt;strong&gt;plus haute priorité&lt;/strong&gt;. Ainsi &lt;code&gt;[ab&amp;amp;&amp;amp;cd]&lt;/code&gt; équivaut à &lt;code&gt;[[a||b]&amp;amp;&amp;amp;[c||d]]&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;regex&lt;/span&gt;
 
-&lt;span class="n"&gt;pattern&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Hello&amp;quot;&lt;/span&gt;
-&lt;span class="n"&gt;text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Hello, World!&amp;quot;&lt;/span&gt;
+&lt;span class="c1"&gt;# Consonnes minuscules : lettres a-z MOINS les voyelles&lt;/span&gt;
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;findall&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;(?V1)[[a-z]--[aeiou]]&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;bonjour&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# [&amp;#39;b&amp;#39;, &amp;#39;n&amp;#39;, &amp;#39;j&amp;#39;, &amp;#39;r&amp;#39;]&lt;/span&gt;
 
-&lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;re&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;match&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pattern&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-
-&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-    &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;f&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Match trouvé : &lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# &amp;quot;Hello&amp;quot;&lt;/span&gt;
-    &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;f&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Position : &lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;start&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt; à &lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;end&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# 0 à 5&lt;/span&gt;
-&lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-    &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Pas de match&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="c1"&gt;# Intersection : caractères qui sont à la fois dans a-m ET dans des voyelles&lt;/span&gt;
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;findall&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;(?V1)[[a-m]&amp;amp;&amp;amp;[aeiou]]&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;abcdefghijklm&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# [&amp;#39;a&amp;#39;, &amp;#39;e&amp;#39;, &amp;#39;i&amp;#39;]&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;&lt;strong&gt;Attention :&lt;/strong&gt; &lt;code&gt;re.match()&lt;/code&gt; ne cherche qu'au début de la chaîne. Pour chercher partout, utilisez &lt;code&gt;re.search()&lt;/code&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# match() ne trouve rien ici car &amp;quot;World&amp;quot; n&amp;#39;est pas au début&lt;/span&gt;
-&lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;re&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;match&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;World&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Hello, World!&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# None&lt;/span&gt;
+&lt;hr&gt;
+&lt;h2 id="flags-drapeaux"&gt;Flags (drapeaux)&lt;/h2&gt;
+&lt;p&gt;Il existe deux types de flags : les &lt;strong&gt;scopés&lt;/strong&gt; et les &lt;strong&gt;globaux&lt;/strong&gt;.&lt;/p&gt;
+&lt;h3 id="flags-scopes"&gt;Flags scopés&lt;/h3&gt;
+&lt;p&gt;Ils ne s'appliquent qu'à &lt;strong&gt;une partie&lt;/strong&gt; du pattern et peuvent être &lt;strong&gt;activés ou désactivés&lt;/strong&gt; :&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;FULLCASE&lt;/code&gt;, &lt;code&gt;IGNORECASE&lt;/code&gt;, &lt;code&gt;MULTILINE&lt;/code&gt;, &lt;code&gt;DOTALL&lt;/code&gt;, &lt;code&gt;VERBOSE&lt;/code&gt;, &lt;code&gt;WORD&lt;/code&gt;&lt;/p&gt;
+&lt;h3 id="flags-globaux"&gt;Flags globaux&lt;/h3&gt;
+&lt;p&gt;Ils s'appliquent au &lt;strong&gt;pattern entier&lt;/strong&gt; et ne peuvent être &lt;strong&gt;qu'activés&lt;/strong&gt; :&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;ASCII&lt;/code&gt;, &lt;code&gt;BESTMATCH&lt;/code&gt;, &lt;code&gt;ENHANCEMATCH&lt;/code&gt;, &lt;code&gt;LOCALE&lt;/code&gt;, &lt;code&gt;POSIX&lt;/code&gt;, &lt;code&gt;REVERSE&lt;/code&gt;, &lt;code&gt;UNICODE&lt;/code&gt;, &lt;code&gt;VERSION0&lt;/code&gt;, &lt;code&gt;VERSION1&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Si ni &lt;code&gt;ASCII&lt;/code&gt;, &lt;code&gt;LOCALE&lt;/code&gt; ni &lt;code&gt;UNICODE&lt;/code&gt; n'est spécifié, la valeur par défaut sera &lt;code&gt;UNICODE&lt;/code&gt; pour une chaîne Unicode et &lt;code&gt;ASCII&lt;/code&gt; pour une chaîne de bytes.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;regex&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Flag scopé : IGNORECASE uniquement sur une partie&lt;/span&gt;
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;(?i:hello) world&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;HELLO world&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;  &lt;span class="c1"&gt;# &amp;#39;HELLO world&amp;#39;&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Le flag ENHANCEMATCH améliore l&amp;#39;ajustement du matching flou&lt;/span&gt;
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;(?e)(chien){e&amp;lt;=2}&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;le chine est beau&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;  &lt;span class="c1"&gt;# &amp;#39;chine&amp;#39;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;h2 id="la-fonction-research"&gt;La fonction &lt;code&gt;re.search()&lt;/code&gt;&lt;/h2&gt;
-&lt;p&gt;&lt;code&gt;re.search()&lt;/code&gt; parcourt &lt;strong&gt;toute&lt;/strong&gt; la chaîne et retourne le premier match trouvé.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;re&lt;/span&gt;
+&lt;hr&gt;
+&lt;h2 id="drapeaux-a-portee-reduite-scoped-flags"&gt;Drapeaux à portée réduite (scoped flags)&lt;/h2&gt;
+&lt;p&gt;Les drapeaux peuvent être limités à un &lt;strong&gt;sous-motif&lt;/strong&gt; uniquement. Ils peuvent être activés ou désactivés au sein du sous-motif, sans affecter le reste du pattern.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;regex&lt;/span&gt;
 
-&lt;span class="n"&gt;text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Mon numéro est 06-12-34-56-78&amp;quot;&lt;/span&gt;
-&lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;re&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;\d&lt;/span&gt;&lt;span class="si"&gt;{2}&lt;/span&gt;&lt;span class="s2"&gt;-\d&lt;/span&gt;&lt;span class="si"&gt;{2}&lt;/span&gt;&lt;span class="s2"&gt;-\d&lt;/span&gt;&lt;span class="si"&gt;{2}&lt;/span&gt;&lt;span class="s2"&gt;-\d&lt;/span&gt;&lt;span class="si"&gt;{2}&lt;/span&gt;&lt;span class="s2"&gt;-\d&lt;/span&gt;&lt;span class="si"&gt;{2}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="c1"&gt;# IGNORECASE uniquement dans le groupe&lt;/span&gt;
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;(?i:abc)def&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;ABCdef&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;  &lt;span class="c1"&gt;# &amp;#39;ABCdef&amp;#39;&lt;/span&gt;
 
-&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-    &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;f&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Numéro trouvé : &lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# &amp;quot;06-12-34-56-78&amp;quot;&lt;/span&gt;
-    &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;f&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Position : &lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;start&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt; à &lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;end&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="c1"&gt;# Désactiver dans un sous-groupe&lt;/span&gt;
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;(?i)abc(?-i:def)&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;ABCdef&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;  &lt;span class="c1"&gt;# &amp;#39;ABCdef&amp;#39;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;h3 id="difference-entre-match-et-search"&gt;Différence entre &lt;code&gt;match()&lt;/code&gt; et &lt;code&gt;search()&lt;/code&gt;&lt;/h3&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Le prix est 42 euros&amp;quot;&lt;/span&gt;
+&lt;hr&gt;
+&lt;h2 id="groupes-de-capture-nommes"&gt;Groupes de capture nommés&lt;/h2&gt;
+&lt;p&gt;Tous les groupes de capture ont un numéro de groupe, à partir de 1.&lt;/p&gt;
+&lt;h3 id="regles-cles"&gt;Règles clés&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Les groupes avec le &lt;strong&gt;même nom&lt;/strong&gt; auront le &lt;strong&gt;même numéro&lt;/strong&gt; de groupe.&lt;/li&gt;
+&lt;li&gt;Les groupes avec un &lt;strong&gt;nom différent&lt;/strong&gt; auront un &lt;strong&gt;numéro différent&lt;/strong&gt;.&lt;/li&gt;
+&lt;li&gt;Le même nom peut être utilisé par plus d'un groupe : les captures ultérieures &lt;strong&gt;écrasent&lt;/strong&gt; les captures antérieures. Toutes les captures restent disponibles via la méthode &lt;code&gt;captures()&lt;/code&gt; de l'objet match.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="syntaxes-supportees"&gt;Syntaxes supportées&lt;/h3&gt;
+&lt;p&gt;Les groupes peuvent être nommés avec &lt;code&gt;(?&amp;lt;nom&amp;gt;...)&lt;/code&gt; ainsi que la syntaxe classique &lt;code&gt;(?P&amp;lt;nom&amp;gt;...)&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Les groupes peuvent être référencés avec &lt;code&gt;\g&amp;lt;nom&amp;gt;&lt;/code&gt;, ce qui permet d'avoir &lt;strong&gt;plus de 99 groupes&lt;/strong&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;regex&lt;/span&gt;
 
-&lt;span class="c1"&gt;# match() cherche au début → pas de résultat pour un nombre&lt;/span&gt;
-&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;re&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;match&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;\d+&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;   &lt;span class="c1"&gt;# None&lt;/span&gt;
-
-&lt;span class="c1"&gt;# search() cherche partout → trouve &amp;quot;42&amp;quot;&lt;/span&gt;
-&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;re&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;\d+&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;  &lt;span class="c1"&gt;# &amp;lt;re.Match object; span=(13, 15), match=&amp;#39;42&amp;#39;&amp;gt;&lt;/span&gt;
+&lt;span class="c1"&gt;# Noms de groupes dupliqués&lt;/span&gt;
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;match&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;(?P&amp;lt;item&amp;gt;\w+) and (?P&amp;lt;item&amp;gt;\w+)&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;chat and chien&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;item&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;     &lt;span class="c1"&gt;# &amp;#39;chien&amp;#39; (dernière capture)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;captures&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;item&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;  &lt;span class="c1"&gt;# [&amp;#39;chat&amp;#39;, &amp;#39;chien&amp;#39;] (toutes les captures)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;h2 id="la-fonction-refindall"&gt;La fonction &lt;code&gt;re.findall()&lt;/code&gt;&lt;/h2&gt;
-&lt;p&gt;&lt;code&gt;re.findall()&lt;/code&gt; retourne &lt;strong&gt;tous&lt;/strong&gt; les matches sous forme de liste de chaînes.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;re&lt;/span&gt;
+&lt;hr&gt;
+&lt;h2 id="reinitialisation-de-branche-branch-reset"&gt;Réinitialisation de branche (branch reset)&lt;/h2&gt;
+&lt;p&gt;La syntaxe &lt;code&gt;(?|...|...)&lt;/code&gt; réutilise les numéros de groupe de capture dans toutes les alternatives.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;regex&lt;/span&gt;
 
-&lt;span class="n"&gt;text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Les prix sont : 10€, 25€, 42€ et 100€&amp;quot;&lt;/span&gt;
-&lt;span class="n"&gt;prices&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;re&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;findall&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;\d+&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;prices&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# [&amp;#39;10&amp;#39;, &amp;#39;25&amp;#39;, &amp;#39;42&amp;#39;, &amp;#39;100&amp;#39;]&lt;/span&gt;
+&lt;span class="c1"&gt;# Les deux alternatives partagent le groupe 1&lt;/span&gt;
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;match&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;(?|(premier)|(second))&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;second&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;  &lt;span class="c1"&gt;# &amp;#39;second&amp;#39;&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Avec noms différents : numéros différents&lt;/span&gt;
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;match&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;(?|(?P&amp;lt;a&amp;gt;premier)|(?P&amp;lt;b&amp;gt;second))&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;second&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;b&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;  &lt;span class="c1"&gt;# &amp;#39;second&amp;#39;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;Avec des groupes de capture, &lt;code&gt;findall()&lt;/code&gt; retourne les groupes :&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Contact : alice@mail.com et bob@company.org&amp;quot;&lt;/span&gt;
-&lt;span class="n"&gt;emails&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;re&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;findall&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;(\w+)@(\w+\.\w+)&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;emails&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# [(&amp;#39;alice&amp;#39;, &amp;#39;mail.com&amp;#39;), (&amp;#39;bob&amp;#39;, &amp;#39;company.org&amp;#39;)]&lt;/span&gt;
+&lt;p&gt;Dans la regex &lt;code&gt;(\s+)(?|(?P&amp;lt;foo&amp;gt;[A-Z]+)|(\w+) (?P&amp;lt;foo&amp;gt;[0-9]+))&lt;/code&gt; :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;(\s+)&lt;/code&gt; → groupe 1&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;(?P&amp;lt;foo&amp;gt;[A-Z]+)&lt;/code&gt; → groupe 2, aussi appelé « foo »&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;(\w+)&lt;/code&gt; → groupe 2 (à cause de la réinitialisation de branche)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;(?P&amp;lt;foo&amp;gt;[0-9]+)&lt;/code&gt; → groupe 2 (parce qu'il s'appelle « foo »)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="multithreading"&gt;Multithreading&lt;/h2&gt;
+&lt;p&gt;Le module &lt;code&gt;regex&lt;/code&gt; &lt;strong&gt;libère le GIL&lt;/strong&gt; lors de la mise en correspondance sur les instances de classes de chaînes intégrées (immuables), ce qui permet à d'autres threads Python de fonctionner simultanément.&lt;/p&gt;
+&lt;p&gt;Il est aussi possible de &lt;strong&gt;forcer&lt;/strong&gt; la libération du GIL en utilisant l'argument &lt;code&gt;concurrent=True&lt;/code&gt; :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;regex&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Recherche concurrente (libère le GIL)&lt;/span&gt;
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;\w+&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;texte&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;concurrent&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;h2 id="la-fonction-refinditer"&gt;La fonction &lt;code&gt;re.finditer()&lt;/code&gt;&lt;/h2&gt;
-&lt;p&gt;&lt;code&gt;re.finditer()&lt;/code&gt; retourne un &lt;strong&gt;itérateur&lt;/strong&gt; d'objets &lt;code&gt;Match&lt;/code&gt;, ce qui permet d'accéder aux positions et aux groupes de chaque match.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;re&lt;/span&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Attention :&lt;/strong&gt; le comportement n'est pas défini si la chaîne change pendant la recherche. N'utilisez &lt;code&gt;concurrent=True&lt;/code&gt; que si vous êtes sûr que la chaîne ne sera pas modifiée.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="matching-posix-le-plus-long-le-plus-a-gauche"&gt;Matching POSIX (le plus long, le plus à gauche)&lt;/h2&gt;
+&lt;p&gt;La norme POSIX pour les regex consiste à retourner le &lt;strong&gt;match le plus long le plus à gauche&lt;/strong&gt;. Ceci peut être activé avec le flag &lt;code&gt;POSIX&lt;/code&gt; ou &lt;code&gt;(?p)&lt;/code&gt; dans le pattern.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;regex&lt;/span&gt;
 
-&lt;span class="n"&gt;text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Dates : 2024-01-15, 2024-03-20, 2024-12-31&amp;quot;&lt;/span&gt;
-&lt;span class="n"&gt;pattern&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;(\d&lt;/span&gt;&lt;span class="si"&gt;{4}&lt;/span&gt;&lt;span class="s2"&gt;)-(\d&lt;/span&gt;&lt;span class="si"&gt;{2}&lt;/span&gt;&lt;span class="s2"&gt;)-(\d&lt;/span&gt;&lt;span class="si"&gt;{2}&lt;/span&gt;&lt;span class="s2"&gt;)&amp;quot;&lt;/span&gt;
+&lt;span class="c1"&gt;# Sans POSIX : premier match trouvé&lt;/span&gt;
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Mr|Mrs&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Mrs Smith&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;  &lt;span class="c1"&gt;# &amp;#39;Mr&amp;#39;&lt;/span&gt;
 
-&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;match&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;re&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;finditer&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pattern&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-    &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;f&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Date : &lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;match&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;f&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;  Année : &lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;match&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;f&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;  Mois  : &lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;match&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;f&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;  Jour  : &lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;match&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;f&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;  Position : &lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;match&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;start&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;-&lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;match&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;end&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="c1"&gt;# Avec POSIX : match le plus long&lt;/span&gt;
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;(?p)Mr|Mrs&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Mrs Smith&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;  &lt;span class="c1"&gt;# &amp;#39;Mrs&amp;#39;&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Autre exemple&lt;/span&gt;
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;(?p)a\w*?b|a\w*?c&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;axxbxxc&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;  &lt;span class="c1"&gt;# &amp;#39;axxbxxc&amp;#39; (le plus long match possible)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;h2 id="la-fonction-resub"&gt;La fonction &lt;code&gt;re.sub()&lt;/code&gt;&lt;/h2&gt;
-&lt;p&gt;&lt;code&gt;re.sub()&lt;/code&gt; remplace les occurrences du motif par une chaîne de remplacement.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;re&lt;/span&gt;
-
-&lt;span class="n"&gt;text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Mon numéro est 06 12 34 56 78&amp;quot;&lt;/span&gt;
-
-&lt;span class="c1"&gt;# Remplacer les espaces dans le numéro par des tirets&lt;/span&gt;
-&lt;span class="c1"&gt;# On cible spécifiquement les espaces entre chiffres&lt;/span&gt;
-&lt;span class="n"&gt;clean&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;re&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sub&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;(\d&lt;/span&gt;&lt;span class="si"&gt;{2}&lt;/span&gt;&lt;span class="s2"&gt;)\s&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;\1-&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;clean&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# &amp;quot;Mon numéro est 06-12-34-56-78&amp;quot;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;On peut aussi utiliser une &lt;strong&gt;fonction&lt;/strong&gt; comme remplacement :&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;double_number&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;match&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;int&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;match&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-
-&lt;span class="n"&gt;text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Les scores sont 10, 25 et 42&amp;quot;&lt;/span&gt;
-&lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;re&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sub&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;\d+&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;double_number&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# &amp;quot;Les scores sont 20, 50 et 84&amp;quot;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;h2 id="la-fonction-resplit"&gt;La fonction &lt;code&gt;re.split()&lt;/code&gt;&lt;/h2&gt;
-&lt;p&gt;&lt;code&gt;re.split()&lt;/code&gt; découpe une chaîne selon un motif regex.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;re&lt;/span&gt;
-
-&lt;span class="n"&gt;text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;pomme, orange;  banane   kiwi&amp;quot;&lt;/span&gt;
-
-&lt;span class="c1"&gt;# Découper par virgule, point-virgule ou espaces&lt;/span&gt;
-&lt;span class="n"&gt;fruits&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;re&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;split&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;[,;\s]+&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;fruits&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# [&amp;#39;pomme&amp;#39;, &amp;#39;orange&amp;#39;, &amp;#39;banane&amp;#39;, &amp;#39;kiwi&amp;#39;]&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;Avec &lt;code&gt;maxsplit&lt;/code&gt; pour limiter le nombre de découpes :&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;re&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;split&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;[,;\s]+&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;maxsplit&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# [&amp;#39;pomme&amp;#39;, &amp;#39;orange&amp;#39;, &amp;#39;banane   kiwi&amp;#39;]&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;h2 id="la-fonction-recompile"&gt;La fonction &lt;code&gt;re.compile()&lt;/code&gt;&lt;/h2&gt;
-&lt;p&gt;&lt;code&gt;re.compile()&lt;/code&gt; pré-compile un motif regex en objet &lt;code&gt;Pattern&lt;/code&gt;. Utile quand on réutilise le même motif plusieurs fois.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;re&lt;/span&gt;
-
-&lt;span class="c1"&gt;# Compiler le motif une seule fois&lt;/span&gt;
-&lt;span class="n"&gt;email_pattern&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;re&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;compile&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-
-&lt;span class="n"&gt;texts&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;
-    &lt;span class="s2"&gt;&amp;quot;Contact : alice@example.com&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-    &lt;span class="s2"&gt;&amp;quot;Pas d&amp;#39;email ici&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-    &lt;span class="s2"&gt;&amp;quot;Écrivez à bob.smith@company.co.uk&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="p"&gt;]&lt;/span&gt;
-
-&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;text&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;texts&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-    &lt;span class="n"&gt;match&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;email_pattern&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;match&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-        &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;f&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Email trouvé : &lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;match&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-        &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Pas d&amp;#39;email&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;h2 id="les-groupes-de-capture"&gt;Les groupes de capture&lt;/h2&gt;
-&lt;p&gt;Les parenthèses &lt;code&gt;()&lt;/code&gt; créent des &lt;strong&gt;groupes de capture&lt;/strong&gt; qui permettent d'extraire des parties spécifiques du match.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;re&lt;/span&gt;
-
-&lt;span class="n"&gt;text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;2024-03-15 10:30:45&amp;quot;&lt;/span&gt;
-&lt;span class="n"&gt;pattern&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;(\d&lt;/span&gt;&lt;span class="si"&gt;{4}&lt;/span&gt;&lt;span class="s2"&gt;)-(\d&lt;/span&gt;&lt;span class="si"&gt;{2}&lt;/span&gt;&lt;span class="s2"&gt;)-(\d&lt;/span&gt;&lt;span class="si"&gt;{2}&lt;/span&gt;&lt;span class="s2"&gt;) (\d&lt;/span&gt;&lt;span class="si"&gt;{2}&lt;/span&gt;&lt;span class="s2"&gt;):(\d&lt;/span&gt;&lt;span class="si"&gt;{2}&lt;/span&gt;&lt;span class="s2"&gt;):(\d&lt;/span&gt;&lt;span class="si"&gt;{2}&lt;/span&gt;&lt;span class="s2"&gt;)&amp;quot;&lt;/span&gt;
-
-&lt;span class="n"&gt;match&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;re&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pattern&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;match&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-    &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;f&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Match complet : &lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;match&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# &amp;quot;2024-03-15 10:30:45&amp;quot;&lt;/span&gt;
-    &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;f&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Année : &lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;match&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;           &lt;span class="c1"&gt;# &amp;quot;2024&amp;quot;&lt;/span&gt;
-    &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;f&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Mois : &lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;match&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;            &lt;span class="c1"&gt;# &amp;quot;03&amp;quot;&lt;/span&gt;
-    &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;f&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Jour : &lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;match&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;            &lt;span class="c1"&gt;# &amp;quot;15&amp;quot;&lt;/span&gt;
-    &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;f&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Heure : &lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;match&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;           &lt;span class="c1"&gt;# &amp;quot;10&amp;quot;&lt;/span&gt;
-    &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;f&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Minute : &lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;match&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;          &lt;span class="c1"&gt;# &amp;quot;30&amp;quot;&lt;/span&gt;
-    &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;f&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Seconde : &lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;match&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;6&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;         &lt;span class="c1"&gt;# &amp;quot;45&amp;quot;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;h3 id="groupes-nommes"&gt;Groupes nommés&lt;/h3&gt;
-&lt;p&gt;Les groupes nommés utilisent la syntaxe &lt;code&gt;(?P&amp;lt;nom&amp;gt;...)&lt;/code&gt; pour donner un nom au groupe :&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;re&lt;/span&gt;
-
-&lt;span class="n"&gt;log&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;2024-03-15 ERROR [auth] Login failed for user admin&amp;quot;&lt;/span&gt;
-&lt;span class="n"&gt;pattern&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;(?P&amp;lt;date&amp;gt;\d&lt;/span&gt;&lt;span class="si"&gt;{4}&lt;/span&gt;&lt;span class="s2"&gt;-\d&lt;/span&gt;&lt;span class="si"&gt;{2}&lt;/span&gt;&lt;span class="s2"&gt;-\d&lt;/span&gt;&lt;span class="si"&gt;{2}&lt;/span&gt;&lt;span class="s2"&gt;) (?P&amp;lt;level&amp;gt;\w+) \[(?P&amp;lt;module&amp;gt;\w+)\] (?P&amp;lt;message&amp;gt;.+)&amp;quot;&lt;/span&gt;
-
-&lt;span class="n"&gt;match&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;re&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pattern&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;log&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;match&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-    &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;f&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Date : &lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;match&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;date&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;       &lt;span class="c1"&gt;# &amp;quot;2024-03-15&amp;quot;&lt;/span&gt;
-    &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;f&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Niveau : &lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;match&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;level&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;     &lt;span class="c1"&gt;# &amp;quot;ERROR&amp;quot;&lt;/span&gt;
-    &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;f&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Module : &lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;match&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;module&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;    &lt;span class="c1"&gt;# &amp;quot;auth&amp;quot;&lt;/span&gt;
-    &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;f&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Message : &lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;match&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;message&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# &amp;quot;Login failed for user admin&amp;quot;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;h3 id="groupes-non-capturants"&gt;Groupes non capturants&lt;/h3&gt;
-&lt;p&gt;&lt;code&gt;(?:...)&lt;/code&gt; crée un groupe sans le capturer (utile pour le regroupement logique) :&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;re&lt;/span&gt;
-
-&lt;span class="c1"&gt;# On veut matcher &amp;quot;http&amp;quot; ou &amp;quot;https&amp;quot; sans capturer le &amp;quot;s&amp;quot; optionnel&lt;/span&gt;
-&lt;span class="n"&gt;urls&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;http://example.com et https://secure.com&amp;quot;&lt;/span&gt;
-&lt;span class="n"&gt;pattern&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;(?:https?://\S+)&amp;quot;&lt;/span&gt;
-
-&lt;span class="n"&gt;matches&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;re&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;findall&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pattern&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;urls&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;matches&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# [&amp;#39;http://example.com&amp;#39;, &amp;#39;https://secure.com&amp;#39;]&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;h2 id="les-drapeaux-flags"&gt;Les drapeaux (flags)&lt;/h2&gt;
-&lt;p&gt;Les drapeaux modifient le comportement de la regex :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Note :&lt;/strong&gt; le matching POSIX prend plus de temps car, même après avoir trouvé une correspondance, il continue à chercher s'il en existe une plus longue à la même position.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="matching-flou-fuzzy-matching"&gt;Matching flou (fuzzy matching)&lt;/h2&gt;
+&lt;p&gt;Le &lt;code&gt;regex&lt;/code&gt; tente généralement d'obtenir une correspondance exacte, mais parfois un résultat &lt;strong&gt;approximatif&lt;/strong&gt; (« fuzzy ») est nécessaire, pour les cas où le texte recherché peut contenir des erreurs.&lt;/p&gt;
+&lt;h3 id="les-trois-types-derreurs"&gt;Les trois types d'erreurs&lt;/h3&gt;
 &lt;table&gt;
 &lt;thead&gt;
 &lt;tr&gt;
-&lt;th&gt;Drapeau&lt;/th&gt;
-&lt;th&gt;Version courte&lt;/th&gt;
+&lt;th&gt;Type&lt;/th&gt;
+&lt;th&gt;Indicateur&lt;/th&gt;
 &lt;th&gt;Description&lt;/th&gt;
 &lt;/tr&gt;
 &lt;/thead&gt;
 &lt;tbody&gt;
 &lt;tr&gt;
-&lt;td&gt;&lt;code&gt;re.IGNORECASE&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;re.I&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;Ignore la casse&lt;/td&gt;
+&lt;td&gt;Insertion&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;i&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Un caractère en trop dans le texte&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;&lt;code&gt;re.MULTILINE&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;re.M&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;^&lt;/code&gt; et &lt;code&gt;$&lt;/code&gt; matchent début/fin de chaque ligne&lt;/td&gt;
+&lt;td&gt;Suppression&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;d&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Un caractère manquant dans le texte&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;&lt;code&gt;re.DOTALL&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;re.S&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;.&lt;/code&gt; matche aussi &lt;code&gt;\n&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Substitution&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;s&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Un caractère remplacé par un autre&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;&lt;code&gt;re.VERBOSE&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;re.X&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;Permet les commentaires dans la regex&lt;/td&gt;
+&lt;td&gt;Toute erreur&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;e&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;N'importe quel type d'erreur&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;re&lt;/span&gt;
+&lt;p&gt;Le flou est spécifié entre &lt;code&gt;{&lt;/code&gt; et &lt;code&gt;}&lt;/code&gt; après l'élément :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;regex&lt;/span&gt;
 
-&lt;span class="c1"&gt;# IGNORECASE : chercher sans distinction majuscule/minuscule&lt;/span&gt;
-&lt;span class="n"&gt;text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Python est génial. PYTHON est puissant.&amp;quot;&lt;/span&gt;
-&lt;span class="n"&gt;matches&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;re&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;findall&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;python&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;re&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;IGNORECASE&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;matches&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# [&amp;#39;Python&amp;#39;, &amp;#39;PYTHON&amp;#39;]&lt;/span&gt;
+&lt;span class="c1"&gt;# Correspondance exacte&lt;/span&gt;
+&lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;(foo)&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;foo&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
-&lt;span class="c1"&gt;# VERBOSE : écrire une regex lisible avec des commentaires&lt;/span&gt;
-&lt;span class="n"&gt;email_pattern&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;re&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;compile&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
-&lt;span class="s2"&gt;    [a-zA-Z0-9._%+-]+    # Nom d&amp;#39;utilisateur&lt;/span&gt;
-&lt;span class="s2"&gt;    @                     # Arobase&lt;/span&gt;
-&lt;span class="s2"&gt;    [a-zA-Z0-9.-]+        # Nom de domaine&lt;/span&gt;
-&lt;span class="s2"&gt;    \.                    # Point&lt;/span&gt;
-&lt;span class="s2"&gt;    [a-zA-Z]{2,}          # Extension (com, org, fr...)&lt;/span&gt;
-&lt;span class="s2"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;re&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;VERBOSE&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="c1"&gt;# Avec insertions autorisées&lt;/span&gt;
+&lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;(foo)&lt;/span&gt;&lt;span class="si"&gt;{i}&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;floo&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
-&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;email_pattern&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;test@example.com&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;  &lt;span class="c1"&gt;# &amp;quot;test@example.com&amp;quot;&lt;/span&gt;
+&lt;span class="c1"&gt;# Avec suppressions autorisées&lt;/span&gt;
+&lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;(foo)&lt;/span&gt;&lt;span class="si"&gt;{d}&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;fo&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
-&lt;span class="c1"&gt;# Combiner plusieurs drapeaux avec |&lt;/span&gt;
-&lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;re&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;findall&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;^hello&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Hello&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s2"&gt;hello&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s2"&gt;HELLO&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;re&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;IGNORECASE&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;re&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;MULTILINE&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# [&amp;#39;Hello&amp;#39;, &amp;#39;hello&amp;#39;, &amp;#39;HELLO&amp;#39;]&lt;/span&gt;
+&lt;span class="c1"&gt;# Avec substitutions autorisées&lt;/span&gt;
+&lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;(foo)&lt;/span&gt;&lt;span class="si"&gt;{s}&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;fao&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Avec tout type d&amp;#39;erreur autorisé&lt;/span&gt;
+&lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;(foo)&lt;/span&gt;&lt;span class="si"&gt;{e}&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;fax&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;h2 id="les-assertions-lookahead-et-lookbehind"&gt;Les assertions (lookahead et lookbehind)&lt;/h2&gt;
-&lt;p&gt;Les assertions vérifient une condition sans consommer de caractères.&lt;/p&gt;
-&lt;h3 id="lookahead-positif"&gt;Lookahead positif &lt;code&gt;(?=...)&lt;/code&gt;&lt;/h3&gt;
-&lt;p&gt;Vérifie que le motif est &lt;strong&gt;suivi&lt;/strong&gt; par quelque chose :&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;re&lt;/span&gt;
+&lt;h3 id="limites-derreurs"&gt;Limites d'erreurs&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# Au maximum 3 suppressions, aucun autre type&lt;/span&gt;
+&lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;(mot){d&amp;lt;=3}&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;texte&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
-&lt;span class="c1"&gt;# Trouver les montants suivis de &amp;quot;€&amp;quot;&lt;/span&gt;
-&lt;span class="n"&gt;text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Prix : 42€, 100$, 25€&amp;quot;&lt;/span&gt;
-&lt;span class="n"&gt;matches&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;re&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;findall&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;\d+(?=€)&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;matches&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# [&amp;#39;42&amp;#39;, &amp;#39;25&amp;#39;]&lt;/span&gt;
+&lt;span class="c1"&gt;# Au maximum 1 insertion et 2 substitutions, aucune suppression&lt;/span&gt;
+&lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;(mot){i&amp;lt;=1,s&amp;lt;=2}&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;texte&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Au moins 1 et au plus 3 erreurs&lt;/span&gt;
+&lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;(mot){1&amp;lt;=e&amp;lt;=3}&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;texte&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Combinaison avec maximum total&lt;/span&gt;
+&lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;(mot){i&amp;lt;=2,d&amp;lt;=2,e&amp;lt;=3}&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;texte&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;h3 id="lookahead-negatif"&gt;Lookahead négatif &lt;code&gt;(?!...)&lt;/code&gt;&lt;/h3&gt;
-&lt;p&gt;Vérifie que le motif n'est &lt;strong&gt;pas suivi&lt;/strong&gt; par quelque chose :&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# Trouver les nombres qui ne sont PAS suivis de &amp;quot;€&amp;quot;&lt;/span&gt;
-&lt;span class="n"&gt;matches&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;re&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;findall&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;\d+(?!€)&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;matches&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# [&amp;#39;100&amp;#39;]&lt;/span&gt;
+&lt;h3 id="couts-derreurs"&gt;Coûts d'erreurs&lt;/h3&gt;
+&lt;p&gt;Il est possible d'attribuer un &lt;strong&gt;coût&lt;/strong&gt; à chaque type d'erreur et de définir un coût total maximum :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# Chaque insertion coûte 2, chaque suppression coûte 2,&lt;/span&gt;
+&lt;span class="c1"&gt;# chaque substitution coûte 1, coût total max 4&lt;/span&gt;
+&lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;(mot){2i+2d+1s&amp;lt;=4}&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;texte&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Combinaison de limites et de coûts&lt;/span&gt;
+&lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;(mot){i&amp;lt;=1,d&amp;lt;=1,s&amp;lt;=1,2i+2d+1s&amp;lt;=4}&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;texte&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;h3 id="lookbehind-positif"&gt;Lookbehind positif &lt;code&gt;(?&amp;lt;=...)&lt;/code&gt;&lt;/h3&gt;
-&lt;p&gt;Vérifie que le motif est &lt;strong&gt;précédé&lt;/strong&gt; par quelque chose :&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# Trouver les montants précédés de &amp;quot;Prix : &amp;quot;&lt;/span&gt;
-&lt;span class="n"&gt;text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Prix : 42, Remise : 10&amp;quot;&lt;/span&gt;
-&lt;span class="n"&gt;matches&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;re&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;findall&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;(?&amp;lt;=Prix : )\d+&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;matches&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# [&amp;#39;42&amp;#39;]&lt;/span&gt;
+&lt;h3 id="flags-pour-le-matching-flou"&gt;Flags pour le matching flou&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;ENHANCEMATCH&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;(?e)&lt;/code&gt;) : tente d'&lt;strong&gt;améliorer l'ajustement&lt;/strong&gt; du match trouvé (réduire le nombre d'erreurs).&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;BESTMATCH&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;(?b)&lt;/code&gt;) : recherche le &lt;strong&gt;meilleur match&lt;/strong&gt; au lieu du prochain match.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;regex&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Sans amélioration : premier match flou trouvé&lt;/span&gt;
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;(dog)&lt;/span&gt;&lt;span class="si"&gt;{e}&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;cat and dog&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;  &lt;span class="c1"&gt;# &amp;#39;cat&amp;#39; (3 erreurs, nombre illimité autorisé)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Avec limite d&amp;#39;erreurs&lt;/span&gt;
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;(dog){e&amp;lt;=1}&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;cat and dog&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;  &lt;span class="c1"&gt;# &amp;#39; dog&amp;#39; (1 erreur, avec espace en tête)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Avec ENHANCEMATCH : améliore l&amp;#39;ajustement&lt;/span&gt;
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;(?e)(dog){e&amp;lt;=1}&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;cat and dog&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;  &lt;span class="c1"&gt;# &amp;#39;dog&amp;#39; (sans espace, meilleur ajustement)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;h3 id="lookbehind-negatif"&gt;Lookbehind négatif &lt;code&gt;(?&amp;lt;!...)&lt;/code&gt;&lt;/h3&gt;
-&lt;p&gt;Vérifie que le motif n'est &lt;strong&gt;pas précédé&lt;/strong&gt; par quelque chose :&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# Trouver les nombres non précédés de &amp;quot;Prix : &amp;quot;&lt;/span&gt;
-&lt;span class="n"&gt;matches&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;re&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;findall&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;(?&amp;lt;!Prix : )\d+&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;matches&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# [&amp;#39;10&amp;#39;]&lt;/span&gt;
+&lt;h3 id="attributs-fuzzy-de-lobjet-match"&gt;Attributs fuzzy de l'objet match&lt;/h3&gt;
+&lt;p&gt;L'objet match possède deux attributs spéciaux :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;fuzzy_counts&lt;/code&gt;&lt;/strong&gt; : tuple &lt;code&gt;(substitutions, insertions, suppressions)&lt;/code&gt; donnant le nombre total de chaque type d'erreur.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;fuzzy_changes&lt;/code&gt;&lt;/strong&gt; : tuple de tuples donnant les &lt;strong&gt;positions&lt;/strong&gt; des substitutions, insertions et suppressions.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;regex&lt;/span&gt;
+
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;(?:magnifique){e&amp;lt;=3}&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;le manigfique&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fuzzy_counts&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;   &lt;span class="c1"&gt;# (1, 0, 0) par exemple&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fuzzy_changes&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# positions des erreurs&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;h2 id="quantificateurs-gourmands-et-paresseux"&gt;Quantificateurs gourmands et paresseux&lt;/h2&gt;
-&lt;p&gt;Par défaut, les quantificateurs (&lt;code&gt;*&lt;/code&gt;, &lt;code&gt;+&lt;/code&gt;, &lt;code&gt;?&lt;/code&gt;) sont &lt;strong&gt;gourmands&lt;/strong&gt; : ils matchent le plus de caractères possible.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;re&lt;/span&gt;
+&lt;hr&gt;
+&lt;h2 id="define-definir-des-sous-patterns-reutilisables"&gt;&lt;code&gt;(?(DEFINE)...)&lt;/code&gt; : définir des sous-patterns réutilisables&lt;/h2&gt;
+&lt;p&gt;Si il n'y a pas de groupe appelé &lt;code&gt;DEFINE&lt;/code&gt;, alors le contenu sera ignoré lors du matching, mais toutes les définitions de groupes qui s'y trouvent seront disponibles pour référence.&lt;/p&gt;
+&lt;p&gt;C'est très utile pour &lt;strong&gt;factoriser&lt;/strong&gt; des sous-motifs complexes utilisés à plusieurs endroits :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;regex&lt;/span&gt;
 
-&lt;span class="n"&gt;html&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;&amp;lt;b&amp;gt;Gras&amp;lt;/b&amp;gt; et &amp;lt;i&amp;gt;Italique&amp;lt;/i&amp;gt;&amp;quot;&lt;/span&gt;
+&lt;span class="c1"&gt;# Définir un sous-pattern pour les montants en dollars&lt;/span&gt;
+&lt;span class="n"&gt;pattern&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;#39;&amp;#39;(?x)&lt;/span&gt;
+&lt;span class="s1"&gt;    (?(DEFINE)&lt;/span&gt;
+&lt;span class="s1"&gt;        (?P&amp;lt;montant&amp;gt;\$\d+(?:\.\d&lt;/span&gt;&lt;span class="si"&gt;{2}&lt;/span&gt;&lt;span class="s1"&gt;)?)&lt;/span&gt;
+&lt;span class="s1"&gt;    )&lt;/span&gt;
+&lt;span class="s1"&gt;    Total:\s*(?P&amp;gt;montant)&lt;/span&gt;
+&lt;span class="s1"&gt;&amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
 
-&lt;span class="c1"&gt;# Gourmand : matche tout entre le premier &amp;lt; et le dernier &amp;gt;&lt;/span&gt;
-&lt;span class="n"&gt;greedy&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;re&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;findall&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&amp;lt;.+&amp;gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;html&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;greedy&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# [&amp;#39;&amp;lt;b&amp;gt;Gras&amp;lt;/b&amp;gt; et &amp;lt;i&amp;gt;Italique&amp;lt;/i&amp;gt;&amp;#39;]&lt;/span&gt;
-
-&lt;span class="c1"&gt;# Paresseux (ajouter ?) : matche le minimum&lt;/span&gt;
-&lt;span class="n"&gt;lazy&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;re&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;findall&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&amp;lt;.+?&amp;gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;html&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;lazy&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# [&amp;#39;&amp;lt;b&amp;gt;&amp;#39;, &amp;#39;&amp;lt;/b&amp;gt;&amp;#39;, &amp;#39;&amp;lt;i&amp;gt;&amp;#39;, &amp;#39;&amp;lt;/i&amp;gt;&amp;#39;]&lt;/span&gt;
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pattern&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Total: $42.50&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;  &lt;span class="c1"&gt;# &amp;#39;Total: $42.50&amp;#39;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;h2 id="cas-dutilisation-courants"&gt;Cas d'utilisation courants&lt;/h2&gt;
-&lt;h3 id="valider-un-email"&gt;Valider un email&lt;/h3&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;re&lt;/span&gt;
+&lt;hr&gt;
+&lt;h2 id="prune-skip-et-fail"&gt;&lt;code&gt;(*PRUNE)&lt;/code&gt;, &lt;code&gt;(*SKIP)&lt;/code&gt; et &lt;code&gt;(*FAIL)&lt;/code&gt;&lt;/h2&gt;
+&lt;p&gt;Trois verbes de contrôle du backtracking :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;(*PRUNE)&lt;/code&gt;&lt;/strong&gt; : supprime les informations de retour en arrière jusqu'à ce point.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;(*SKIP)&lt;/code&gt;&lt;/strong&gt; : comme &lt;code&gt;(*PRUNE)&lt;/code&gt;, mais définit aussi &lt;strong&gt;où&lt;/strong&gt; dans le texte la prochaine tentative de correspondance commencera.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;(*FAIL)&lt;/code&gt;&lt;/strong&gt; (ou &lt;code&gt;(*F)&lt;/code&gt;) : provoque un retour en arrière &lt;strong&gt;immédiat&lt;/strong&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Lorsqu'ils sont utilisés dans un groupe atomique ou dans un lookaround, ces verbes n'affectent pas le pattern environnant.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="k-garder-une-partie-du-match"&gt;&lt;code&gt;\K&lt;/code&gt; : garder une partie du match&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;\K&lt;/code&gt; garde la partie du match entier &lt;strong&gt;après&lt;/strong&gt; la position où &lt;code&gt;\K&lt;/code&gt; s'est produit ; la partie avant est défaussée. Cela n'affecte &lt;strong&gt;pas&lt;/strong&gt; le retour des groupes de capture.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;regex&lt;/span&gt;
 
-&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;is_valid_email&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;email&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-    &lt;span class="n"&gt;pattern&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$&amp;quot;&lt;/span&gt;
-    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nb"&gt;bool&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;re&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;match&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pattern&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;email&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="c1"&gt;# Trouver le mot après &amp;quot;foo &amp;quot; sans l&amp;#39;inclure dans le match&lt;/span&gt;
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;foo \K\w+&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;foo bar&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;  &lt;span class="c1"&gt;# &amp;#39;bar&amp;#39;&lt;/span&gt;
 
-&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;is_valid_email&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;user@example.com&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;    &lt;span class="c1"&gt;# True&lt;/span&gt;
-&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;is_valid_email&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;invalid@.com&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;         &lt;span class="c1"&gt;# False&lt;/span&gt;
-&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;is_valid_email&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;no-at-sign.com&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;       &lt;span class="c1"&gt;# False&lt;/span&gt;
+&lt;span class="c1"&gt;# Remplacer uniquement ce qui suit \K&lt;/span&gt;
+&lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sub&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;foo \K\w+&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;baz&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;foo bar&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# &amp;#39;foo baz&amp;#39;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;h3 id="extraire-des-urls"&gt;Extraire des URLs&lt;/h3&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;re&lt;/span&gt;
+&lt;hr&gt;
+&lt;h2 id="captures-capturesdict-et-groupdict"&gt;&lt;code&gt;captures()&lt;/code&gt;, &lt;code&gt;capturesdict()&lt;/code&gt; et &lt;code&gt;groupdict()&lt;/code&gt;&lt;/h2&gt;
+&lt;p&gt;L'objet match dispose de méthodes supplémentaires pour accéder à &lt;strong&gt;toutes les captures&lt;/strong&gt; d'un groupe répété :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;groupdict()&lt;/code&gt;&lt;/strong&gt; : retourne un dictionnaire des groupes nommés avec la &lt;strong&gt;dernière&lt;/strong&gt; capture.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;captures(group)&lt;/code&gt;&lt;/strong&gt; : retourne une &lt;strong&gt;liste&lt;/strong&gt; de toutes les captures d'un groupe.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;capturesdict()&lt;/code&gt;&lt;/strong&gt; : retourne un dictionnaire des groupes nommés avec la &lt;strong&gt;liste complète&lt;/strong&gt; de toutes les captures.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;regex&lt;/span&gt;
 
-&lt;span class="n"&gt;text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
-&lt;span class="s2"&gt;Visitez https://www.example.com ou http://blog.test.org/page?id=42&lt;/span&gt;
-&lt;span class="s2"&gt;pour plus d&amp;#39;informations.&lt;/span&gt;
-&lt;span class="s2"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;match&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;(?P&amp;lt;mot&amp;gt;\w+) (?P&amp;lt;mot&amp;gt;\w+) (?P&amp;lt;mot&amp;gt;\w+)&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;un deux trois&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
-&lt;span class="n"&gt;urls&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;re&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;findall&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;https?://[^\s]+&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;urls&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# [&amp;#39;https://www.example.com&amp;#39;, &amp;#39;http://blog.test.org/page?id=42&amp;#39;]&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;mot&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;        &lt;span class="c1"&gt;# &amp;#39;trois&amp;#39; (dernière capture)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;captures&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;mot&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;     &lt;span class="c1"&gt;# [&amp;#39;un&amp;#39;, &amp;#39;deux&amp;#39;, &amp;#39;trois&amp;#39;]&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;capturesdict&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;      &lt;span class="c1"&gt;# {&amp;#39;mot&amp;#39;: [&amp;#39;un&amp;#39;, &amp;#39;deux&amp;#39;, &amp;#39;trois&amp;#39;]}&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;groupdict&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;         &lt;span class="c1"&gt;# {&amp;#39;mot&amp;#39;: &amp;#39;trois&amp;#39;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;h3 id="nettoyer-du-texte"&gt;Nettoyer du texte&lt;/h3&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;re&lt;/span&gt;
+&lt;hr&gt;
+&lt;h2 id="noms-de-groupes-dupliques"&gt;Noms de groupes dupliqués&lt;/h2&gt;
+&lt;p&gt;Les noms de groupes peuvent être &lt;strong&gt;dupliqués&lt;/strong&gt; dans le pattern. Les captures ultérieures écrasent les précédentes, mais toutes restent accessibles via &lt;code&gt;captures()&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;regex&lt;/span&gt;
 
-&lt;span class="n"&gt;text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;  Trop   d&amp;#39;espaces    partout  &amp;quot;&lt;/span&gt;
-
-&lt;span class="c1"&gt;# Remplacer les espaces multiples par un seul espace&lt;/span&gt;
-&lt;span class="n"&gt;clean&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;re&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sub&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;\s+&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot; &amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;strip&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;clean&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# &amp;quot;Trop d&amp;#39;espaces partout&amp;quot;&lt;/span&gt;
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;match&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;(?P&amp;lt;item&amp;gt;\w+) et (?P&amp;lt;item&amp;gt;\w+)&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;pain et beurre&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;item&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;      &lt;span class="c1"&gt;# &amp;#39;beurre&amp;#39;&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;captures&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;item&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;   &lt;span class="c1"&gt;# [&amp;#39;pain&amp;#39;, &amp;#39;beurre&amp;#39;]&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;h3 id="parser-des-logs"&gt;Parser des logs&lt;/h3&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;re&lt;/span&gt;
+&lt;hr&gt;
+&lt;h2 id="fullmatch"&gt;&lt;code&gt;fullmatch()&lt;/code&gt;&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;fullmatch&lt;/code&gt; se comporte comme &lt;code&gt;match&lt;/code&gt;, sauf qu'il doit correspondre à &lt;strong&gt;toute la chaîne&lt;/strong&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;regex&lt;/span&gt;
 
-&lt;span class="n"&gt;logs&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
-&lt;span class="s2"&gt;2024-03-15 10:30:45 ERROR [database] Connection timeout after 30s&lt;/span&gt;
-&lt;span class="s2"&gt;2024-03-15 10:31:02 INFO [api] Request processed in 150ms&lt;/span&gt;
-&lt;span class="s2"&gt;2024-03-15 10:31:15 WARNING [auth] Failed login attempt from 192.168.1.42&lt;/span&gt;
-&lt;span class="s2"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
-
-&lt;span class="n"&gt;pattern&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;(\d&lt;/span&gt;&lt;span class="si"&gt;{4}&lt;/span&gt;&lt;span class="s2"&gt;-\d&lt;/span&gt;&lt;span class="si"&gt;{2}&lt;/span&gt;&lt;span class="s2"&gt;-\d&lt;/span&gt;&lt;span class="si"&gt;{2}&lt;/span&gt;&lt;span class="s2"&gt; \d&lt;/span&gt;&lt;span class="si"&gt;{2}&lt;/span&gt;&lt;span class="s2"&gt;:\d&lt;/span&gt;&lt;span class="si"&gt;{2}&lt;/span&gt;&lt;span class="s2"&gt;:\d&lt;/span&gt;&lt;span class="si"&gt;{2}&lt;/span&gt;&lt;span class="s2"&gt;) (\w+) \[(\w+)\] (.+)&amp;quot;&lt;/span&gt;
-
-&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;match&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;re&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;finditer&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pattern&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;logs&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-    &lt;span class="n"&gt;timestamp&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;level&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;module&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;message&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;match&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;groups&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;level&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;ERROR&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;WARNING&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-        &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;f&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;⚠️ [&lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;level&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;] &lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;timestamp&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt; - &lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;module&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;: &lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;message&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fullmatch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;\d&lt;/span&gt;&lt;span class="si"&gt;{4}&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;1234&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;    &lt;span class="c1"&gt;# Match&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fullmatch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;\d&lt;/span&gt;&lt;span class="si"&gt;{4}&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;12345&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;   &lt;span class="c1"&gt;# None&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fullmatch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;\d&lt;/span&gt;&lt;span class="si"&gt;{4}&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;123&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;     &lt;span class="c1"&gt;# None&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;h2 id="comparaison-rapide-des-fonctions"&gt;Comparaison rapide des fonctions&lt;/h2&gt;
+&lt;hr&gt;
+&lt;h2 id="subf-subfn-et-expandf"&gt;&lt;code&gt;subf()&lt;/code&gt;, &lt;code&gt;subfn()&lt;/code&gt; et &lt;code&gt;expandf()&lt;/code&gt;&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;subf&lt;/code&gt; et &lt;code&gt;subfn&lt;/code&gt; sont des alternatives à &lt;code&gt;sub&lt;/code&gt; et &lt;code&gt;subn&lt;/code&gt;. Lorsqu'une chaîne de remplacement est passée, ils la traitent comme une &lt;strong&gt;chaîne de format&lt;/strong&gt; (f-string style).&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;expandf&lt;/code&gt; est l'équivalent pour l'objet match.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;regex&lt;/span&gt;
+
+&lt;span class="c1"&gt;# subf : remplacement avec chaîne de format&lt;/span&gt;
+&lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;subf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;(?P&amp;lt;mot&amp;gt;\w+)&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="si"&gt;{0}&lt;/span&gt;&lt;span class="s1"&gt; (&lt;/span&gt;&lt;span class="si"&gt;{mot}&lt;/span&gt;&lt;span class="s1"&gt;)&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;bonjour monde&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;count&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# &amp;#39;bonjour (bonjour) monde&amp;#39;&lt;/span&gt;
+
+&lt;span class="c1"&gt;# expandf sur un objet match&lt;/span&gt;
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;(?P&amp;lt;prenom&amp;gt;\w+) (?P&amp;lt;nom&amp;gt;\w+)&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Jean Dupont&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;expandf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="si"&gt;{prenom}&lt;/span&gt;&lt;span class="s1"&gt; - &lt;/span&gt;&lt;span class="si"&gt;{nom}&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;  &lt;span class="c1"&gt;# &amp;#39;Jean - Dupont&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3 id="indice-de-capture-dans-expandf-et-subfsubfn"&gt;Indice de capture dans &lt;code&gt;expandf&lt;/code&gt; et &lt;code&gt;subf&lt;/code&gt;/&lt;code&gt;subfn&lt;/code&gt;&lt;/h3&gt;
+&lt;p&gt;Vous pouvez utiliser l'écriture en &lt;strong&gt;indice&lt;/strong&gt; pour obtenir les captures d'un groupe de capture répété :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;regex&lt;/span&gt;
+
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;match&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;(?P&amp;lt;x&amp;gt;\w+) (?P&amp;lt;x&amp;gt;\w+)&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;abc def&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;expandf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="si"&gt;{x[0]}&lt;/span&gt;&lt;span class="s1"&gt; &lt;/span&gt;&lt;span class="si"&gt;{x[1]}&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;  &lt;span class="c1"&gt;# &amp;#39;abc def&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;hr&gt;
+&lt;h2 id="detacher-la-chaine-recherchee-detach_string"&gt;Détacher la chaîne recherchée (&lt;code&gt;detach_string&lt;/code&gt;)&lt;/h2&gt;
+&lt;p&gt;Un objet match contient une &lt;strong&gt;référence&lt;/strong&gt; à la chaîne recherchée via son attribut &lt;code&gt;string&lt;/code&gt;. La méthode &lt;code&gt;detach_string()&lt;/code&gt; « détache » cette chaîne, la rendant disponible pour le garbage collector — utile pour &lt;strong&gt;économiser la mémoire&lt;/strong&gt; si la chaîne est très grande.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;regex&lt;/span&gt;
+
+&lt;span class="n"&gt;texte&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;un très long texte...&amp;#39;&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="mi"&gt;10000&lt;/span&gt;
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;\w+&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;texte&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;  &lt;span class="c1"&gt;# &amp;#39;un&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;detach_string&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;  &lt;span class="c1"&gt;# &amp;#39;un&amp;#39; (toujours accessible)&lt;/span&gt;
+&lt;span class="c1"&gt;# Mais m.string est maintenant None&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;hr&gt;
+&lt;h2 id="patterns-recursifs"&gt;Patterns récursifs&lt;/h2&gt;
+&lt;p&gt;Les motifs récursifs et répétés sont pris en charge :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;(?R)&lt;/code&gt;&lt;/strong&gt; ou &lt;strong&gt;&lt;code&gt;(?0)&lt;/code&gt;&lt;/strong&gt; : essaie de faire correspondre l'&lt;strong&gt;ensemble&lt;/strong&gt; du regex de façon récursive.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;(?1)&lt;/code&gt;&lt;/strong&gt;, &lt;strong&gt;&lt;code&gt;(?2)&lt;/code&gt;&lt;/strong&gt;, etc. : essaie de faire correspondre le &lt;strong&gt;groupe de capture&lt;/strong&gt; correspondant.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;(?&amp;amp;nom)&lt;/code&gt;&lt;/strong&gt; : essaie de faire correspondre le &lt;strong&gt;groupe de capture nommé&lt;/strong&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Les formes alternatives &lt;code&gt;(?P&amp;gt;nom)&lt;/code&gt; et &lt;code&gt;(?P&amp;amp;nom)&lt;/code&gt; sont aussi supportées.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;regex&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Correspondance de parenthèses imbriquées&lt;/span&gt;
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;\((?:[^()]*|(?R))*\)&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;(a(b)c)&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;  &lt;span class="c1"&gt;# &amp;#39;(a(b)c)&amp;#39;&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Réutilisation d&amp;#39;un sous-pattern&lt;/span&gt;
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;match&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;(Tarzan|Jane) aime (?1)&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Tarzan aime Jane&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;  &lt;span class="c1"&gt;# &amp;#39;Tarzan aime Jane&amp;#39;&lt;/span&gt;
+
+&lt;span class="c1"&gt;# (?1) est équivalent à (?:Tarzan|Jane) — réutilise le motif, pas le groupe&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Note :&lt;/strong&gt; Il est possible de revenir en arrière (backtracker) dans un groupe récursif. Vous ne pouvez pas appeler un groupe s'il y a plus d'un groupe avec ce nom ou numéro (« référence ambiguë »).&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="correspondances-partielles-partial-matches"&gt;Correspondances partielles (partial matches)&lt;/h2&gt;
+&lt;p&gt;Une correspondance partielle est une correspondance qui atteint la &lt;strong&gt;fin de la chaîne&lt;/strong&gt; — si la chaîne avait été plus longue, un match complet aurait été possible.&lt;/p&gt;
+&lt;p&gt;Les correspondances partielles sont acceptées avec &lt;code&gt;match&lt;/code&gt;, &lt;code&gt;search&lt;/code&gt;, &lt;code&gt;fullmatch&lt;/code&gt; et &lt;code&gt;finditer&lt;/code&gt; via l'argument &lt;code&gt;partial=True&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;L'objet match possède un attribut &lt;code&gt;partial&lt;/code&gt; qui vaut &lt;code&gt;True&lt;/code&gt; s'il s'agit d'un match partiel.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;regex&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Vérification caractère par caractère (ex: saisie utilisateur)&lt;/span&gt;
+&lt;span class="n"&gt;pattern&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;compile&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;\d&lt;/span&gt;&lt;span class="si"&gt;{4}&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;saisie&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;1&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;12&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;123&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;1234&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;12345&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt;
+    &lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pattern&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fullmatch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;saisie&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;partial&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="ow"&gt;is&lt;/span&gt; &lt;span class="kc"&gt;None&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;f&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;saisie&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s1"&gt; → rejeté&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;elif&lt;/span&gt; &lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;partial&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;f&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;saisie&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s1"&gt; → partiel (continuer)&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;f&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;saisie&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s1"&gt; → complet !&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Sortie :&lt;/span&gt;
+&lt;span class="c1"&gt;# 1 → partiel (continuer)&lt;/span&gt;
+&lt;span class="c1"&gt;# 12 → partiel (continuer)&lt;/span&gt;
+&lt;span class="c1"&gt;# 123 → partiel (continuer)&lt;/span&gt;
+&lt;span class="c1"&gt;# 1234 → complet !&lt;/span&gt;
+&lt;span class="c1"&gt;# 12345 → rejeté&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;hr&gt;
+&lt;h2 id="lookaround-dans-les-motifs-conditionnels"&gt;Lookaround dans les motifs conditionnels&lt;/h2&gt;
+&lt;p&gt;Le test d'un motif conditionnel peut maintenant être un &lt;strong&gt;lookaround&lt;/strong&gt; (lookahead ou lookbehind).&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;regex&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Conditionnel avec lookahead&lt;/span&gt;
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;(?(?=\d)\d&lt;/span&gt;&lt;span class="si"&gt;{3}&lt;/span&gt;&lt;span class="s1"&gt;|\w&lt;/span&gt;&lt;span class="si"&gt;{3}&lt;/span&gt;&lt;span class="s1"&gt;)&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;123abc&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;  &lt;span class="c1"&gt;# &amp;#39;123&amp;#39;&lt;/span&gt;
+
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;(?(?=\d)\d&lt;/span&gt;&lt;span class="si"&gt;{3}&lt;/span&gt;&lt;span class="s1"&gt;|\w&lt;/span&gt;&lt;span class="si"&gt;{3}&lt;/span&gt;&lt;span class="s1"&gt;)&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;abc123&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;  &lt;span class="c1"&gt;# &amp;#39;abc&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Attention :&lt;/strong&gt; ce n'est pas la même chose qu'un lookaround dans la première branche d'une paire d'alternatives. Avec le conditionnel, si la condition échoue, la seconde branche est tentée. Avec les alternatives, si le lookaround réussit mais que la première branche échoue, la seconde branche est tout de même essayée.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="lookbehind-de-longueur-variable"&gt;Lookbehind de longueur variable&lt;/h2&gt;
+&lt;p&gt;Contrairement au module &lt;code&gt;re&lt;/code&gt; standard, la librairie &lt;code&gt;regex&lt;/code&gt; supporte les &lt;strong&gt;lookbehind de longueur variable&lt;/strong&gt; :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;regex&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Lookbehind avec longueur variable — impossible avec re !&lt;/span&gt;
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;(?&amp;lt;=\d+)\w+&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;123abc&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;  &lt;span class="c1"&gt;# &amp;#39;abc&amp;#39;&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Lookbehind négatif de longueur variable&lt;/span&gt;
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;(?&amp;lt;!\d{2,4})\b\w+&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;abc 123def&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;  &lt;span class="c1"&gt;# &amp;#39;abc&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;hr&gt;
+&lt;h2 id="groupes-atomiques"&gt;Groupes atomiques&lt;/h2&gt;
+&lt;p&gt;Si le motif suivant échoue, le sous-motif dans un groupe atomique &lt;strong&gt;échoue dans son ensemble&lt;/strong&gt;, sans backtracking.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;regex&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Groupe atomique : pas de backtracking&lt;/span&gt;
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;(?&amp;gt;abc|ab)c&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;abc&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# None — &amp;#39;abc&amp;#39; est consommé par le groupe atomique, il ne reste rien pour &amp;#39;c&amp;#39;&lt;/span&gt;
+
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;(?&amp;gt;abc|ab)c&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;abcc&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;  &lt;span class="c1"&gt;# &amp;#39;abcc&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;hr&gt;
+&lt;h2 id="quantificateurs-possessifs"&gt;Quantificateurs possessifs&lt;/h2&gt;
+&lt;p&gt;Les quantificateurs possessifs fonctionnent comme les groupes atomiques appliqués aux quantificateurs :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;(?:...)?+&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;(?:...)*+&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;(?:...)++&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;(?:...){min,max}+&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Le sous-motif est adapté au maximum. Si le motif suivant échoue, tous les sous-motifs répétés échouent &lt;strong&gt;dans leur ensemble&lt;/strong&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;regex&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Sans possessif : backtracking possible&lt;/span&gt;
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;quot;.+&amp;quot;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;&amp;quot;abc&amp;quot;def&amp;quot;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;  &lt;span class="c1"&gt;# &amp;#39;&amp;quot;abc&amp;quot;def&amp;quot;&amp;#39;&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Avec quantificateur possessif : pas de backtracking sur le +&lt;/span&gt;
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;quot;.++&amp;quot;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;&amp;quot;abc&amp;quot;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# None — le ++ consomme tout y compris le dernier &amp;quot;, pas de backtracking&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;hr&gt;
+&lt;h2 id="listes-nommees"&gt;Listes nommées&lt;/h2&gt;
+&lt;p&gt;Il est parfois nécessaire d'inclure une liste d'options dans un regex. Plutôt que de construire un pattern d'alternation (qui peut être lent à parser pour de longues listes), utilisez les &lt;strong&gt;listes nommées&lt;/strong&gt; :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;regex&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Méthode classique (alternation)&lt;/span&gt;
+&lt;span class="n"&gt;p&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;compile&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;chat|chien|oiseau|poisson&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Méthode avec listes nommées&lt;/span&gt;
+&lt;span class="n"&gt;animaux&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;chat&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;chien&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;oiseau&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;poisson&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="n"&gt;p&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;compile&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;\L&amp;lt;animaux&amp;gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;animaux&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;animaux&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Mon chien est mignon&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;  &lt;span class="c1"&gt;# &amp;#39;chien&amp;#39;&lt;/span&gt;
+
+&lt;span class="c1"&gt;# L&amp;#39;ordre des items n&amp;#39;est pas pertinent (traités comme un ensemble)&lt;/span&gt;
+&lt;span class="c1"&gt;# Disponibles via l&amp;#39;attribut .named_lists du pattern compilé&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;named_lists&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# {&amp;#39;animaux&amp;#39;: frozenset({...})}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;hr&gt;
+&lt;h2 id="debut-et-fin-de-mot"&gt;Début et fin de mot&lt;/h2&gt;
+&lt;p&gt;Deux ancres supplémentaires pour les limites de mots :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;\m&lt;/code&gt;&lt;/strong&gt; : correspond au &lt;strong&gt;début&lt;/strong&gt; d'un mot.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;\M&lt;/code&gt;&lt;/strong&gt; : correspond à la &lt;strong&gt;fin&lt;/strong&gt; d'un mot.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Comparez avec &lt;code&gt;\b&lt;/code&gt;, qui correspond au début &lt;strong&gt;ou&lt;/strong&gt; à la fin d'un mot.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;regex&lt;/span&gt;
+
+&lt;span class="c1"&gt;# \m : début de mot uniquement&lt;/span&gt;
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;findall&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;\m\w&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;un deux trois&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# [&amp;#39;u&amp;#39;, &amp;#39;d&amp;#39;, &amp;#39;t&amp;#39;]&lt;/span&gt;
+
+&lt;span class="c1"&gt;# \M : fin de mot uniquement&lt;/span&gt;
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;findall&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;\w\M&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;un deux trois&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# [&amp;#39;n&amp;#39;, &amp;#39;x&amp;#39;, &amp;#39;s&amp;#39;]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;hr&gt;
+&lt;h2 id="separateurs-de-ligne-unicode"&gt;Séparateurs de ligne Unicode&lt;/h2&gt;
+&lt;p&gt;Normalement, le seul séparateur de ligne est &lt;code&gt;\n&lt;/code&gt; (&lt;code&gt;\x0A&lt;/code&gt;). Mais si le drapeau &lt;strong&gt;&lt;code&gt;WORD&lt;/code&gt;&lt;/strong&gt; est activé, les séparateurs de ligne deviennent : &lt;code&gt;\x0D\x0A&lt;/code&gt;, &lt;code&gt;\x0A&lt;/code&gt;, &lt;code&gt;\x0B&lt;/code&gt;, &lt;code&gt;\x0C&lt;/code&gt;, &lt;code&gt;\x0D&lt;/code&gt;, plus &lt;code&gt;\x85&lt;/code&gt;, &lt;code&gt;\u2028&lt;/code&gt; et &lt;code&gt;\u2029&lt;/code&gt; en Unicode.&lt;/p&gt;
+&lt;p&gt;Ceci affecte :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Le point &lt;code&gt;.&lt;/code&gt; (quand &lt;code&gt;DOTALL&lt;/code&gt; est désactivé) : correspond à tout sauf un séparateur de ligne.&lt;/li&gt;
+&lt;li&gt;Les ancres &lt;code&gt;^&lt;/code&gt; et &lt;code&gt;$&lt;/code&gt; en mode multiligne.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="proprietes-unicode-scripts-et-blocs"&gt;Propriétés Unicode, scripts et blocs&lt;/h2&gt;
+&lt;p&gt;De nombreuses propriétés Unicode sont supportées, y compris les &lt;strong&gt;blocs&lt;/strong&gt; et les &lt;strong&gt;scripts&lt;/strong&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;regex&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Propriété générale&lt;/span&gt;
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;findall&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;\p&lt;/span&gt;&lt;span class="si"&gt;{L}&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;abc 123 àéî&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# Lettres Unicode&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# [&amp;#39;a&amp;#39;, &amp;#39;b&amp;#39;, &amp;#39;c&amp;#39;, &amp;#39;à&amp;#39;, &amp;#39;é&amp;#39;, &amp;#39;î&amp;#39;]&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Script&lt;/span&gt;
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;findall&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;\p{Script=Greek}&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;αβγ abc&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# [&amp;#39;α&amp;#39;, &amp;#39;β&amp;#39;, &amp;#39;γ&amp;#39;]&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Bloc&lt;/span&gt;
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;findall&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;\p{Block=BasicLatin}&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;abc αβγ&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# [&amp;#39;a&amp;#39;, &amp;#39;b&amp;#39;, &amp;#39;c&amp;#39;]&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Inverse&lt;/span&gt;
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;findall&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;\P&lt;/span&gt;&lt;span class="si"&gt;{L}&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;abc 123&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# Non-lettres&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# [&amp;#39; &amp;#39;, &amp;#39;1&amp;#39;, &amp;#39;2&amp;#39;, &amp;#39;3&amp;#39;]&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Forme courte : \p{value} cherche dans General_Category, puis Script, puis Block&lt;/span&gt;
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;findall&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;\p&lt;/span&gt;&lt;span class="si"&gt;{Lu}&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Bonjour MONDE&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# Uppercase letters&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# [&amp;#39;B&amp;#39;, &amp;#39;M&amp;#39;, &amp;#39;O&amp;#39;, &amp;#39;N&amp;#39;, &amp;#39;D&amp;#39;, &amp;#39;E&amp;#39;]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;hr&gt;
+&lt;h2 id="caracteres-nommes-unicode"&gt;Caractères nommés Unicode&lt;/h2&gt;
+&lt;p&gt;Les caractères nommés Unicode sont pris en charge :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;regex&lt;/span&gt;
+
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;\N&lt;/span&gt;&lt;span class="si"&gt;{SNOWMAN}&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;☃ bonhomme de neige&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;  &lt;span class="c1"&gt;# &amp;#39;☃&amp;#39;&lt;/span&gt;
+
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;\N{HEAVY BLACK HEART}&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Je t❤aime&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;  &lt;span class="c1"&gt;# &amp;#39;❤&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Note :&lt;/strong&gt; seuls les noms connus par la base de données Unicode de Python sont supportés.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="classes-de-caracteres-posix"&gt;Classes de caractères POSIX&lt;/h2&gt;
+&lt;p&gt;Les classes de caractères POSIX sont supportées et traitées comme une forme alternative de &lt;code&gt;\p{...}&lt;/code&gt; :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;regex&lt;/span&gt;
+
+&lt;span class="c1"&gt;# [:alpha:] — lettres&lt;/span&gt;
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;findall&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;[[:alpha:]]&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;abc 123&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# [&amp;#39;a&amp;#39;, &amp;#39;b&amp;#39;, &amp;#39;c&amp;#39;]&lt;/span&gt;
+
+&lt;span class="c1"&gt;# [:digit:] — chiffres&lt;/span&gt;
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;findall&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;[[:digit:]]&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;abc 123&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# [&amp;#39;1&amp;#39;, &amp;#39;2&amp;#39;, &amp;#39;3&amp;#39;]&lt;/span&gt;
+
+&lt;span class="c1"&gt;# [:alnum:] — alphanumériques&lt;/span&gt;
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;findall&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;[[:alnum:]]&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;a1 b2!&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# [&amp;#39;a&amp;#39;, &amp;#39;1&amp;#39;, &amp;#39;b&amp;#39;, &amp;#39;2&amp;#39;]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Note :&lt;/strong&gt; les définitions de &lt;code&gt;alnum&lt;/code&gt;, &lt;code&gt;digit&lt;/code&gt;, &lt;code&gt;punct&lt;/code&gt; et &lt;code&gt;xdigit&lt;/code&gt; sont différentes de celles d'Unicode.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="ancre-de-recherche-g"&gt;Ancre de recherche (&lt;code&gt;\G&lt;/code&gt;)&lt;/h2&gt;
+&lt;p&gt;L'ancre &lt;code&gt;\G&lt;/code&gt; correspond à l'endroit où chaque recherche a &lt;strong&gt;commencé ou s'est poursuivie&lt;/strong&gt;. Elle est utile pour des &lt;strong&gt;correspondances contiguës&lt;/strong&gt; :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;regex&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Correspondances contiguës de 2 lettres&lt;/span&gt;
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;findall&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;\G[a-z]&lt;/span&gt;&lt;span class="si"&gt;{2}&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;abcdef123&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# [&amp;#39;ab&amp;#39;, &amp;#39;cd&amp;#39;, &amp;#39;ef&amp;#39;]&lt;/span&gt;
+&lt;span class="c1"&gt;# S&amp;#39;arrête à &amp;#39;123&amp;#39; car la correspondance n&amp;#39;est plus contiguë&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;La recherche commence à la position 0 pour correspondre à &lt;code&gt;ab&lt;/code&gt;. La recherche se poursuit à la position 2 et correspond à &lt;code&gt;cd&lt;/code&gt;. Elle se poursuit à la position 4 et correspond à &lt;code&gt;ef&lt;/code&gt;. À la position 6, pas de correspondance de 2 lettres → l'ancre empêche de continuer.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="recherche-inversee"&gt;Recherche inversée&lt;/h2&gt;
+&lt;p&gt;Les recherches peuvent se faire &lt;strong&gt;à l'envers&lt;/strong&gt; avec le flag &lt;code&gt;REVERSE&lt;/code&gt; ou &lt;code&gt;(?r)&lt;/code&gt; :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;regex&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Recherche inversée : du dernier au premier&lt;/span&gt;
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;(?r)chat&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;le chat du chat noir&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;  &lt;span class="c1"&gt;# &amp;#39;chat&amp;#39;&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;start&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;  &lt;span class="c1"&gt;# 13 (le dernier &amp;#39;chat&amp;#39;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Avec findall en mode inversé&lt;/span&gt;
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;findall&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;(?r)\w+&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;un deux trois&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# [&amp;#39;trois&amp;#39;, &amp;#39;deux&amp;#39;, &amp;#39;un&amp;#39;]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Note :&lt;/strong&gt; le résultat d'une recherche inversée n'est pas nécessairement l'inverse d'une recherche directe.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="correspondance-de-graphemes-unicode"&gt;Correspondance de graphèmes Unicode&lt;/h2&gt;
+&lt;p&gt;L'appariement des &lt;strong&gt;graphèmes&lt;/strong&gt; est pris en charge avec &lt;code&gt;\X&lt;/code&gt;, conforme à la spécification Unicode :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;regex&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Un graphème peut être composé de plusieurs points de code&lt;/span&gt;
+&lt;span class="n"&gt;texte&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;e&lt;/span&gt;&lt;span class="se"&gt;\u0301&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;  &lt;span class="c1"&gt;# é (e + accent aigu combinant)&lt;/span&gt;
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;findall&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;\X&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;texte&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;    &lt;span class="c1"&gt;# [&amp;#39;é&amp;#39;] — un seul graphème&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;texte&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;  &lt;span class="c1"&gt;# 2 points de code&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;hr&gt;
+&lt;h2 id="limite-de-mot-unicode-par-defaut"&gt;Limite de mot Unicode par défaut&lt;/h2&gt;
+&lt;p&gt;Le flag &lt;strong&gt;&lt;code&gt;WORD&lt;/code&gt;&lt;/strong&gt; change la définition d'une « limite de mot » en celle d'une &lt;strong&gt;limite de mot Unicode par défaut&lt;/strong&gt; (conforme à la spécification Unicode). Ceci s'applique à &lt;code&gt;\b&lt;/code&gt; et &lt;code&gt;\B&lt;/code&gt;.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="regexescape-ameliore"&gt;&lt;code&gt;regex.escape()&lt;/code&gt; amélioré&lt;/h2&gt;
+&lt;p&gt;La fonction &lt;code&gt;regex.escape&lt;/code&gt; possède deux paramètres supplémentaires :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;special_only=True&lt;/code&gt;&lt;/strong&gt; : n'échappe que les caractères « spéciaux » regex (comme &lt;code&gt;?&lt;/code&gt;, &lt;code&gt;*&lt;/code&gt;, etc.).&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;literal_spaces=True&lt;/code&gt;&lt;/strong&gt; : les espaces ne sont &lt;strong&gt;pas&lt;/strong&gt; échappés.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;regex&lt;/span&gt;
+
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;escape&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;hello world?&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;special_only&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="c1"&gt;# &amp;#39;hello world\?&amp;#39;&lt;/span&gt;
+
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;escape&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;hello world&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;literal_spaces&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="c1"&gt;# &amp;#39;hello world&amp;#39;  (les espaces ne sont pas échappés)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;hr&gt;
+&lt;h2 id="captures-repetees-repeated-captures"&gt;Captures répétées (repeated captures)&lt;/h2&gt;
+&lt;p&gt;Un objet match possède des méthodes supplémentaires qui renvoient des informations sur &lt;strong&gt;toutes les correspondances réussies&lt;/strong&gt; d'un groupe de capture répété :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;regex&lt;/span&gt;
+
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;match&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;(\w)+&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;abcdef&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# group() retourne la dernière capture&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;      &lt;span class="c1"&gt;# &amp;#39;f&amp;#39;&lt;/span&gt;
+
+&lt;span class="c1"&gt;# captures() retourne TOUTES les captures&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;captures&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;   &lt;span class="c1"&gt;# [&amp;#39;a&amp;#39;, &amp;#39;b&amp;#39;, &amp;#39;c&amp;#39;, &amp;#39;d&amp;#39;, &amp;#39;e&amp;#39;, &amp;#39;f&amp;#39;]&lt;/span&gt;
+
+&lt;span class="c1"&gt;# spans() retourne les positions de toutes les captures&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;spans&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;      &lt;span class="c1"&gt;# [(0,1), (1,2), (2,3), (3,4), (4,5), (5,6)]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;hr&gt;
+&lt;h2 id="splititer"&gt;&lt;code&gt;splititer()&lt;/code&gt;&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;regex.splititer&lt;/code&gt; est un &lt;strong&gt;générateur&lt;/strong&gt; équivalent de &lt;code&gt;regex.split&lt;/code&gt; :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;regex&lt;/span&gt;
+
+&lt;span class="c1"&gt;# split retourne une liste&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;split&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;\s+&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;un deux trois&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="c1"&gt;# [&amp;#39;un&amp;#39;, &amp;#39;deux&amp;#39;, &amp;#39;trois&amp;#39;]&lt;/span&gt;
+
+&lt;span class="c1"&gt;# splititer retourne un générateur (plus économe en mémoire)&lt;/span&gt;
+&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;mot&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;splititer&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;\s+&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;un deux trois&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;mot&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;hr&gt;
+&lt;h2 id="indexation-dun-objet-match-subscripting"&gt;Indexation d'un objet match (subscripting)&lt;/h2&gt;
+&lt;p&gt;Un objet match accepte l'accès aux groupes via l'&lt;strong&gt;indexation&lt;/strong&gt; et les &lt;strong&gt;slices&lt;/strong&gt; :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;regex&lt;/span&gt;
+
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;(\w+) (\w+) (\w+)&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;un deux trois&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Accès par index&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;    &lt;span class="c1"&gt;# &amp;#39;un deux trois&amp;#39;&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;    &lt;span class="c1"&gt;# &amp;#39;un&amp;#39;&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;    &lt;span class="c1"&gt;# &amp;#39;deux&amp;#39;&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Slice&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;  &lt;span class="c1"&gt;# (&amp;#39;un&amp;#39;, &amp;#39;deux&amp;#39;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;hr&gt;
+&lt;h2 id="arguments-supplementaires"&gt;Arguments supplémentaires&lt;/h2&gt;
+&lt;h3 id="flag-flags-pour-split-sub-et-subn"&gt;Flag &lt;code&gt;flags&lt;/code&gt; pour &lt;code&gt;split&lt;/code&gt;, &lt;code&gt;sub&lt;/code&gt; et &lt;code&gt;subn&lt;/code&gt;&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;regex&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Passer des flags directement&lt;/span&gt;
+&lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;split&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;[aeiou]&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Bonjour&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;flags&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;IGNORECASE&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# [&amp;#39;&amp;#39;, &amp;#39;nj&amp;#39;, &amp;#39;&amp;#39;, &amp;#39;r&amp;#39;]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3 id="arguments-pos-et-endpos-pour-sub-et-subn"&gt;Arguments &lt;code&gt;pos&lt;/code&gt; et &lt;code&gt;endpos&lt;/code&gt; pour &lt;code&gt;sub&lt;/code&gt; et &lt;code&gt;subn&lt;/code&gt;&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;regex&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Remplacer uniquement dans une sous-partie&lt;/span&gt;
+&lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sub&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;\w&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;*&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;abcdef&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;pos&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;endpos&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# &amp;#39;ab**ef&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3 id="argument-overlapped-pour-findall-et-finditer"&gt;Argument &lt;code&gt;overlapped&lt;/code&gt; pour &lt;code&gt;findall&lt;/code&gt; et &lt;code&gt;finditer&lt;/code&gt;&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;regex&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Sans overlapped&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;findall&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;\w&lt;/span&gt;&lt;span class="si"&gt;{3}&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;abcdef&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="c1"&gt;# [&amp;#39;abc&amp;#39;, &amp;#39;def&amp;#39;]&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Avec overlapped : correspondances chevauchantes&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;findall&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;\w&lt;/span&gt;&lt;span class="si"&gt;{3}&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;abcdef&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;overlapped&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="c1"&gt;# [&amp;#39;abc&amp;#39;, &amp;#39;bcd&amp;#39;, &amp;#39;cde&amp;#39;, &amp;#39;def&amp;#39;]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;hr&gt;
+&lt;h2 id="timeout-python-3"&gt;Timeout (Python 3)&lt;/h2&gt;
+&lt;p&gt;Les méthodes et fonctions de correspondance prennent en charge les &lt;strong&gt;délais d'attente&lt;/strong&gt;. Le timeout (en secondes) s'applique à l'ensemble de l'opération :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;regex&lt;/span&gt;
+
+&lt;span class="k"&gt;try&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="c1"&gt;# Timeout de 1 seconde&lt;/span&gt;
+    &lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;regex&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;(a+)+b&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;a&amp;#39;&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="mi"&gt;30&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;timeout&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="k"&gt;except&lt;/span&gt; &lt;span class="ne"&gt;TimeoutError&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Le matching a pris trop de temps !&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Note :&lt;/strong&gt; le timeout est particulièrement utile pour se protéger contre les expressions régulières malveillantes ou les cas de backtracking exponentiel (ReDoS).&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="resume-des-fonctionnalites-exclusives-a-regex"&gt;Résumé des fonctionnalités exclusives à &lt;code&gt;regex&lt;/code&gt;&lt;/h2&gt;
 &lt;table&gt;
 &lt;thead&gt;
 &lt;tr&gt;
-&lt;th&gt;Fonction&lt;/th&gt;
-&lt;th&gt;Recherche où ?&lt;/th&gt;
-&lt;th&gt;Retourne quoi ?&lt;/th&gt;
-&lt;th&gt;Cas d'usage&lt;/th&gt;
+&lt;th&gt;Fonctionnalité&lt;/th&gt;
+&lt;th&gt;Syntaxe&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
 &lt;/tr&gt;
 &lt;/thead&gt;
 &lt;tbody&gt;
 &lt;tr&gt;
-&lt;td&gt;&lt;code&gt;match()&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;Début de chaîne&lt;/td&gt;
-&lt;td&gt;1 Match ou None&lt;/td&gt;
-&lt;td&gt;Validation de format&lt;/td&gt;
+&lt;td&gt;Matching flou&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;{e&amp;lt;=n}&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Correspondance approximative&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;&lt;code&gt;search()&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;Toute la chaîne&lt;/td&gt;
-&lt;td&gt;1 Match ou None&lt;/td&gt;
-&lt;td&gt;Trouver la première occurrence&lt;/td&gt;
+&lt;td&gt;Patterns récursifs&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;(?R)&lt;/code&gt;, &lt;code&gt;(?1)&lt;/code&gt;, &lt;code&gt;(?&amp;amp;nom)&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Réutilisation de motifs&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;&lt;code&gt;findall()&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;Toute la chaîne&lt;/td&gt;
-&lt;td&gt;Liste de strings&lt;/td&gt;
-&lt;td&gt;Extraire toutes les occurrences&lt;/td&gt;
+&lt;td&gt;Propriétés Unicode&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;\p{Script=Latin}&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Filtrage par propriété&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;&lt;code&gt;finditer()&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;Toute la chaîne&lt;/td&gt;
-&lt;td&gt;Itérateur de Match&lt;/td&gt;
-&lt;td&gt;Accès aux positions et groupes&lt;/td&gt;
+&lt;td&gt;Ensembles imbriqués&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;[[a-z]--[aeiou]]&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Opérations sur les sets&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;&lt;code&gt;sub()&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;Toute la chaîne&lt;/td&gt;
-&lt;td&gt;String modifiée&lt;/td&gt;
-&lt;td&gt;Remplacement&lt;/td&gt;
+&lt;td&gt;Lookbehind variable&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;(?&amp;lt;=\d+)&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Lookbehind de longueur variable&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;&lt;code&gt;split()&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;Toute la chaîne&lt;/td&gt;
-&lt;td&gt;Liste de strings&lt;/td&gt;
-&lt;td&gt;Découpage&lt;/td&gt;
+&lt;td&gt;Groupes atomiques&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;(?&amp;gt;...)&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Pas de backtracking&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;&lt;code&gt;compile()&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;—&lt;/td&gt;
-&lt;td&gt;Objet Pattern&lt;/td&gt;
-&lt;td&gt;Réutilisation du motif&lt;/td&gt;
+&lt;td&gt;Quantificateurs possessifs&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;a++&lt;/code&gt;, &lt;code&gt;a*+&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Quantificateurs sans backtracking&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Matching POSIX&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;(?p)&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Match le plus long&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Listes nommées&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;\L&amp;lt;nom&amp;gt;&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Ensembles dynamiques&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Branch reset&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;(?|...\|...)&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Numéros de groupe partagés&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;\K&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;\K&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Garder une partie du match&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;captures()&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;m.captures(1)&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Toutes les captures d'un groupe&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Recherche inversée&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;(?r)&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Recherche de droite à gauche&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Correspondances partielles&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;partial=True&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Match partiel&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Timeout&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;timeout=1&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Protection contre le ReDoS&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;subf()&lt;/code&gt;/&lt;code&gt;expandf()&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;{nom}&lt;/code&gt; dans le remplacement&lt;/td&gt;
+&lt;td&gt;Remplacement avec format&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;detach_string()&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;m.detach_string()&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Libération mémoire&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Multithreading&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;concurrent=True&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Libération du GIL&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;\m&lt;/code&gt;, &lt;code&gt;\M&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;\m&lt;/code&gt;, &lt;code&gt;\M&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Début/fin de mot&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;\G&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;\G&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Ancre de recherche&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;(*PRUNE)&lt;/code&gt;, &lt;code&gt;(*SKIP)&lt;/code&gt;, &lt;code&gt;(*FAIL)&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Verbes de contrôle&lt;/td&gt;
+&lt;td&gt;Contrôle du backtracking&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;(?(DEFINE)...)&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Définitions&lt;/td&gt;
+&lt;td&gt;Sous-patterns réutilisables&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-&lt;h2 id="bonnes-pratiques"&gt;Bonnes pratiques&lt;/h2&gt;
-&lt;ol&gt;
-&lt;li&gt;&lt;strong&gt;Utilisez les raw strings&lt;/strong&gt; (&lt;code&gt;r"..."&lt;/code&gt;) pour éviter les problèmes d'échappement.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Compilez&lt;/strong&gt; vos regex si vous les utilisez plusieurs fois dans votre code.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Préférez &lt;code&gt;re.VERBOSE&lt;/code&gt;&lt;/strong&gt; pour les regex complexes — la lisibilité est cruciale.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Testez&lt;/strong&gt; vos regex sur &lt;a href="https://regex101.com/"&gt;regex101.com&lt;/a&gt; avant de les intégrer dans votre code.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Attention aux quantificateurs gourmands&lt;/strong&gt; : utilisez &lt;code&gt;?&lt;/code&gt; après &lt;code&gt;*&lt;/code&gt; ou &lt;code&gt;+&lt;/code&gt; pour les rendre paresseux quand nécessaire.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;N'utilisez pas les regex pour parser du HTML/XML&lt;/strong&gt; : utilisez plutôt &lt;code&gt;BeautifulSoup&lt;/code&gt; ou &lt;code&gt;lxml&lt;/code&gt;.&lt;/li&gt;
-&lt;/ol&gt;</content><category term="tech"/><category term="python"/><category term="regex"/><category term="tech"/></entry><entry><title>La signification de la valeur p (p-value) — Exemple avec Python</title><link href="/la-signification-de-la-valeur-p-exemple-python.html" rel="alternate"/><published>2026-03-05T16:00:00+01:00</published><updated>2026-03-05T16:00:00+01:00</updated><author><name>Mikael Monjour</name></author><id>tag:None,2026-03-05:/la-signification-de-la-valeur-p-exemple-python.html</id><summary type="html">&lt;p&gt;Lundi matin, réunion d'équipe. Le product manager annonce : "p-value de 0.03, on déploie en prod." Tout le monde applaudit. Sauf vous. Car cette p-value ne prouve probablement pas ce que tout le monde croit.&lt;/p&gt;</summary><content type="html">&lt;p&gt;Imaginez la scène. Lundi matin, 9 h 30, réunion d'équipe. Le product manager (la personne responsable du produit) affiche un graphique et annonce fièrement :&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="conclusion"&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;La librairie &lt;code&gt;regex&lt;/code&gt; est un &lt;strong&gt;remplacement direct&lt;/strong&gt; du module &lt;code&gt;re&lt;/code&gt; avec des fonctionnalités considérablement étendues. Elle est particulièrement utile pour :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Le &lt;strong&gt;traitement de texte avancé&lt;/strong&gt; (matching flou, patterns récursifs)&lt;/li&gt;
+&lt;li&gt;Le travail avec &lt;strong&gt;Unicode&lt;/strong&gt; (propriétés, scripts, blocs, full case-folding)&lt;/li&gt;
+&lt;li&gt;Les &lt;strong&gt;performances&lt;/strong&gt; (listes nommées, groupes atomiques, libération du GIL)&lt;/li&gt;
+&lt;li&gt;La &lt;strong&gt;sécurité&lt;/strong&gt; (timeout contre le ReDoS)&lt;/li&gt;
+&lt;li&gt;L'&lt;strong&gt;analyse syntaxique&lt;/strong&gt; complexe (patterns récursifs, branch reset, &lt;code&gt;(?(DEFINE)...)&lt;/code&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Pour l'installer :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;pip&lt;span class="w"&gt; &lt;/span&gt;install&lt;span class="w"&gt; &lt;/span&gt;regex
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Et pour l'utiliser en remplacement de &lt;code&gt;re&lt;/code&gt; :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;regex&lt;/span&gt;
+&lt;span class="c1"&gt;# Toutes les fonctions de re sont disponibles :&lt;/span&gt;
+&lt;span class="c1"&gt;# regex.search(), regex.match(), regex.findall(), regex.sub(), etc.&lt;/span&gt;
+&lt;span class="c1"&gt;# Plus toutes les fonctionnalités avancées décrites dans ce guide !&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content><category term="tech"/><category term="python"/><category term="regex"/><category term="tech"/></entry><entry><title>La signification de la valeur p (p-value) — Exemple avec Python</title><link href="/la-signification-de-la-valeur-p-exemple-python.html" rel="alternate"/><published>2026-03-05T16:00:00+01:00</published><updated>2026-03-05T16:00:00+01:00</updated><author><name>Mikael Monjour</name></author><id>tag:None,2026-03-05:/la-signification-de-la-valeur-p-exemple-python.html</id><summary type="html">&lt;p&gt;Lundi matin, réunion d'équipe. Le product manager annonce : "p-value de 0.03, on déploie en prod." Tout le monde applaudit. Sauf vous. Car cette p-value ne prouve probablement pas ce que tout le monde croit.&lt;/p&gt;</summary><content type="html">&lt;p&gt;Imaginez la scène. Lundi matin, 9 h 30, réunion d'équipe. Le product manager (la personne responsable du produit) affiche un graphique et annonce fièrement :&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;"Notre nouveau bouton vert a augmenté le taux de conversion de 12 %. La p-value est de 0.03. C'est statistiquement significatif. On déploie en production."&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;Traduction : il pense avoir prouvé que le bouton vert fait acheter plus de clients. Tout le monde applaudit.&lt;/p&gt;
 &lt;p&gt;Sauf vous. Parce que vous savez que ce test a été lancé un vendredi soir, sur seulement 200 visiteurs. Et qu'une p-value de 0.03 dans ces conditions ne prouve pas grand-chose.&lt;/p&gt;

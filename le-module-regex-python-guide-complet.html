@@ -6,7 +6,7 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-        <title>Le module Regex Python : Guide Complet</title>
+        <title>La librairie regex Python : guide complet</title>
         <link rel="stylesheet" href="/theme/css/main.css?v=4" />
         <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Blog de Mikael Atom Feed" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
@@ -25,7 +25,7 @@
     <header>
       <h1 class="entry-title">
         <a href="/le-module-regex-python-guide-complet.html" rel="bookmark"
-           title="Permalink to Le module Regex Python : Guide Complet">Le module Regex Python : Guide Complet</a></h1>
+           title="Permalink to La librairie regex Python : guide complet">La librairie regex Python : guide complet</a></h1>
     </header>
 
     <div class="entry-content">
@@ -39,519 +39,1068 @@
         </address>
 <p>In <a href="/category/tech.html">tech</a>.</p>
 <p>tags: <a href="/tag/python.html">python</a> <a href="/tag/regex.html">regex</a> <a href="/tag/tech.html">tech</a> </p>
-</footer><!-- /.post-info -->      <h2 id="les-expressions-regulieres-cest-quoi">Les expressions régulières : c'est quoi ?</h2>
-<p>Les expressions régulières (ou <strong>regex</strong>) sont un langage de motifs utilisé pour rechercher, valider ou manipuler du texte. Elles permettent de décrire des modèles complexes en quelques caractères.</p>
-<p>En Python, le module <code>re</code> fournit toutes les fonctions nécessaires pour travailler avec les regex.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">re</span>
+</footer><!-- /.post-info -->      <div class="toc">
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#ancien-et-nouveau-comportement-version-0-et-version-1">Ancien et nouveau comportement (version 0 et version 1)</a><ul>
+<li><a href="#comportement-version-0-ancien-compatible-re">Comportement version 0 (ancien, compatible re)</a></li>
+<li><a href="#comportement-version-1-nouveau-ameliore">Comportement version 1 (nouveau, amélioré)</a></li>
+</ul>
+</li>
+<li><a href="#correspondances-insensibles-a-la-casse-en-unicode">Correspondances insensibles à la casse en Unicode</a></li>
+<li><a href="#ensembles-imbriques-et-operations-de-set">Ensembles imbriqués et opérations de set</a><ul>
+<li><a href="#operateurs-de-set-version-1-uniquement">Opérateurs de set (version 1 uniquement)</a></li>
+</ul>
+</li>
+<li><a href="#flags-drapeaux">Flags (drapeaux)</a><ul>
+<li><a href="#flags-scopes">Flags scopés</a></li>
+<li><a href="#flags-globaux">Flags globaux</a></li>
+</ul>
+</li>
+<li><a href="#drapeaux-a-portee-reduite-scoped-flags">Drapeaux à portée réduite (scoped flags)</a></li>
+<li><a href="#groupes-de-capture-nommes">Groupes de capture nommés</a><ul>
+<li><a href="#regles-cles">Règles clés</a></li>
+<li><a href="#syntaxes-supportees">Syntaxes supportées</a></li>
+</ul>
+</li>
+<li><a href="#reinitialisation-de-branche-branch-reset">Réinitialisation de branche (branch reset)</a></li>
+<li><a href="#multithreading">Multithreading</a></li>
+<li><a href="#matching-posix-le-plus-long-le-plus-a-gauche">Matching POSIX (le plus long, le plus à gauche)</a></li>
+<li><a href="#matching-flou-fuzzy-matching">Matching flou (fuzzy matching)</a><ul>
+<li><a href="#les-trois-types-derreurs">Les trois types d'erreurs</a></li>
+<li><a href="#limites-derreurs">Limites d'erreurs</a></li>
+<li><a href="#couts-derreurs">Coûts d'erreurs</a></li>
+<li><a href="#flags-pour-le-matching-flou">Flags pour le matching flou</a></li>
+<li><a href="#attributs-fuzzy-de-lobjet-match">Attributs fuzzy de l'objet match</a></li>
+</ul>
+</li>
+<li><a href="#define-definir-des-sous-patterns-reutilisables">(?(DEFINE)...) : définir des sous-patterns réutilisables</a></li>
+<li><a href="#prune-skip-et-fail">(*PRUNE), (*SKIP) et (*FAIL)</a></li>
+<li><a href="#k-garder-une-partie-du-match">\K : garder une partie du match</a></li>
+<li><a href="#captures-capturesdict-et-groupdict">captures(), capturesdict() et groupdict()</a></li>
+<li><a href="#noms-de-groupes-dupliques">Noms de groupes dupliqués</a></li>
+<li><a href="#fullmatch">fullmatch()</a></li>
+<li><a href="#subf-subfn-et-expandf">subf(), subfn() et expandf()</a><ul>
+<li><a href="#indice-de-capture-dans-expandf-et-subfsubfn">Indice de capture dans expandf et subf/subfn</a></li>
+</ul>
+</li>
+<li><a href="#detacher-la-chaine-recherchee-detach_string">Détacher la chaîne recherchée (detach_string)</a></li>
+<li><a href="#patterns-recursifs">Patterns récursifs</a></li>
+<li><a href="#correspondances-partielles-partial-matches">Correspondances partielles (partial matches)</a></li>
+<li><a href="#lookaround-dans-les-motifs-conditionnels">Lookaround dans les motifs conditionnels</a></li>
+<li><a href="#lookbehind-de-longueur-variable">Lookbehind de longueur variable</a></li>
+<li><a href="#groupes-atomiques">Groupes atomiques</a></li>
+<li><a href="#quantificateurs-possessifs">Quantificateurs possessifs</a></li>
+<li><a href="#listes-nommees">Listes nommées</a></li>
+<li><a href="#debut-et-fin-de-mot">Début et fin de mot</a></li>
+<li><a href="#separateurs-de-ligne-unicode">Séparateurs de ligne Unicode</a></li>
+<li><a href="#proprietes-unicode-scripts-et-blocs">Propriétés Unicode, scripts et blocs</a></li>
+<li><a href="#caracteres-nommes-unicode">Caractères nommés Unicode</a></li>
+<li><a href="#classes-de-caracteres-posix">Classes de caractères POSIX</a></li>
+<li><a href="#ancre-de-recherche-g">Ancre de recherche (\G)</a></li>
+<li><a href="#recherche-inversee">Recherche inversée</a></li>
+<li><a href="#correspondance-de-graphemes-unicode">Correspondance de graphèmes Unicode</a></li>
+<li><a href="#limite-de-mot-unicode-par-defaut">Limite de mot Unicode par défaut</a></li>
+<li><a href="#regexescape-ameliore">regex.escape() amélioré</a></li>
+<li><a href="#captures-repetees-repeated-captures">Captures répétées (repeated captures)</a></li>
+<li><a href="#splititer">splititer()</a></li>
+<li><a href="#indexation-dun-objet-match-subscripting">Indexation d'un objet match (subscripting)</a></li>
+<li><a href="#arguments-supplementaires">Arguments supplémentaires</a><ul>
+<li><a href="#flag-flags-pour-split-sub-et-subn">Flag flags pour split, sub et subn</a></li>
+<li><a href="#arguments-pos-et-endpos-pour-sub-et-subn">Arguments pos et endpos pour sub et subn</a></li>
+<li><a href="#argument-overlapped-pour-findall-et-finditer">Argument overlapped pour findall et finditer</a></li>
+</ul>
+</li>
+<li><a href="#timeout-python-3">Timeout (Python 3)</a></li>
+<li><a href="#resume-des-fonctionnalites-exclusives-a-regex">Résumé des fonctionnalités exclusives à regex</a></li>
+<li><a href="#conclusion">Conclusion</a></li>
+</ul>
+</div>
+<h2 id="introduction">Introduction</h2>
+<p>La librairie <strong><code>regex</code></strong> (disponible via <code>pip install regex</code>) est une implémentation avancée des expressions régulières pour Python, <strong>rétrocompatible</strong> avec le module standard <code>re</code>, mais offrant de nombreuses fonctionnalités supplémentaires.</p>
+<p>Parmi les ajouts majeurs :</p>
+<ul>
+<li>Le <strong>matching flou</strong> (approximatif)</li>
+<li>Les <strong>patterns récursifs</strong></li>
+<li>Les <strong>propriétés Unicode</strong> étendues (<code>\p{...}</code>)</li>
+<li>Les <strong>ensembles imbriqués</strong> et opérations de set</li>
+<li>Le <strong>lookbehind de longueur variable</strong></li>
+<li>Les <strong>groupes atomiques</strong> et quantificateurs possessifs</li>
+<li>Le matching <strong>POSIX</strong> (le plus long, le plus à gauche)</li>
+<li>Les <strong>listes nommées</strong></li>
+<li>La <strong>recherche inversée</strong></li>
+<li>Les <strong>timeouts</strong></li>
+<li>Et bien d'autres...</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="c1"># Installation</span>
+<span class="c1"># pip install regex</span>
+
+<span class="kn">import</span> <span class="nn">regex</span>
+
+<span class="c1"># Utilisation identique à re</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\w+&#39;</span><span class="p">,</span> <span class="s1">&#39;Bonjour le monde&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">())</span>  <span class="c1"># &#39;Bonjour&#39;</span>
 </code></pre></div>
 
-<h2 id="les-caracteres-speciaux-metacaracteres">Les caractères spéciaux (métacaractères)</h2>
-<p>Voici les caractères qui ont une signification particulière dans les regex :</p>
+<hr>
+<h2 id="ancien-et-nouveau-comportement-version-0-et-version-1">Ancien et nouveau comportement (version 0 et version 1)</h2>
+<p>Afin d'être compatible avec le module <code>re</code>, le module <code>regex</code> possède <strong>deux comportements</strong> :</p>
+<h3 id="comportement-version-0-ancien-compatible-re">Comportement version 0 (ancien, compatible <code>re</code>)</h3>
+<p>Indiqué par le flag <code>VERSION0</code> ou <code>V0</code>, ou <code>(?V0)</code> dans le pattern.</p>
+<ul>
+<li>Les correspondances de largeur zéro ne sont pas gérées correctement (avant Python 3.7).</li>
+<li><code>.split</code> ne divisera pas une chaîne à une largeur égale à zéro.</li>
+<li><code>.sub</code> avancera d'un caractère après une correspondance de largeur zéro.</li>
+<li>Les flags en ligne s'appliquent à l'ensemble du pattern et ne peuvent pas être désactivés.</li>
+<li>Seuls les ensembles simples sont supportés.</li>
+<li>Les correspondances insensibles à la casse en Unicode utilisent une mise en forme simple des majuscules par défaut.</li>
+</ul>
+<h3 id="comportement-version-1-nouveau-ameliore">Comportement version 1 (nouveau, amélioré)</h3>
+<p>Indiqué par le flag <code>VERSION1</code> ou <code>V1</code>, ou <code>(?V1)</code> dans le pattern.</p>
+<ul>
+<li>Les correspondances de largeur zéro sont <strong>gérées correctement</strong>.</li>
+<li>Les drapeaux en ligne s'appliquent à la fin du groupe ou du motif et <strong>peuvent être désactivés</strong>.</li>
+<li>Les <strong>ensembles imbriqués</strong> et les <strong>opérations de set</strong> sont pris en charge.</li>
+<li>Les correspondances insensibles à la casse en Unicode utilisent le <strong>pliage complet</strong> (full case-folding) par défaut.</li>
+</ul>
+<p>Si aucune version n'est spécifiée, le module utilisera <code>regex.DEFAULT_VERSION</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">regex</span>
+
+<span class="c1"># Forcer la version 1</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?V1)[[a-z]--[aeiou]]&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">())</span>  <span class="c1"># &#39;b&#39; (consonnes uniquement)</span>
+</code></pre></div>
+
+<hr>
+<h2 id="correspondances-insensibles-a-la-casse-en-unicode">Correspondances insensibles à la casse en Unicode</h2>
+<p>Le module <code>regex</code> prend en charge la conversion <strong>simple</strong> et <strong>complète</strong> (full case-folding) des majuscules et minuscules pour les correspondances insensibles à la casse en Unicode.</p>
+<p>L'utilisation complète peut être activée à l'aide du flag <code>FULLCASE</code> ou <code>F</code>, ou <code>(?f)</code> dans le pattern.</p>
+<blockquote>
+<p><strong>Note :</strong> Ce flag affecte le fonctionnement du flag <code>IGNORECASE</code> ; le flag <code>FULLCASE</code> lui-même n'active pas la correspondance insensible à la casse.</p>
+</blockquote>
+<ul>
+<li><strong>Version 0 :</strong> le flag <code>FULLCASE</code> est <strong>désactivé</strong> par défaut.</li>
+<li><strong>Version 1 :</strong> le flag <code>FULLCASE</code> est <strong>activé</strong> par défaut.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">regex</span>
+
+<span class="c1"># Le caractère allemand ß correspond à &quot;SS&quot; en full case-folding</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?fi)strasse&#39;</span><span class="p">,</span> <span class="s1">&#39;die Straße&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">())</span>  <span class="c1"># &#39;Straße&#39;</span>
+</code></pre></div>
+
+<hr>
+<h2 id="ensembles-imbriques-et-operations-de-set">Ensembles imbriqués et opérations de set</h2>
+<p>Il n'est pas possible de supporter à la fois des ensembles simples (comme dans <code>re</code>) et des ensembles imbriqués en même temps, à cause d'une différence dans la signification d'un <code>[</code> non échappé dans un set.</p>
+<p>Par exemple, le pattern <code>[[a-z]--[aeiou]]</code> est traité :</p>
+<ul>
+<li>En <strong>version 0</strong> comme : un set contenant <code>[</code> et les lettres <code>a-z</code>, suivi du littéral <code>--</code>, etc.</li>
+<li>En <strong>version 1</strong> comme : un set contenant les lettres <code>a-z</code> <strong>en excluant</strong> les lettres <code>a, e, i, o, u</code> (c'est-à-dire les <strong>consonnes</strong>).</li>
+</ul>
+<h3 id="operateurs-de-set-version-1-uniquement">Opérateurs de set (version 1 uniquement)</h3>
+<p>Les opérateurs, par ordre de priorité croissant :</p>
 <table>
 <thead>
 <tr>
-<th>Métacaractère</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>.</code></td>
-<td>N'importe quel caractère (sauf <code>\n</code>)</td>
-</tr>
-<tr>
-<td><code>^</code></td>
-<td>Début de chaîne</td>
-</tr>
-<tr>
-<td><code>$</code></td>
-<td>Fin de chaîne</td>
-</tr>
-<tr>
-<td><code>*</code></td>
-<td>0 ou plusieurs répétitions</td>
-</tr>
-<tr>
-<td><code>+</code></td>
-<td>1 ou plusieurs répétitions</td>
-</tr>
-<tr>
-<td><code>?</code></td>
-<td>0 ou 1 répétition</td>
-</tr>
-<tr>
-<td><code>{}</code></td>
-<td>Nombre exact de répétitions</td>
-</tr>
-<tr>
-<td><code>[]</code></td>
-<td>Ensemble de caractères</td>
-</tr>
-<tr>
-<td><code>\</code></td>
-<td>Séquence spéciale ou échappement</td>
-</tr>
-<tr>
-<td><code>\|</code></td>
-<td>Ou (alternance)</td>
-</tr>
-<tr>
-<td><code>()</code></td>
-<td>Groupe de capture</td>
-</tr>
-</tbody>
-</table>
-<h2 id="les-sequences-speciales">Les séquences spéciales</h2>
-<p>Les séquences spéciales commencent par <code>\</code> et ont une signification prédéfinie :</p>
-<table>
-<thead>
-<tr>
-<th>Séquence</th>
-<th>Description</th>
+<th>Opérateur</th>
+<th>Signification</th>
 <th>Exemple</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>\d</code></td>
-<td>Un chiffre [0-9]</td>
-<td><code>\d+</code> → "123"</td>
+<td><code>\|\|</code></td>
+<td>Union</td>
+<td><code>x\|\|y</code> → « x ou y »</td>
 </tr>
 <tr>
-<td><code>\D</code></td>
-<td>Tout sauf un chiffre</td>
-<td><code>\D+</code> → "abc"</td>
+<td><code>~~</code></td>
+<td>Différence symétrique</td>
+<td><code>x~~y</code> → « x ou y, mais pas les deux »</td>
 </tr>
 <tr>
-<td><code>\w</code></td>
-<td>Un caractère alphanumérique [a-zA-Z0-9_]</td>
-<td><code>\w+</code> → "hello_42"</td>
+<td><code>&amp;&amp;</code></td>
+<td>Intersection</td>
+<td><code>x&amp;&amp;y</code> → « x et y »</td>
 </tr>
 <tr>
-<td><code>\W</code></td>
-<td>Tout sauf un alphanumérique</td>
-<td><code>\W+</code> → "!@#"</td>
-</tr>
-<tr>
-<td><code>\s</code></td>
-<td>Un espace blanc (espace, tab, newline)</td>
-<td><code>\s+</code> → " "</td>
-</tr>
-<tr>
-<td><code>\S</code></td>
-<td>Tout sauf un espace blanc</td>
-<td><code>\S+</code> → "hello"</td>
-</tr>
-<tr>
-<td><code>\b</code></td>
-<td>Frontière de mot</td>
-<td><code>\bcat\b</code> → "cat" dans "the cat sat"</td>
-</tr>
-<tr>
-<td><code>\B</code></td>
-<td>Pas une frontière de mot</td>
-<td><code>\Bcat\B</code> → "cat" dans "concatenate"</td>
+<td><code>--</code></td>
+<td>Différence</td>
+<td><code>x--y</code> → « x mais pas y »</td>
 </tr>
 </tbody>
 </table>
-<h2 id="la-fonction-rematch">La fonction <code>re.match()</code></h2>
-<p><code>re.match()</code> vérifie si le <strong>début</strong> de la chaîne correspond au motif. Si oui, elle retourne un objet <code>Match</code>. Sinon, elle retourne <code>None</code>.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">re</span>
+<p>L'union implicite (juxtaposition comme <code>[ab]</code>) a la <strong>plus haute priorité</strong>. Ainsi <code>[ab&amp;&amp;cd]</code> équivaut à <code>[[a||b]&amp;&amp;[c||d]]</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">regex</span>
 
-<span class="n">pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;Hello&quot;</span>
-<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Hello, World!&quot;</span>
+<span class="c1"># Consonnes minuscules : lettres a-z MOINS les voyelles</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?V1)[[a-z]--[aeiou]]&#39;</span><span class="p">,</span> <span class="s1">&#39;bonjour&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>  <span class="c1"># [&#39;b&#39;, &#39;n&#39;, &#39;j&#39;, &#39;r&#39;]</span>
 
-<span class="n">result</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
-
-<span class="k">if</span> <span class="n">result</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Match trouvé : </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">group</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># &quot;Hello&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Position : </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">start</span><span class="p">()</span><span class="si">}</span><span class="s2"> à </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">end</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># 0 à 5</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Pas de match&quot;</span><span class="p">)</span>
+<span class="c1"># Intersection : caractères qui sont à la fois dans a-m ET dans des voyelles</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?V1)[[a-m]&amp;&amp;[aeiou]]&#39;</span><span class="p">,</span> <span class="s1">&#39;abcdefghijklm&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>  <span class="c1"># [&#39;a&#39;, &#39;e&#39;, &#39;i&#39;]</span>
 </code></pre></div>
 
-<p><strong>Attention :</strong> <code>re.match()</code> ne cherche qu'au début de la chaîne. Pour chercher partout, utilisez <code>re.search()</code>.</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># match() ne trouve rien ici car &quot;World&quot; n&#39;est pas au début</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;World&quot;</span><span class="p">,</span> <span class="s2">&quot;Hello, World!&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>  <span class="c1"># None</span>
+<hr>
+<h2 id="flags-drapeaux">Flags (drapeaux)</h2>
+<p>Il existe deux types de flags : les <strong>scopés</strong> et les <strong>globaux</strong>.</p>
+<h3 id="flags-scopes">Flags scopés</h3>
+<p>Ils ne s'appliquent qu'à <strong>une partie</strong> du pattern et peuvent être <strong>activés ou désactivés</strong> :</p>
+<p><code>FULLCASE</code>, <code>IGNORECASE</code>, <code>MULTILINE</code>, <code>DOTALL</code>, <code>VERBOSE</code>, <code>WORD</code></p>
+<h3 id="flags-globaux">Flags globaux</h3>
+<p>Ils s'appliquent au <strong>pattern entier</strong> et ne peuvent être <strong>qu'activés</strong> :</p>
+<p><code>ASCII</code>, <code>BESTMATCH</code>, <code>ENHANCEMATCH</code>, <code>LOCALE</code>, <code>POSIX</code>, <code>REVERSE</code>, <code>UNICODE</code>, <code>VERSION0</code>, <code>VERSION1</code></p>
+<p>Si ni <code>ASCII</code>, <code>LOCALE</code> ni <code>UNICODE</code> n'est spécifié, la valeur par défaut sera <code>UNICODE</code> pour une chaîne Unicode et <code>ASCII</code> pour une chaîne de bytes.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">regex</span>
+
+<span class="c1"># Flag scopé : IGNORECASE uniquement sur une partie</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?i:hello) world&#39;</span><span class="p">,</span> <span class="s1">&#39;HELLO world&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">())</span>  <span class="c1"># &#39;HELLO world&#39;</span>
+
+<span class="c1"># Le flag ENHANCEMATCH améliore l&#39;ajustement du matching flou</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?e)(chien){e&lt;=2}&#39;</span><span class="p">,</span> <span class="s1">&#39;le chine est beau&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>  <span class="c1"># &#39;chine&#39;</span>
 </code></pre></div>
 
-<h2 id="la-fonction-research">La fonction <code>re.search()</code></h2>
-<p><code>re.search()</code> parcourt <strong>toute</strong> la chaîne et retourne le premier match trouvé.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">re</span>
+<hr>
+<h2 id="drapeaux-a-portee-reduite-scoped-flags">Drapeaux à portée réduite (scoped flags)</h2>
+<p>Les drapeaux peuvent être limités à un <strong>sous-motif</strong> uniquement. Ils peuvent être activés ou désactivés au sein du sous-motif, sans affecter le reste du pattern.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">regex</span>
 
-<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Mon numéro est 06-12-34-56-78&quot;</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\d</span><span class="si">{2}</span><span class="s2">-\d</span><span class="si">{2}</span><span class="s2">-\d</span><span class="si">{2}</span><span class="s2">-\d</span><span class="si">{2}</span><span class="s2">-\d</span><span class="si">{2}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+<span class="c1"># IGNORECASE uniquement dans le groupe</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?i:abc)def&#39;</span><span class="p">,</span> <span class="s1">&#39;ABCdef&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">())</span>  <span class="c1"># &#39;ABCdef&#39;</span>
 
-<span class="k">if</span> <span class="n">result</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Numéro trouvé : </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">group</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># &quot;06-12-34-56-78&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Position : </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">start</span><span class="p">()</span><span class="si">}</span><span class="s2"> à </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">end</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="c1"># Désactiver dans un sous-groupe</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?i)abc(?-i:def)&#39;</span><span class="p">,</span> <span class="s1">&#39;ABCdef&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">())</span>  <span class="c1"># &#39;ABCdef&#39;</span>
 </code></pre></div>
 
-<h3 id="difference-entre-match-et-search">Différence entre <code>match()</code> et <code>search()</code></h3>
-<div class="highlight"><pre><span></span><code><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Le prix est 42 euros&quot;</span>
+<hr>
+<h2 id="groupes-de-capture-nommes">Groupes de capture nommés</h2>
+<p>Tous les groupes de capture ont un numéro de groupe, à partir de 1.</p>
+<h3 id="regles-cles">Règles clés</h3>
+<ul>
+<li>Les groupes avec le <strong>même nom</strong> auront le <strong>même numéro</strong> de groupe.</li>
+<li>Les groupes avec un <strong>nom différent</strong> auront un <strong>numéro différent</strong>.</li>
+<li>Le même nom peut être utilisé par plus d'un groupe : les captures ultérieures <strong>écrasent</strong> les captures antérieures. Toutes les captures restent disponibles via la méthode <code>captures()</code> de l'objet match.</li>
+</ul>
+<h3 id="syntaxes-supportees">Syntaxes supportées</h3>
+<p>Les groupes peuvent être nommés avec <code>(?&lt;nom&gt;...)</code> ainsi que la syntaxe classique <code>(?P&lt;nom&gt;...)</code>.</p>
+<p>Les groupes peuvent être référencés avec <code>\g&lt;nom&gt;</code>, ce qui permet d'avoir <strong>plus de 99 groupes</strong>.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">regex</span>
 
-<span class="c1"># match() cherche au début → pas de résultat pour un nombre</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\d+&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">))</span>   <span class="c1"># None</span>
-
-<span class="c1"># search() cherche partout → trouve &quot;42&quot;</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\d+&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">))</span>  <span class="c1"># &lt;re.Match object; span=(13, 15), match=&#39;42&#39;&gt;</span>
+<span class="c1"># Noms de groupes dupliqués</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?P&lt;item&gt;\w+) and (?P&lt;item&gt;\w+)&#39;</span><span class="p">,</span> <span class="s1">&#39;chat and chien&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s1">&#39;item&#39;</span><span class="p">))</span>     <span class="c1"># &#39;chien&#39; (dernière capture)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">captures</span><span class="p">(</span><span class="s1">&#39;item&#39;</span><span class="p">))</span>  <span class="c1"># [&#39;chat&#39;, &#39;chien&#39;] (toutes les captures)</span>
 </code></pre></div>
 
-<h2 id="la-fonction-refindall">La fonction <code>re.findall()</code></h2>
-<p><code>re.findall()</code> retourne <strong>tous</strong> les matches sous forme de liste de chaînes.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">re</span>
+<hr>
+<h2 id="reinitialisation-de-branche-branch-reset">Réinitialisation de branche (branch reset)</h2>
+<p>La syntaxe <code>(?|...|...)</code> réutilise les numéros de groupe de capture dans toutes les alternatives.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">regex</span>
 
-<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Les prix sont : 10€, 25€, 42€ et 100€&quot;</span>
-<span class="n">prices</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\d+&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">prices</span><span class="p">)</span>  <span class="c1"># [&#39;10&#39;, &#39;25&#39;, &#39;42&#39;, &#39;100&#39;]</span>
+<span class="c1"># Les deux alternatives partagent le groupe 1</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?|(premier)|(second))&#39;</span><span class="p">,</span> <span class="s1">&#39;second&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>  <span class="c1"># &#39;second&#39;</span>
+
+<span class="c1"># Avec noms différents : numéros différents</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?|(?P&lt;a&gt;premier)|(?P&lt;b&gt;second))&#39;</span><span class="p">,</span> <span class="s1">&#39;second&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">))</span>  <span class="c1"># &#39;second&#39;</span>
 </code></pre></div>
 
-<p>Avec des groupes de capture, <code>findall()</code> retourne les groupes :</p>
-<div class="highlight"><pre><span></span><code><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Contact : alice@mail.com et bob@company.org&quot;</span>
-<span class="n">emails</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(\w+)@(\w+\.\w+)&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">emails</span><span class="p">)</span>  <span class="c1"># [(&#39;alice&#39;, &#39;mail.com&#39;), (&#39;bob&#39;, &#39;company.org&#39;)]</span>
+<p>Dans la regex <code>(\s+)(?|(?P&lt;foo&gt;[A-Z]+)|(\w+) (?P&lt;foo&gt;[0-9]+))</code> :</p>
+<ul>
+<li><code>(\s+)</code> → groupe 1</li>
+<li><code>(?P&lt;foo&gt;[A-Z]+)</code> → groupe 2, aussi appelé « foo »</li>
+<li><code>(\w+)</code> → groupe 2 (à cause de la réinitialisation de branche)</li>
+<li><code>(?P&lt;foo&gt;[0-9]+)</code> → groupe 2 (parce qu'il s'appelle « foo »)</li>
+</ul>
+<hr>
+<h2 id="multithreading">Multithreading</h2>
+<p>Le module <code>regex</code> <strong>libère le GIL</strong> lors de la mise en correspondance sur les instances de classes de chaînes intégrées (immuables), ce qui permet à d'autres threads Python de fonctionner simultanément.</p>
+<p>Il est aussi possible de <strong>forcer</strong> la libération du GIL en utilisant l'argument <code>concurrent=True</code> :</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">regex</span>
+
+<span class="c1"># Recherche concurrente (libère le GIL)</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\w+&#39;</span><span class="p">,</span> <span class="n">texte</span><span class="p">,</span> <span class="n">concurrent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </code></pre></div>
 
-<h2 id="la-fonction-refinditer">La fonction <code>re.finditer()</code></h2>
-<p><code>re.finditer()</code> retourne un <strong>itérateur</strong> d'objets <code>Match</code>, ce qui permet d'accéder aux positions et aux groupes de chaque match.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">re</span>
+<blockquote>
+<p><strong>Attention :</strong> le comportement n'est pas défini si la chaîne change pendant la recherche. N'utilisez <code>concurrent=True</code> que si vous êtes sûr que la chaîne ne sera pas modifiée.</p>
+</blockquote>
+<hr>
+<h2 id="matching-posix-le-plus-long-le-plus-a-gauche">Matching POSIX (le plus long, le plus à gauche)</h2>
+<p>La norme POSIX pour les regex consiste à retourner le <strong>match le plus long le plus à gauche</strong>. Ceci peut être activé avec le flag <code>POSIX</code> ou <code>(?p)</code> dans le pattern.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">regex</span>
 
-<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Dates : 2024-01-15, 2024-03-20, 2024-12-31&quot;</span>
-<span class="n">pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(\d</span><span class="si">{4}</span><span class="s2">)-(\d</span><span class="si">{2}</span><span class="s2">)-(\d</span><span class="si">{2}</span><span class="s2">)&quot;</span>
+<span class="c1"># Sans POSIX : premier match trouvé</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Mr|Mrs&#39;</span><span class="p">,</span> <span class="s1">&#39;Mrs Smith&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">())</span>  <span class="c1"># &#39;Mr&#39;</span>
 
-<span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Date : </span><span class="si">{</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Année : </span><span class="si">{</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Mois  : </span><span class="si">{</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Jour  : </span><span class="si">{</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Position : </span><span class="si">{</span><span class="n">match</span><span class="o">.</span><span class="n">start</span><span class="p">()</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">match</span><span class="o">.</span><span class="n">end</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="c1"># Avec POSIX : match le plus long</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?p)Mr|Mrs&#39;</span><span class="p">,</span> <span class="s1">&#39;Mrs Smith&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">())</span>  <span class="c1"># &#39;Mrs&#39;</span>
+
+<span class="c1"># Autre exemple</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?p)a\w*?b|a\w*?c&#39;</span><span class="p">,</span> <span class="s1">&#39;axxbxxc&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">())</span>  <span class="c1"># &#39;axxbxxc&#39; (le plus long match possible)</span>
 </code></pre></div>
 
-<h2 id="la-fonction-resub">La fonction <code>re.sub()</code></h2>
-<p><code>re.sub()</code> remplace les occurrences du motif par une chaîne de remplacement.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">re</span>
-
-<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Mon numéro est 06 12 34 56 78&quot;</span>
-
-<span class="c1"># Remplacer les espaces dans le numéro par des tirets</span>
-<span class="c1"># On cible spécifiquement les espaces entre chiffres</span>
-<span class="n">clean</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(\d</span><span class="si">{2}</span><span class="s2">)\s&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;\1-&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">clean</span><span class="p">)</span>  <span class="c1"># &quot;Mon numéro est 06-12-34-56-78&quot;</span>
-</code></pre></div>
-
-<p>On peut aussi utiliser une <strong>fonction</strong> comme remplacement :</p>
-<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">double_number</span><span class="p">(</span><span class="n">match</span><span class="p">):</span>
-    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">())</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
-
-<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Les scores sont 10, 25 et 42&quot;</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\d+&quot;</span><span class="p">,</span> <span class="n">double_number</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>  <span class="c1"># &quot;Les scores sont 20, 50 et 84&quot;</span>
-</code></pre></div>
-
-<h2 id="la-fonction-resplit">La fonction <code>re.split()</code></h2>
-<p><code>re.split()</code> découpe une chaîne selon un motif regex.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">re</span>
-
-<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;pomme, orange;  banane   kiwi&quot;</span>
-
-<span class="c1"># Découper par virgule, point-virgule ou espaces</span>
-<span class="n">fruits</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;[,;\s]+&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">fruits</span><span class="p">)</span>  <span class="c1"># [&#39;pomme&#39;, &#39;orange&#39;, &#39;banane&#39;, &#39;kiwi&#39;]</span>
-</code></pre></div>
-
-<p>Avec <code>maxsplit</code> pour limiter le nombre de découpes :</p>
-<div class="highlight"><pre><span></span><code><span class="n">result</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;[,;\s]+&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">maxsplit</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>  <span class="c1"># [&#39;pomme&#39;, &#39;orange&#39;, &#39;banane   kiwi&#39;]</span>
-</code></pre></div>
-
-<h2 id="la-fonction-recompile">La fonction <code>re.compile()</code></h2>
-<p><code>re.compile()</code> pré-compile un motif regex en objet <code>Pattern</code>. Utile quand on réutilise le même motif plusieurs fois.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">re</span>
-
-<span class="c1"># Compiler le motif une seule fois</span>
-<span class="n">email_pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}&quot;</span><span class="p">)</span>
-
-<span class="n">texts</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;Contact : alice@example.com&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;Pas d&#39;email ici&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;Écrivez à bob.smith@company.co.uk&quot;</span><span class="p">,</span>
-<span class="p">]</span>
-
-<span class="k">for</span> <span class="n">text</span> <span class="ow">in</span> <span class="n">texts</span><span class="p">:</span>
-    <span class="n">match</span> <span class="o">=</span> <span class="n">email_pattern</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Email trouvé : </span><span class="si">{</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Pas d&#39;email&quot;</span><span class="p">)</span>
-</code></pre></div>
-
-<h2 id="les-groupes-de-capture">Les groupes de capture</h2>
-<p>Les parenthèses <code>()</code> créent des <strong>groupes de capture</strong> qui permettent d'extraire des parties spécifiques du match.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">re</span>
-
-<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;2024-03-15 10:30:45&quot;</span>
-<span class="n">pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(\d</span><span class="si">{4}</span><span class="s2">)-(\d</span><span class="si">{2}</span><span class="s2">)-(\d</span><span class="si">{2}</span><span class="s2">) (\d</span><span class="si">{2}</span><span class="s2">):(\d</span><span class="si">{2}</span><span class="s2">):(\d</span><span class="si">{2}</span><span class="s2">)&quot;</span>
-
-<span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
-<span class="k">if</span> <span class="n">match</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Match complet : </span><span class="si">{</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># &quot;2024-03-15 10:30:45&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Année : </span><span class="si">{</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>           <span class="c1"># &quot;2024&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mois : </span><span class="si">{</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>            <span class="c1"># &quot;03&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Jour : </span><span class="si">{</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>            <span class="c1"># &quot;15&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Heure : </span><span class="si">{</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>           <span class="c1"># &quot;10&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Minute : </span><span class="si">{</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>          <span class="c1"># &quot;30&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Seconde : </span><span class="si">{</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>         <span class="c1"># &quot;45&quot;</span>
-</code></pre></div>
-
-<h3 id="groupes-nommes">Groupes nommés</h3>
-<p>Les groupes nommés utilisent la syntaxe <code>(?P&lt;nom&gt;...)</code> pour donner un nom au groupe :</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">re</span>
-
-<span class="n">log</span> <span class="o">=</span> <span class="s2">&quot;2024-03-15 ERROR [auth] Login failed for user admin&quot;</span>
-<span class="n">pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(?P&lt;date&gt;\d</span><span class="si">{4}</span><span class="s2">-\d</span><span class="si">{2}</span><span class="s2">-\d</span><span class="si">{2}</span><span class="s2">) (?P&lt;level&gt;\w+) \[(?P&lt;module&gt;\w+)\] (?P&lt;message&gt;.+)&quot;</span>
-
-<span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">log</span><span class="p">)</span>
-<span class="k">if</span> <span class="n">match</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Date : </span><span class="si">{</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s1">&#39;date&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>       <span class="c1"># &quot;2024-03-15&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Niveau : </span><span class="si">{</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s1">&#39;level&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>     <span class="c1"># &quot;ERROR&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Module : </span><span class="si">{</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s1">&#39;module&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>    <span class="c1"># &quot;auth&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Message : </span><span class="si">{</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># &quot;Login failed for user admin&quot;</span>
-</code></pre></div>
-
-<h3 id="groupes-non-capturants">Groupes non capturants</h3>
-<p><code>(?:...)</code> crée un groupe sans le capturer (utile pour le regroupement logique) :</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">re</span>
-
-<span class="c1"># On veut matcher &quot;http&quot; ou &quot;https&quot; sans capturer le &quot;s&quot; optionnel</span>
-<span class="n">urls</span> <span class="o">=</span> <span class="s2">&quot;http://example.com et https://secure.com&quot;</span>
-<span class="n">pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(?:https?://\S+)&quot;</span>
-
-<span class="n">matches</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">urls</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span>  <span class="c1"># [&#39;http://example.com&#39;, &#39;https://secure.com&#39;]</span>
-</code></pre></div>
-
-<h2 id="les-drapeaux-flags">Les drapeaux (flags)</h2>
-<p>Les drapeaux modifient le comportement de la regex :</p>
+<blockquote>
+<p><strong>Note :</strong> le matching POSIX prend plus de temps car, même après avoir trouvé une correspondance, il continue à chercher s'il en existe une plus longue à la même position.</p>
+</blockquote>
+<hr>
+<h2 id="matching-flou-fuzzy-matching">Matching flou (fuzzy matching)</h2>
+<p>Le <code>regex</code> tente généralement d'obtenir une correspondance exacte, mais parfois un résultat <strong>approximatif</strong> (« fuzzy ») est nécessaire, pour les cas où le texte recherché peut contenir des erreurs.</p>
+<h3 id="les-trois-types-derreurs">Les trois types d'erreurs</h3>
 <table>
 <thead>
 <tr>
-<th>Drapeau</th>
-<th>Version courte</th>
+<th>Type</th>
+<th>Indicateur</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>re.IGNORECASE</code></td>
-<td><code>re.I</code></td>
-<td>Ignore la casse</td>
+<td>Insertion</td>
+<td><code>i</code></td>
+<td>Un caractère en trop dans le texte</td>
 </tr>
 <tr>
-<td><code>re.MULTILINE</code></td>
-<td><code>re.M</code></td>
-<td><code>^</code> et <code>$</code> matchent début/fin de chaque ligne</td>
+<td>Suppression</td>
+<td><code>d</code></td>
+<td>Un caractère manquant dans le texte</td>
 </tr>
 <tr>
-<td><code>re.DOTALL</code></td>
-<td><code>re.S</code></td>
-<td><code>.</code> matche aussi <code>\n</code></td>
+<td>Substitution</td>
+<td><code>s</code></td>
+<td>Un caractère remplacé par un autre</td>
 </tr>
 <tr>
-<td><code>re.VERBOSE</code></td>
-<td><code>re.X</code></td>
-<td>Permet les commentaires dans la regex</td>
+<td>Toute erreur</td>
+<td><code>e</code></td>
+<td>N'importe quel type d'erreur</td>
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">re</span>
+<p>Le flou est spécifié entre <code>{</code> et <code>}</code> après l'élément :</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">regex</span>
 
-<span class="c1"># IGNORECASE : chercher sans distinction majuscule/minuscule</span>
-<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Python est génial. PYTHON est puissant.&quot;</span>
-<span class="n">matches</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;python&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span>  <span class="c1"># [&#39;Python&#39;, &#39;PYTHON&#39;]</span>
+<span class="c1"># Correspondance exacte</span>
+<span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(foo)&#39;</span><span class="p">,</span> <span class="s1">&#39;foo&#39;</span><span class="p">)</span>
 
-<span class="c1"># VERBOSE : écrire une regex lisible avec des commentaires</span>
-<span class="n">email_pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    [a-zA-Z0-9._%+-]+    # Nom d&#39;utilisateur</span>
-<span class="s2">    @                     # Arobase</span>
-<span class="s2">    [a-zA-Z0-9.-]+        # Nom de domaine</span>
-<span class="s2">    \.                    # Point</span>
-<span class="s2">    [a-zA-Z]{2,}          # Extension (com, org, fr...)</span>
-<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">VERBOSE</span><span class="p">)</span>
+<span class="c1"># Avec insertions autorisées</span>
+<span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(foo)</span><span class="si">{i}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;floo&#39;</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="n">email_pattern</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;test@example.com&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">())</span>  <span class="c1"># &quot;test@example.com&quot;</span>
+<span class="c1"># Avec suppressions autorisées</span>
+<span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(foo)</span><span class="si">{d}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;fo&#39;</span><span class="p">)</span>
 
-<span class="c1"># Combiner plusieurs drapeaux avec |</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^hello&quot;</span><span class="p">,</span> <span class="s2">&quot;Hello</span><span class="se">\n</span><span class="s2">hello</span><span class="se">\n</span><span class="s2">HELLO&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span> <span class="o">|</span> <span class="n">re</span><span class="o">.</span><span class="n">MULTILINE</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>  <span class="c1"># [&#39;Hello&#39;, &#39;hello&#39;, &#39;HELLO&#39;]</span>
+<span class="c1"># Avec substitutions autorisées</span>
+<span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(foo)</span><span class="si">{s}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;fao&#39;</span><span class="p">)</span>
+
+<span class="c1"># Avec tout type d&#39;erreur autorisé</span>
+<span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(foo)</span><span class="si">{e}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;fax&#39;</span><span class="p">)</span>
 </code></pre></div>
 
-<h2 id="les-assertions-lookahead-et-lookbehind">Les assertions (lookahead et lookbehind)</h2>
-<p>Les assertions vérifient une condition sans consommer de caractères.</p>
-<h3 id="lookahead-positif">Lookahead positif <code>(?=...)</code></h3>
-<p>Vérifie que le motif est <strong>suivi</strong> par quelque chose :</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">re</span>
+<h3 id="limites-derreurs">Limites d'erreurs</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Au maximum 3 suppressions, aucun autre type</span>
+<span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(mot){d&lt;=3}&#39;</span><span class="p">,</span> <span class="n">texte</span><span class="p">)</span>
 
-<span class="c1"># Trouver les montants suivis de &quot;€&quot;</span>
-<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Prix : 42€, 100$, 25€&quot;</span>
-<span class="n">matches</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\d+(?=€)&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span>  <span class="c1"># [&#39;42&#39;, &#39;25&#39;]</span>
+<span class="c1"># Au maximum 1 insertion et 2 substitutions, aucune suppression</span>
+<span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(mot){i&lt;=1,s&lt;=2}&#39;</span><span class="p">,</span> <span class="n">texte</span><span class="p">)</span>
+
+<span class="c1"># Au moins 1 et au plus 3 erreurs</span>
+<span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(mot){1&lt;=e&lt;=3}&#39;</span><span class="p">,</span> <span class="n">texte</span><span class="p">)</span>
+
+<span class="c1"># Combinaison avec maximum total</span>
+<span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(mot){i&lt;=2,d&lt;=2,e&lt;=3}&#39;</span><span class="p">,</span> <span class="n">texte</span><span class="p">)</span>
 </code></pre></div>
 
-<h3 id="lookahead-negatif">Lookahead négatif <code>(?!...)</code></h3>
-<p>Vérifie que le motif n'est <strong>pas suivi</strong> par quelque chose :</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Trouver les nombres qui ne sont PAS suivis de &quot;€&quot;</span>
-<span class="n">matches</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\d+(?!€)&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span>  <span class="c1"># [&#39;100&#39;]</span>
+<h3 id="couts-derreurs">Coûts d'erreurs</h3>
+<p>Il est possible d'attribuer un <strong>coût</strong> à chaque type d'erreur et de définir un coût total maximum :</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Chaque insertion coûte 2, chaque suppression coûte 2,</span>
+<span class="c1"># chaque substitution coûte 1, coût total max 4</span>
+<span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(mot){2i+2d+1s&lt;=4}&#39;</span><span class="p">,</span> <span class="n">texte</span><span class="p">)</span>
+
+<span class="c1"># Combinaison de limites et de coûts</span>
+<span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(mot){i&lt;=1,d&lt;=1,s&lt;=1,2i+2d+1s&lt;=4}&#39;</span><span class="p">,</span> <span class="n">texte</span><span class="p">)</span>
 </code></pre></div>
 
-<h3 id="lookbehind-positif">Lookbehind positif <code>(?&lt;=...)</code></h3>
-<p>Vérifie que le motif est <strong>précédé</strong> par quelque chose :</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Trouver les montants précédés de &quot;Prix : &quot;</span>
-<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Prix : 42, Remise : 10&quot;</span>
-<span class="n">matches</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(?&lt;=Prix : )\d+&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span>  <span class="c1"># [&#39;42&#39;]</span>
+<h3 id="flags-pour-le-matching-flou">Flags pour le matching flou</h3>
+<ul>
+<li><strong><code>ENHANCEMATCH</code></strong> (<code>(?e)</code>) : tente d'<strong>améliorer l'ajustement</strong> du match trouvé (réduire le nombre d'erreurs).</li>
+<li><strong><code>BESTMATCH</code></strong> (<code>(?b)</code>) : recherche le <strong>meilleur match</strong> au lieu du prochain match.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">regex</span>
+
+<span class="c1"># Sans amélioration : premier match flou trouvé</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(dog)</span><span class="si">{e}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;cat and dog&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>  <span class="c1"># &#39;cat&#39; (3 erreurs, nombre illimité autorisé)</span>
+
+<span class="c1"># Avec limite d&#39;erreurs</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(dog){e&lt;=1}&#39;</span><span class="p">,</span> <span class="s1">&#39;cat and dog&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>  <span class="c1"># &#39; dog&#39; (1 erreur, avec espace en tête)</span>
+
+<span class="c1"># Avec ENHANCEMATCH : améliore l&#39;ajustement</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?e)(dog){e&lt;=1}&#39;</span><span class="p">,</span> <span class="s1">&#39;cat and dog&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>  <span class="c1"># &#39;dog&#39; (sans espace, meilleur ajustement)</span>
 </code></pre></div>
 
-<h3 id="lookbehind-negatif">Lookbehind négatif <code>(?&lt;!...)</code></h3>
-<p>Vérifie que le motif n'est <strong>pas précédé</strong> par quelque chose :</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Trouver les nombres non précédés de &quot;Prix : &quot;</span>
-<span class="n">matches</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(?&lt;!Prix : )\d+&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span>  <span class="c1"># [&#39;10&#39;]</span>
+<h3 id="attributs-fuzzy-de-lobjet-match">Attributs fuzzy de l'objet match</h3>
+<p>L'objet match possède deux attributs spéciaux :</p>
+<ul>
+<li><strong><code>fuzzy_counts</code></strong> : tuple <code>(substitutions, insertions, suppressions)</code> donnant le nombre total de chaque type d'erreur.</li>
+<li><strong><code>fuzzy_changes</code></strong> : tuple de tuples donnant les <strong>positions</strong> des substitutions, insertions et suppressions.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">regex</span>
+
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?:magnifique){e&lt;=3}&#39;</span><span class="p">,</span> <span class="s1">&#39;le manigfique&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">fuzzy_counts</span><span class="p">)</span>   <span class="c1"># (1, 0, 0) par exemple</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">fuzzy_changes</span><span class="p">)</span>  <span class="c1"># positions des erreurs</span>
 </code></pre></div>
 
-<h2 id="quantificateurs-gourmands-et-paresseux">Quantificateurs gourmands et paresseux</h2>
-<p>Par défaut, les quantificateurs (<code>*</code>, <code>+</code>, <code>?</code>) sont <strong>gourmands</strong> : ils matchent le plus de caractères possible.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">re</span>
+<hr>
+<h2 id="define-definir-des-sous-patterns-reutilisables"><code>(?(DEFINE)...)</code> : définir des sous-patterns réutilisables</h2>
+<p>Si il n'y a pas de groupe appelé <code>DEFINE</code>, alors le contenu sera ignoré lors du matching, mais toutes les définitions de groupes qui s'y trouvent seront disponibles pour référence.</p>
+<p>C'est très utile pour <strong>factoriser</strong> des sous-motifs complexes utilisés à plusieurs endroits :</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">regex</span>
 
-<span class="n">html</span> <span class="o">=</span> <span class="s2">&quot;&lt;b&gt;Gras&lt;/b&gt; et &lt;i&gt;Italique&lt;/i&gt;&quot;</span>
+<span class="c1"># Définir un sous-pattern pour les montants en dollars</span>
+<span class="n">pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;&#39;&#39;(?x)</span>
+<span class="s1">    (?(DEFINE)</span>
+<span class="s1">        (?P&lt;montant&gt;\$\d+(?:\.\d</span><span class="si">{2}</span><span class="s1">)?)</span>
+<span class="s1">    )</span>
+<span class="s1">    Total:\s*(?P&gt;montant)</span>
+<span class="s1">&#39;&#39;&#39;</span>
 
-<span class="c1"># Gourmand : matche tout entre le premier &lt; et le dernier &gt;</span>
-<span class="n">greedy</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;&lt;.+&gt;&quot;</span><span class="p">,</span> <span class="n">html</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">greedy</span><span class="p">)</span>  <span class="c1"># [&#39;&lt;b&gt;Gras&lt;/b&gt; et &lt;i&gt;Italique&lt;/i&gt;&#39;]</span>
-
-<span class="c1"># Paresseux (ajouter ?) : matche le minimum</span>
-<span class="n">lazy</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;&lt;.+?&gt;&quot;</span><span class="p">,</span> <span class="n">html</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">lazy</span><span class="p">)</span>  <span class="c1"># [&#39;&lt;b&gt;&#39;, &#39;&lt;/b&gt;&#39;, &#39;&lt;i&gt;&#39;, &#39;&lt;/i&gt;&#39;]</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="s1">&#39;Total: $42.50&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">())</span>  <span class="c1"># &#39;Total: $42.50&#39;</span>
 </code></pre></div>
 
-<h2 id="cas-dutilisation-courants">Cas d'utilisation courants</h2>
-<h3 id="valider-un-email">Valider un email</h3>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">re</span>
+<hr>
+<h2 id="prune-skip-et-fail"><code>(*PRUNE)</code>, <code>(*SKIP)</code> et <code>(*FAIL)</code></h2>
+<p>Trois verbes de contrôle du backtracking :</p>
+<ul>
+<li><strong><code>(*PRUNE)</code></strong> : supprime les informations de retour en arrière jusqu'à ce point.</li>
+<li><strong><code>(*SKIP)</code></strong> : comme <code>(*PRUNE)</code>, mais définit aussi <strong>où</strong> dans le texte la prochaine tentative de correspondance commencera.</li>
+<li><strong><code>(*FAIL)</code></strong> (ou <code>(*F)</code>) : provoque un retour en arrière <strong>immédiat</strong>.</li>
+</ul>
+<blockquote>
+<p>Lorsqu'ils sont utilisés dans un groupe atomique ou dans un lookaround, ces verbes n'affectent pas le pattern environnant.</p>
+</blockquote>
+<hr>
+<h2 id="k-garder-une-partie-du-match"><code>\K</code> : garder une partie du match</h2>
+<p><code>\K</code> garde la partie du match entier <strong>après</strong> la position où <code>\K</code> s'est produit ; la partie avant est défaussée. Cela n'affecte <strong>pas</strong> le retour des groupes de capture.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">regex</span>
 
-<span class="k">def</span> <span class="nf">is_valid_email</span><span class="p">(</span><span class="n">email</span><span class="p">):</span>
-    <span class="n">pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$&quot;</span>
-    <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">email</span><span class="p">))</span>
+<span class="c1"># Trouver le mot après &quot;foo &quot; sans l&#39;inclure dans le match</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;foo \K\w+&#39;</span><span class="p">,</span> <span class="s1">&#39;foo bar&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">())</span>  <span class="c1"># &#39;bar&#39;</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="n">is_valid_email</span><span class="p">(</span><span class="s2">&quot;user@example.com&quot;</span><span class="p">))</span>    <span class="c1"># True</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">is_valid_email</span><span class="p">(</span><span class="s2">&quot;invalid@.com&quot;</span><span class="p">))</span>         <span class="c1"># False</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">is_valid_email</span><span class="p">(</span><span class="s2">&quot;no-at-sign.com&quot;</span><span class="p">))</span>       <span class="c1"># False</span>
+<span class="c1"># Remplacer uniquement ce qui suit \K</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;foo \K\w+&#39;</span><span class="p">,</span> <span class="s1">&#39;baz&#39;</span><span class="p">,</span> <span class="s1">&#39;foo bar&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>  <span class="c1"># &#39;foo baz&#39;</span>
 </code></pre></div>
 
-<h3 id="extraire-des-urls">Extraire des URLs</h3>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">re</span>
+<hr>
+<h2 id="captures-capturesdict-et-groupdict"><code>captures()</code>, <code>capturesdict()</code> et <code>groupdict()</code></h2>
+<p>L'objet match dispose de méthodes supplémentaires pour accéder à <strong>toutes les captures</strong> d'un groupe répété :</p>
+<ul>
+<li><strong><code>groupdict()</code></strong> : retourne un dictionnaire des groupes nommés avec la <strong>dernière</strong> capture.</li>
+<li><strong><code>captures(group)</code></strong> : retourne une <strong>liste</strong> de toutes les captures d'un groupe.</li>
+<li><strong><code>capturesdict()</code></strong> : retourne un dictionnaire des groupes nommés avec la <strong>liste complète</strong> de toutes les captures.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">regex</span>
 
-<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">Visitez https://www.example.com ou http://blog.test.org/page?id=42</span>
-<span class="s2">pour plus d&#39;informations.</span>
-<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?P&lt;mot&gt;\w+) (?P&lt;mot&gt;\w+) (?P&lt;mot&gt;\w+)&#39;</span><span class="p">,</span> <span class="s1">&#39;un deux trois&#39;</span><span class="p">)</span>
 
-<span class="n">urls</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;https?://[^\s]+&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">urls</span><span class="p">)</span>  <span class="c1"># [&#39;https://www.example.com&#39;, &#39;http://blog.test.org/page?id=42&#39;]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s1">&#39;mot&#39;</span><span class="p">))</span>        <span class="c1"># &#39;trois&#39; (dernière capture)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">captures</span><span class="p">(</span><span class="s1">&#39;mot&#39;</span><span class="p">))</span>     <span class="c1"># [&#39;un&#39;, &#39;deux&#39;, &#39;trois&#39;]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">capturesdict</span><span class="p">())</span>      <span class="c1"># {&#39;mot&#39;: [&#39;un&#39;, &#39;deux&#39;, &#39;trois&#39;]}</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">groupdict</span><span class="p">())</span>         <span class="c1"># {&#39;mot&#39;: &#39;trois&#39;}</span>
 </code></pre></div>
 
-<h3 id="nettoyer-du-texte">Nettoyer du texte</h3>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">re</span>
+<hr>
+<h2 id="noms-de-groupes-dupliques">Noms de groupes dupliqués</h2>
+<p>Les noms de groupes peuvent être <strong>dupliqués</strong> dans le pattern. Les captures ultérieures écrasent les précédentes, mais toutes restent accessibles via <code>captures()</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">regex</span>
 
-<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;  Trop   d&#39;espaces    partout  &quot;</span>
-
-<span class="c1"># Remplacer les espaces multiples par un seul espace</span>
-<span class="n">clean</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\s+&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">clean</span><span class="p">)</span>  <span class="c1"># &quot;Trop d&#39;espaces partout&quot;</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?P&lt;item&gt;\w+) et (?P&lt;item&gt;\w+)&#39;</span><span class="p">,</span> <span class="s1">&#39;pain et beurre&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s1">&#39;item&#39;</span><span class="p">))</span>      <span class="c1"># &#39;beurre&#39;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">captures</span><span class="p">(</span><span class="s1">&#39;item&#39;</span><span class="p">))</span>   <span class="c1"># [&#39;pain&#39;, &#39;beurre&#39;]</span>
 </code></pre></div>
 
-<h3 id="parser-des-logs">Parser des logs</h3>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">re</span>
+<hr>
+<h2 id="fullmatch"><code>fullmatch()</code></h2>
+<p><code>fullmatch</code> se comporte comme <code>match</code>, sauf qu'il doit correspondre à <strong>toute la chaîne</strong>.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">regex</span>
 
-<span class="n">logs</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">2024-03-15 10:30:45 ERROR [database] Connection timeout after 30s</span>
-<span class="s2">2024-03-15 10:31:02 INFO [api] Request processed in 150ms</span>
-<span class="s2">2024-03-15 10:31:15 WARNING [auth] Failed login attempt from 192.168.1.42</span>
-<span class="s2">&quot;&quot;&quot;</span>
-
-<span class="n">pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(\d</span><span class="si">{4}</span><span class="s2">-\d</span><span class="si">{2}</span><span class="s2">-\d</span><span class="si">{2}</span><span class="s2"> \d</span><span class="si">{2}</span><span class="s2">:\d</span><span class="si">{2}</span><span class="s2">:\d</span><span class="si">{2}</span><span class="s2">) (\w+) \[(\w+)\] (.+)&quot;</span>
-
-<span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">logs</span><span class="p">):</span>
-    <span class="n">timestamp</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">level</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;ERROR&quot;</span><span class="p">,</span> <span class="s2">&quot;WARNING&quot;</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;⚠️ [</span><span class="si">{</span><span class="n">level</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">timestamp</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">module</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">regex</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\d</span><span class="si">{4}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;1234&#39;</span><span class="p">))</span>    <span class="c1"># Match</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">regex</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\d</span><span class="si">{4}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;12345&#39;</span><span class="p">))</span>   <span class="c1"># None</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">regex</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\d</span><span class="si">{4}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;123&#39;</span><span class="p">))</span>     <span class="c1"># None</span>
 </code></pre></div>
 
-<h2 id="comparaison-rapide-des-fonctions">Comparaison rapide des fonctions</h2>
+<hr>
+<h2 id="subf-subfn-et-expandf"><code>subf()</code>, <code>subfn()</code> et <code>expandf()</code></h2>
+<p><code>subf</code> et <code>subfn</code> sont des alternatives à <code>sub</code> et <code>subn</code>. Lorsqu'une chaîne de remplacement est passée, ils la traitent comme une <strong>chaîne de format</strong> (f-string style).</p>
+<p><code>expandf</code> est l'équivalent pour l'objet match.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">regex</span>
+
+<span class="c1"># subf : remplacement avec chaîne de format</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">subf</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?P&lt;mot&gt;\w+)&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> (</span><span class="si">{mot}</span><span class="s1">)&#39;</span><span class="p">,</span> <span class="s1">&#39;bonjour monde&#39;</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>  <span class="c1"># &#39;bonjour (bonjour) monde&#39;</span>
+
+<span class="c1"># expandf sur un objet match</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?P&lt;prenom&gt;\w+) (?P&lt;nom&gt;\w+)&#39;</span><span class="p">,</span> <span class="s1">&#39;Jean Dupont&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">expandf</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{prenom}</span><span class="s1"> - </span><span class="si">{nom}</span><span class="s1">&#39;</span><span class="p">))</span>  <span class="c1"># &#39;Jean - Dupont&#39;</span>
+</code></pre></div>
+
+<h3 id="indice-de-capture-dans-expandf-et-subfsubfn">Indice de capture dans <code>expandf</code> et <code>subf</code>/<code>subfn</code></h3>
+<p>Vous pouvez utiliser l'écriture en <strong>indice</strong> pour obtenir les captures d'un groupe de capture répété :</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">regex</span>
+
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?P&lt;x&gt;\w+) (?P&lt;x&gt;\w+)&#39;</span><span class="p">,</span> <span class="s1">&#39;abc def&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">expandf</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{x[0]}</span><span class="s1"> </span><span class="si">{x[1]}</span><span class="s1">&#39;</span><span class="p">))</span>  <span class="c1"># &#39;abc def&#39;</span>
+</code></pre></div>
+
+<hr>
+<h2 id="detacher-la-chaine-recherchee-detach_string">Détacher la chaîne recherchée (<code>detach_string</code>)</h2>
+<p>Un objet match contient une <strong>référence</strong> à la chaîne recherchée via son attribut <code>string</code>. La méthode <code>detach_string()</code> « détache » cette chaîne, la rendant disponible pour le garbage collector — utile pour <strong>économiser la mémoire</strong> si la chaîne est très grande.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">regex</span>
+
+<span class="n">texte</span> <span class="o">=</span> <span class="s1">&#39;un très long texte...&#39;</span> <span class="o">*</span> <span class="mi">10000</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\w+&#39;</span><span class="p">,</span> <span class="n">texte</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">())</span>  <span class="c1"># &#39;un&#39;</span>
+<span class="n">m</span><span class="o">.</span><span class="n">detach_string</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">())</span>  <span class="c1"># &#39;un&#39; (toujours accessible)</span>
+<span class="c1"># Mais m.string est maintenant None</span>
+</code></pre></div>
+
+<hr>
+<h2 id="patterns-recursifs">Patterns récursifs</h2>
+<p>Les motifs récursifs et répétés sont pris en charge :</p>
+<ul>
+<li><strong><code>(?R)</code></strong> ou <strong><code>(?0)</code></strong> : essaie de faire correspondre l'<strong>ensemble</strong> du regex de façon récursive.</li>
+<li><strong><code>(?1)</code></strong>, <strong><code>(?2)</code></strong>, etc. : essaie de faire correspondre le <strong>groupe de capture</strong> correspondant.</li>
+<li><strong><code>(?&amp;nom)</code></strong> : essaie de faire correspondre le <strong>groupe de capture nommé</strong>.</li>
+</ul>
+<p>Les formes alternatives <code>(?P&gt;nom)</code> et <code>(?P&amp;nom)</code> sont aussi supportées.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">regex</span>
+
+<span class="c1"># Correspondance de parenthèses imbriquées</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\((?:[^()]*|(?R))*\)&#39;</span><span class="p">,</span> <span class="s1">&#39;(a(b)c)&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">())</span>  <span class="c1"># &#39;(a(b)c)&#39;</span>
+
+<span class="c1"># Réutilisation d&#39;un sous-pattern</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(Tarzan|Jane) aime (?1)&#39;</span><span class="p">,</span> <span class="s1">&#39;Tarzan aime Jane&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">())</span>  <span class="c1"># &#39;Tarzan aime Jane&#39;</span>
+
+<span class="c1"># (?1) est équivalent à (?:Tarzan|Jane) — réutilise le motif, pas le groupe</span>
+</code></pre></div>
+
+<blockquote>
+<p><strong>Note :</strong> Il est possible de revenir en arrière (backtracker) dans un groupe récursif. Vous ne pouvez pas appeler un groupe s'il y a plus d'un groupe avec ce nom ou numéro (« référence ambiguë »).</p>
+</blockquote>
+<hr>
+<h2 id="correspondances-partielles-partial-matches">Correspondances partielles (partial matches)</h2>
+<p>Une correspondance partielle est une correspondance qui atteint la <strong>fin de la chaîne</strong> — si la chaîne avait été plus longue, un match complet aurait été possible.</p>
+<p>Les correspondances partielles sont acceptées avec <code>match</code>, <code>search</code>, <code>fullmatch</code> et <code>finditer</code> via l'argument <code>partial=True</code>.</p>
+<p>L'objet match possède un attribut <code>partial</code> qui vaut <code>True</code> s'il s'agit d'un match partiel.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">regex</span>
+
+<span class="c1"># Vérification caractère par caractère (ex: saisie utilisateur)</span>
+<span class="n">pattern</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\d</span><span class="si">{4}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">saisie</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;12&#39;</span><span class="p">,</span> <span class="s1">&#39;123&#39;</span><span class="p">,</span> <span class="s1">&#39;1234&#39;</span><span class="p">,</span> <span class="s1">&#39;12345&#39;</span><span class="p">]:</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">pattern</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">saisie</span><span class="p">,</span> <span class="n">partial</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">m</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">saisie</span><span class="si">}</span><span class="s1"> → rejeté&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">m</span><span class="o">.</span><span class="n">partial</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">saisie</span><span class="si">}</span><span class="s1"> → partiel (continuer)&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">saisie</span><span class="si">}</span><span class="s1"> → complet !&#39;</span><span class="p">)</span>
+
+<span class="c1"># Sortie :</span>
+<span class="c1"># 1 → partiel (continuer)</span>
+<span class="c1"># 12 → partiel (continuer)</span>
+<span class="c1"># 123 → partiel (continuer)</span>
+<span class="c1"># 1234 → complet !</span>
+<span class="c1"># 12345 → rejeté</span>
+</code></pre></div>
+
+<hr>
+<h2 id="lookaround-dans-les-motifs-conditionnels">Lookaround dans les motifs conditionnels</h2>
+<p>Le test d'un motif conditionnel peut maintenant être un <strong>lookaround</strong> (lookahead ou lookbehind).</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">regex</span>
+
+<span class="c1"># Conditionnel avec lookahead</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?(?=\d)\d</span><span class="si">{3}</span><span class="s1">|\w</span><span class="si">{3}</span><span class="s1">)&#39;</span><span class="p">,</span> <span class="s1">&#39;123abc&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">())</span>  <span class="c1"># &#39;123&#39;</span>
+
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?(?=\d)\d</span><span class="si">{3}</span><span class="s1">|\w</span><span class="si">{3}</span><span class="s1">)&#39;</span><span class="p">,</span> <span class="s1">&#39;abc123&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">())</span>  <span class="c1"># &#39;abc&#39;</span>
+</code></pre></div>
+
+<blockquote>
+<p><strong>Attention :</strong> ce n'est pas la même chose qu'un lookaround dans la première branche d'une paire d'alternatives. Avec le conditionnel, si la condition échoue, la seconde branche est tentée. Avec les alternatives, si le lookaround réussit mais que la première branche échoue, la seconde branche est tout de même essayée.</p>
+</blockquote>
+<hr>
+<h2 id="lookbehind-de-longueur-variable">Lookbehind de longueur variable</h2>
+<p>Contrairement au module <code>re</code> standard, la librairie <code>regex</code> supporte les <strong>lookbehind de longueur variable</strong> :</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">regex</span>
+
+<span class="c1"># Lookbehind avec longueur variable — impossible avec re !</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?&lt;=\d+)\w+&#39;</span><span class="p">,</span> <span class="s1">&#39;123abc&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">())</span>  <span class="c1"># &#39;abc&#39;</span>
+
+<span class="c1"># Lookbehind négatif de longueur variable</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?&lt;!\d{2,4})\b\w+&#39;</span><span class="p">,</span> <span class="s1">&#39;abc 123def&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">())</span>  <span class="c1"># &#39;abc&#39;</span>
+</code></pre></div>
+
+<hr>
+<h2 id="groupes-atomiques">Groupes atomiques</h2>
+<p>Si le motif suivant échoue, le sous-motif dans un groupe atomique <strong>échoue dans son ensemble</strong>, sans backtracking.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">regex</span>
+
+<span class="c1"># Groupe atomique : pas de backtracking</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?&gt;abc|ab)c&#39;</span><span class="p">,</span> <span class="s1">&#39;abc&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>  <span class="c1"># None — &#39;abc&#39; est consommé par le groupe atomique, il ne reste rien pour &#39;c&#39;</span>
+
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?&gt;abc|ab)c&#39;</span><span class="p">,</span> <span class="s1">&#39;abcc&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">())</span>  <span class="c1"># &#39;abcc&#39;</span>
+</code></pre></div>
+
+<hr>
+<h2 id="quantificateurs-possessifs">Quantificateurs possessifs</h2>
+<p>Les quantificateurs possessifs fonctionnent comme les groupes atomiques appliqués aux quantificateurs :</p>
+<ul>
+<li><code>(?:...)?+</code></li>
+<li><code>(?:...)*+</code></li>
+<li><code>(?:...)++</code></li>
+<li><code>(?:...){min,max}+</code></li>
+</ul>
+<p>Le sous-motif est adapté au maximum. Si le motif suivant échoue, tous les sous-motifs répétés échouent <strong>dans leur ensemble</strong>.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">regex</span>
+
+<span class="c1"># Sans possessif : backtracking possible</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;&quot;.+&quot;&#39;</span><span class="p">,</span> <span class="s1">&#39;&quot;abc&quot;def&quot;&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">())</span>  <span class="c1"># &#39;&quot;abc&quot;def&quot;&#39;</span>
+
+<span class="c1"># Avec quantificateur possessif : pas de backtracking sur le +</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;&quot;.++&quot;&#39;</span><span class="p">,</span> <span class="s1">&#39;&quot;abc&quot;&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>  <span class="c1"># None — le ++ consomme tout y compris le dernier &quot;, pas de backtracking</span>
+</code></pre></div>
+
+<hr>
+<h2 id="listes-nommees">Listes nommées</h2>
+<p>Il est parfois nécessaire d'inclure une liste d'options dans un regex. Plutôt que de construire un pattern d'alternation (qui peut être lent à parser pour de longues listes), utilisez les <strong>listes nommées</strong> :</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">regex</span>
+
+<span class="c1"># Méthode classique (alternation)</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;chat|chien|oiseau|poisson&#39;</span><span class="p">)</span>
+
+<span class="c1"># Méthode avec listes nommées</span>
+<span class="n">animaux</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;chat&#39;</span><span class="p">,</span> <span class="s1">&#39;chien&#39;</span><span class="p">,</span> <span class="s1">&#39;oiseau&#39;</span><span class="p">,</span> <span class="s1">&#39;poisson&#39;</span><span class="p">]</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\L&lt;animaux&gt;&#39;</span><span class="p">,</span> <span class="n">animaux</span><span class="o">=</span><span class="n">animaux</span><span class="p">)</span>
+
+<span class="n">m</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;Mon chien est mignon&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">())</span>  <span class="c1"># &#39;chien&#39;</span>
+
+<span class="c1"># L&#39;ordre des items n&#39;est pas pertinent (traités comme un ensemble)</span>
+<span class="c1"># Disponibles via l&#39;attribut .named_lists du pattern compilé</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">named_lists</span><span class="p">)</span>  <span class="c1"># {&#39;animaux&#39;: frozenset({...})}</span>
+</code></pre></div>
+
+<hr>
+<h2 id="debut-et-fin-de-mot">Début et fin de mot</h2>
+<p>Deux ancres supplémentaires pour les limites de mots :</p>
+<ul>
+<li><strong><code>\m</code></strong> : correspond au <strong>début</strong> d'un mot.</li>
+<li><strong><code>\M</code></strong> : correspond à la <strong>fin</strong> d'un mot.</li>
+</ul>
+<p>Comparez avec <code>\b</code>, qui correspond au début <strong>ou</strong> à la fin d'un mot.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">regex</span>
+
+<span class="c1"># \m : début de mot uniquement</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\m\w&#39;</span><span class="p">,</span> <span class="s1">&#39;un deux trois&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>  <span class="c1"># [&#39;u&#39;, &#39;d&#39;, &#39;t&#39;]</span>
+
+<span class="c1"># \M : fin de mot uniquement</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\w\M&#39;</span><span class="p">,</span> <span class="s1">&#39;un deux trois&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>  <span class="c1"># [&#39;n&#39;, &#39;x&#39;, &#39;s&#39;]</span>
+</code></pre></div>
+
+<hr>
+<h2 id="separateurs-de-ligne-unicode">Séparateurs de ligne Unicode</h2>
+<p>Normalement, le seul séparateur de ligne est <code>\n</code> (<code>\x0A</code>). Mais si le drapeau <strong><code>WORD</code></strong> est activé, les séparateurs de ligne deviennent : <code>\x0D\x0A</code>, <code>\x0A</code>, <code>\x0B</code>, <code>\x0C</code>, <code>\x0D</code>, plus <code>\x85</code>, <code>\u2028</code> et <code>\u2029</code> en Unicode.</p>
+<p>Ceci affecte :</p>
+<ul>
+<li>Le point <code>.</code> (quand <code>DOTALL</code> est désactivé) : correspond à tout sauf un séparateur de ligne.</li>
+<li>Les ancres <code>^</code> et <code>$</code> en mode multiligne.</li>
+</ul>
+<hr>
+<h2 id="proprietes-unicode-scripts-et-blocs">Propriétés Unicode, scripts et blocs</h2>
+<p>De nombreuses propriétés Unicode sont supportées, y compris les <strong>blocs</strong> et les <strong>scripts</strong>.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">regex</span>
+
+<span class="c1"># Propriété générale</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\p</span><span class="si">{L}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;abc 123 àéî&#39;</span><span class="p">)</span>  <span class="c1"># Lettres Unicode</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>  <span class="c1"># [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;à&#39;, &#39;é&#39;, &#39;î&#39;]</span>
+
+<span class="c1"># Script</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\p{Script=Greek}&#39;</span><span class="p">,</span> <span class="s1">&#39;αβγ abc&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>  <span class="c1"># [&#39;α&#39;, &#39;β&#39;, &#39;γ&#39;]</span>
+
+<span class="c1"># Bloc</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\p{Block=BasicLatin}&#39;</span><span class="p">,</span> <span class="s1">&#39;abc αβγ&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>  <span class="c1"># [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;]</span>
+
+<span class="c1"># Inverse</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\P</span><span class="si">{L}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;abc 123&#39;</span><span class="p">)</span>  <span class="c1"># Non-lettres</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>  <span class="c1"># [&#39; &#39;, &#39;1&#39;, &#39;2&#39;, &#39;3&#39;]</span>
+
+<span class="c1"># Forme courte : \p{value} cherche dans General_Category, puis Script, puis Block</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\p</span><span class="si">{Lu}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;Bonjour MONDE&#39;</span><span class="p">)</span>  <span class="c1"># Uppercase letters</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>  <span class="c1"># [&#39;B&#39;, &#39;M&#39;, &#39;O&#39;, &#39;N&#39;, &#39;D&#39;, &#39;E&#39;]</span>
+</code></pre></div>
+
+<hr>
+<h2 id="caracteres-nommes-unicode">Caractères nommés Unicode</h2>
+<p>Les caractères nommés Unicode sont pris en charge :</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">regex</span>
+
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\N</span><span class="si">{SNOWMAN}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;☃ bonhomme de neige&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">())</span>  <span class="c1"># &#39;☃&#39;</span>
+
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\N{HEAVY BLACK HEART}&#39;</span><span class="p">,</span> <span class="s1">&#39;Je t❤aime&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">())</span>  <span class="c1"># &#39;❤&#39;</span>
+</code></pre></div>
+
+<blockquote>
+<p><strong>Note :</strong> seuls les noms connus par la base de données Unicode de Python sont supportés.</p>
+</blockquote>
+<hr>
+<h2 id="classes-de-caracteres-posix">Classes de caractères POSIX</h2>
+<p>Les classes de caractères POSIX sont supportées et traitées comme une forme alternative de <code>\p{...}</code> :</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">regex</span>
+
+<span class="c1"># [:alpha:] — lettres</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[[:alpha:]]&#39;</span><span class="p">,</span> <span class="s1">&#39;abc 123&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>  <span class="c1"># [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;]</span>
+
+<span class="c1"># [:digit:] — chiffres</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[[:digit:]]&#39;</span><span class="p">,</span> <span class="s1">&#39;abc 123&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>  <span class="c1"># [&#39;1&#39;, &#39;2&#39;, &#39;3&#39;]</span>
+
+<span class="c1"># [:alnum:] — alphanumériques</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[[:alnum:]]&#39;</span><span class="p">,</span> <span class="s1">&#39;a1 b2!&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>  <span class="c1"># [&#39;a&#39;, &#39;1&#39;, &#39;b&#39;, &#39;2&#39;]</span>
+</code></pre></div>
+
+<blockquote>
+<p><strong>Note :</strong> les définitions de <code>alnum</code>, <code>digit</code>, <code>punct</code> et <code>xdigit</code> sont différentes de celles d'Unicode.</p>
+</blockquote>
+<hr>
+<h2 id="ancre-de-recherche-g">Ancre de recherche (<code>\G</code>)</h2>
+<p>L'ancre <code>\G</code> correspond à l'endroit où chaque recherche a <strong>commencé ou s'est poursuivie</strong>. Elle est utile pour des <strong>correspondances contiguës</strong> :</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">regex</span>
+
+<span class="c1"># Correspondances contiguës de 2 lettres</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\G[a-z]</span><span class="si">{2}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;abcdef123&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>  <span class="c1"># [&#39;ab&#39;, &#39;cd&#39;, &#39;ef&#39;]</span>
+<span class="c1"># S&#39;arrête à &#39;123&#39; car la correspondance n&#39;est plus contiguë</span>
+</code></pre></div>
+
+<p>La recherche commence à la position 0 pour correspondre à <code>ab</code>. La recherche se poursuit à la position 2 et correspond à <code>cd</code>. Elle se poursuit à la position 4 et correspond à <code>ef</code>. À la position 6, pas de correspondance de 2 lettres → l'ancre empêche de continuer.</p>
+<hr>
+<h2 id="recherche-inversee">Recherche inversée</h2>
+<p>Les recherches peuvent se faire <strong>à l'envers</strong> avec le flag <code>REVERSE</code> ou <code>(?r)</code> :</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">regex</span>
+
+<span class="c1"># Recherche inversée : du dernier au premier</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?r)chat&#39;</span><span class="p">,</span> <span class="s1">&#39;le chat du chat noir&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">())</span>  <span class="c1"># &#39;chat&#39;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">start</span><span class="p">())</span>  <span class="c1"># 13 (le dernier &#39;chat&#39;)</span>
+
+<span class="c1"># Avec findall en mode inversé</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?r)\w+&#39;</span><span class="p">,</span> <span class="s1">&#39;un deux trois&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>  <span class="c1"># [&#39;trois&#39;, &#39;deux&#39;, &#39;un&#39;]</span>
+</code></pre></div>
+
+<blockquote>
+<p><strong>Note :</strong> le résultat d'une recherche inversée n'est pas nécessairement l'inverse d'une recherche directe.</p>
+</blockquote>
+<hr>
+<h2 id="correspondance-de-graphemes-unicode">Correspondance de graphèmes Unicode</h2>
+<p>L'appariement des <strong>graphèmes</strong> est pris en charge avec <code>\X</code>, conforme à la spécification Unicode :</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">regex</span>
+
+<span class="c1"># Un graphème peut être composé de plusieurs points de code</span>
+<span class="n">texte</span> <span class="o">=</span> <span class="s1">&#39;e</span><span class="se">\u0301</span><span class="s1">&#39;</span>  <span class="c1"># é (e + accent aigu combinant)</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\X&#39;</span><span class="p">,</span> <span class="n">texte</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>    <span class="c1"># [&#39;é&#39;] — un seul graphème</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">texte</span><span class="p">))</span>  <span class="c1"># 2 points de code</span>
+</code></pre></div>
+
+<hr>
+<h2 id="limite-de-mot-unicode-par-defaut">Limite de mot Unicode par défaut</h2>
+<p>Le flag <strong><code>WORD</code></strong> change la définition d'une « limite de mot » en celle d'une <strong>limite de mot Unicode par défaut</strong> (conforme à la spécification Unicode). Ceci s'applique à <code>\b</code> et <code>\B</code>.</p>
+<hr>
+<h2 id="regexescape-ameliore"><code>regex.escape()</code> amélioré</h2>
+<p>La fonction <code>regex.escape</code> possède deux paramètres supplémentaires :</p>
+<ul>
+<li><strong><code>special_only=True</code></strong> : n'échappe que les caractères « spéciaux » regex (comme <code>?</code>, <code>*</code>, etc.).</li>
+<li><strong><code>literal_spaces=True</code></strong> : les espaces ne sont <strong>pas</strong> échappés.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">regex</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">regex</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="s1">&#39;hello world?&#39;</span><span class="p">,</span> <span class="n">special_only</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+<span class="c1"># &#39;hello world\?&#39;</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">regex</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="s1">&#39;hello world&#39;</span><span class="p">,</span> <span class="n">literal_spaces</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+<span class="c1"># &#39;hello world&#39;  (les espaces ne sont pas échappés)</span>
+</code></pre></div>
+
+<hr>
+<h2 id="captures-repetees-repeated-captures">Captures répétées (repeated captures)</h2>
+<p>Un objet match possède des méthodes supplémentaires qui renvoient des informations sur <strong>toutes les correspondances réussies</strong> d'un groupe de capture répété :</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">regex</span>
+
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(\w)+&#39;</span><span class="p">,</span> <span class="s1">&#39;abcdef&#39;</span><span class="p">)</span>
+
+<span class="c1"># group() retourne la dernière capture</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>      <span class="c1"># &#39;f&#39;</span>
+
+<span class="c1"># captures() retourne TOUTES les captures</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">captures</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>   <span class="c1"># [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;, &#39;f&#39;]</span>
+
+<span class="c1"># spans() retourne les positions de toutes les captures</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">spans</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>      <span class="c1"># [(0,1), (1,2), (2,3), (3,4), (4,5), (5,6)]</span>
+</code></pre></div>
+
+<hr>
+<h2 id="splititer"><code>splititer()</code></h2>
+<p><code>regex.splititer</code> est un <strong>générateur</strong> équivalent de <code>regex.split</code> :</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">regex</span>
+
+<span class="c1"># split retourne une liste</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">regex</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\s+&#39;</span><span class="p">,</span> <span class="s1">&#39;un deux trois&#39;</span><span class="p">))</span>
+<span class="c1"># [&#39;un&#39;, &#39;deux&#39;, &#39;trois&#39;]</span>
+
+<span class="c1"># splititer retourne un générateur (plus économe en mémoire)</span>
+<span class="k">for</span> <span class="n">mot</span> <span class="ow">in</span> <span class="n">regex</span><span class="o">.</span><span class="n">splititer</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\s+&#39;</span><span class="p">,</span> <span class="s1">&#39;un deux trois&#39;</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">mot</span><span class="p">)</span>
+</code></pre></div>
+
+<hr>
+<h2 id="indexation-dun-objet-match-subscripting">Indexation d'un objet match (subscripting)</h2>
+<p>Un objet match accepte l'accès aux groupes via l'<strong>indexation</strong> et les <strong>slices</strong> :</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">regex</span>
+
+<span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(\w+) (\w+) (\w+)&#39;</span><span class="p">,</span> <span class="s1">&#39;un deux trois&#39;</span><span class="p">)</span>
+
+<span class="c1"># Accès par index</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>    <span class="c1"># &#39;un deux trois&#39;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>    <span class="c1"># &#39;un&#39;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>    <span class="c1"># &#39;deux&#39;</span>
+
+<span class="c1"># Slice</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">])</span>  <span class="c1"># (&#39;un&#39;, &#39;deux&#39;)</span>
+</code></pre></div>
+
+<hr>
+<h2 id="arguments-supplementaires">Arguments supplémentaires</h2>
+<h3 id="flag-flags-pour-split-sub-et-subn">Flag <code>flags</code> pour <code>split</code>, <code>sub</code> et <code>subn</code></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">regex</span>
+
+<span class="c1"># Passer des flags directement</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[aeiou]&#39;</span><span class="p">,</span> <span class="s1">&#39;Bonjour&#39;</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">regex</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>  <span class="c1"># [&#39;&#39;, &#39;nj&#39;, &#39;&#39;, &#39;r&#39;]</span>
+</code></pre></div>
+
+<h3 id="arguments-pos-et-endpos-pour-sub-et-subn">Arguments <code>pos</code> et <code>endpos</code> pour <code>sub</code> et <code>subn</code></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">regex</span>
+
+<span class="c1"># Remplacer uniquement dans une sous-partie</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\w&#39;</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="s1">&#39;abcdef&#39;</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">endpos</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>  <span class="c1"># &#39;ab**ef&#39;</span>
+</code></pre></div>
+
+<h3 id="argument-overlapped-pour-findall-et-finditer">Argument <code>overlapped</code> pour <code>findall</code> et <code>finditer</code></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">regex</span>
+
+<span class="c1"># Sans overlapped</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">regex</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\w</span><span class="si">{3}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;abcdef&#39;</span><span class="p">))</span>
+<span class="c1"># [&#39;abc&#39;, &#39;def&#39;]</span>
+
+<span class="c1"># Avec overlapped : correspondances chevauchantes</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">regex</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\w</span><span class="si">{3}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;abcdef&#39;</span><span class="p">,</span> <span class="n">overlapped</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+<span class="c1"># [&#39;abc&#39;, &#39;bcd&#39;, &#39;cde&#39;, &#39;def&#39;]</span>
+</code></pre></div>
+
+<hr>
+<h2 id="timeout-python-3">Timeout (Python 3)</h2>
+<p>Les méthodes et fonctions de correspondance prennent en charge les <strong>délais d'attente</strong>. Le timeout (en secondes) s'applique à l'ensemble de l'opération :</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">regex</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="c1"># Timeout de 1 seconde</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(a+)+b&#39;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span> <span class="o">*</span> <span class="mi">30</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">TimeoutError</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Le matching a pris trop de temps !&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+<blockquote>
+<p><strong>Note :</strong> le timeout est particulièrement utile pour se protéger contre les expressions régulières malveillantes ou les cas de backtracking exponentiel (ReDoS).</p>
+</blockquote>
+<hr>
+<h2 id="resume-des-fonctionnalites-exclusives-a-regex">Résumé des fonctionnalités exclusives à <code>regex</code></h2>
 <table>
 <thead>
 <tr>
-<th>Fonction</th>
-<th>Recherche où ?</th>
-<th>Retourne quoi ?</th>
-<th>Cas d'usage</th>
+<th>Fonctionnalité</th>
+<th>Syntaxe</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>match()</code></td>
-<td>Début de chaîne</td>
-<td>1 Match ou None</td>
-<td>Validation de format</td>
+<td>Matching flou</td>
+<td><code>{e&lt;=n}</code></td>
+<td>Correspondance approximative</td>
 </tr>
 <tr>
-<td><code>search()</code></td>
-<td>Toute la chaîne</td>
-<td>1 Match ou None</td>
-<td>Trouver la première occurrence</td>
+<td>Patterns récursifs</td>
+<td><code>(?R)</code>, <code>(?1)</code>, <code>(?&amp;nom)</code></td>
+<td>Réutilisation de motifs</td>
 </tr>
 <tr>
-<td><code>findall()</code></td>
-<td>Toute la chaîne</td>
-<td>Liste de strings</td>
-<td>Extraire toutes les occurrences</td>
+<td>Propriétés Unicode</td>
+<td><code>\p{Script=Latin}</code></td>
+<td>Filtrage par propriété</td>
 </tr>
 <tr>
-<td><code>finditer()</code></td>
-<td>Toute la chaîne</td>
-<td>Itérateur de Match</td>
-<td>Accès aux positions et groupes</td>
+<td>Ensembles imbriqués</td>
+<td><code>[[a-z]--[aeiou]]</code></td>
+<td>Opérations sur les sets</td>
 </tr>
 <tr>
-<td><code>sub()</code></td>
-<td>Toute la chaîne</td>
-<td>String modifiée</td>
-<td>Remplacement</td>
+<td>Lookbehind variable</td>
+<td><code>(?&lt;=\d+)</code></td>
+<td>Lookbehind de longueur variable</td>
 </tr>
 <tr>
-<td><code>split()</code></td>
-<td>Toute la chaîne</td>
-<td>Liste de strings</td>
-<td>Découpage</td>
+<td>Groupes atomiques</td>
+<td><code>(?&gt;...)</code></td>
+<td>Pas de backtracking</td>
 </tr>
 <tr>
-<td><code>compile()</code></td>
-<td>—</td>
-<td>Objet Pattern</td>
-<td>Réutilisation du motif</td>
+<td>Quantificateurs possessifs</td>
+<td><code>a++</code>, <code>a*+</code></td>
+<td>Quantificateurs sans backtracking</td>
+</tr>
+<tr>
+<td>Matching POSIX</td>
+<td><code>(?p)</code></td>
+<td>Match le plus long</td>
+</tr>
+<tr>
+<td>Listes nommées</td>
+<td><code>\L&lt;nom&gt;</code></td>
+<td>Ensembles dynamiques</td>
+</tr>
+<tr>
+<td>Branch reset</td>
+<td><code>(?|...\|...)</code></td>
+<td>Numéros de groupe partagés</td>
+</tr>
+<tr>
+<td><code>\K</code></td>
+<td><code>\K</code></td>
+<td>Garder une partie du match</td>
+</tr>
+<tr>
+<td><code>captures()</code></td>
+<td><code>m.captures(1)</code></td>
+<td>Toutes les captures d'un groupe</td>
+</tr>
+<tr>
+<td>Recherche inversée</td>
+<td><code>(?r)</code></td>
+<td>Recherche de droite à gauche</td>
+</tr>
+<tr>
+<td>Correspondances partielles</td>
+<td><code>partial=True</code></td>
+<td>Match partiel</td>
+</tr>
+<tr>
+<td>Timeout</td>
+<td><code>timeout=1</code></td>
+<td>Protection contre le ReDoS</td>
+</tr>
+<tr>
+<td><code>subf()</code>/<code>expandf()</code></td>
+<td><code>{nom}</code> dans le remplacement</td>
+<td>Remplacement avec format</td>
+</tr>
+<tr>
+<td><code>detach_string()</code></td>
+<td><code>m.detach_string()</code></td>
+<td>Libération mémoire</td>
+</tr>
+<tr>
+<td>Multithreading</td>
+<td><code>concurrent=True</code></td>
+<td>Libération du GIL</td>
+</tr>
+<tr>
+<td><code>\m</code>, <code>\M</code></td>
+<td><code>\m</code>, <code>\M</code></td>
+<td>Début/fin de mot</td>
+</tr>
+<tr>
+<td><code>\G</code></td>
+<td><code>\G</code></td>
+<td>Ancre de recherche</td>
+</tr>
+<tr>
+<td><code>(*PRUNE)</code>, <code>(*SKIP)</code>, <code>(*FAIL)</code></td>
+<td>Verbes de contrôle</td>
+<td>Contrôle du backtracking</td>
+</tr>
+<tr>
+<td><code>(?(DEFINE)...)</code></td>
+<td>Définitions</td>
+<td>Sous-patterns réutilisables</td>
 </tr>
 </tbody>
 </table>
-<h2 id="bonnes-pratiques">Bonnes pratiques</h2>
-<ol>
-<li><strong>Utilisez les raw strings</strong> (<code>r"..."</code>) pour éviter les problèmes d'échappement.</li>
-<li><strong>Compilez</strong> vos regex si vous les utilisez plusieurs fois dans votre code.</li>
-<li><strong>Préférez <code>re.VERBOSE</code></strong> pour les regex complexes — la lisibilité est cruciale.</li>
-<li><strong>Testez</strong> vos regex sur <a href="https://regex101.com/">regex101.com</a> avant de les intégrer dans votre code.</li>
-<li><strong>Attention aux quantificateurs gourmands</strong> : utilisez <code>?</code> après <code>*</code> ou <code>+</code> pour les rendre paresseux quand nécessaire.</li>
-<li><strong>N'utilisez pas les regex pour parser du HTML/XML</strong> : utilisez plutôt <code>BeautifulSoup</code> ou <code>lxml</code>.</li>
-</ol>
+<hr>
+<h2 id="conclusion">Conclusion</h2>
+<p>La librairie <code>regex</code> est un <strong>remplacement direct</strong> du module <code>re</code> avec des fonctionnalités considérablement étendues. Elle est particulièrement utile pour :</p>
+<ul>
+<li>Le <strong>traitement de texte avancé</strong> (matching flou, patterns récursifs)</li>
+<li>Le travail avec <strong>Unicode</strong> (propriétés, scripts, blocs, full case-folding)</li>
+<li>Les <strong>performances</strong> (listes nommées, groupes atomiques, libération du GIL)</li>
+<li>La <strong>sécurité</strong> (timeout contre le ReDoS)</li>
+<li>L'<strong>analyse syntaxique</strong> complexe (patterns récursifs, branch reset, <code>(?(DEFINE)...)</code>)</li>
+</ul>
+<p>Pour l'installer :</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>regex
+</code></pre></div>
+
+<p>Et pour l'utiliser en remplacement de <code>re</code> :</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">regex</span>
+<span class="c1"># Toutes les fonctions de re sont disponibles :</span>
+<span class="c1"># regex.search(), regex.match(), regex.findall(), regex.sub(), etc.</span>
+<span class="c1"># Plus toutes les fonctionnalités avancées décrites dans ce guide !</span>
+</code></pre></div>
     </div><!-- /.entry-content -->
 
   </article>
