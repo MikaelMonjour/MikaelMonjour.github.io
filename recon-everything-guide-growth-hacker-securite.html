@@ -6,7 +6,7 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-        <title>Recon Everything : le guide du growth engineer pour la sécurité offensive</title>
+        <title>Recon Everything : le guide complet de la reconnaissance en sécurité offensive</title>
         <link rel="stylesheet" href="/theme/css/main.css?v=3" />
         <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Blog de Mikael Atom Feed" />
 </head>
@@ -24,7 +24,7 @@
     <header>
       <h1 class="entry-title">
         <a href="/recon-everything-guide-growth-hacker-securite.html" rel="bookmark"
-           title="Permalink to Recon Everything : le guide du growth engineer pour la sécurité offensive">Recon Everything : le guide du growth engineer pour la sécurité offensive</a></h1>
+           title="Permalink to Recon Everything : le guide complet de la reconnaissance en sécurité offensive">Recon Everything : le guide complet de la reconnaissance en sécurité offensive</a></h1>
     </header>
 
     <div class="entry-content">
@@ -40,33 +40,21 @@
 <p>tags: <a href="/tag/securite.html">securite</a> <a href="/tag/recon.html">recon</a> <a href="/tag/bug-bounty.html">bug-bounty</a> <a href="/tag/outils.html">outils</a> <a href="/tag/tech.html">tech</a> </p>
 </footer><!-- /.post-info -->
 
-      <p>Il y a quelques mois, un de mes anciens élèves d'<a href="https://eduba.school">Eduba</a> m'a envoyé un message sur LinkedIn : <em>"Mikael, je viens de décrocher ma première bounty sur HackerOne. 500 dollars. C'est grâce à ton cours sur le scraping que j'ai compris comment énumérer des sous-domaines."</em></p>
+      <p>Il y a une image qui revient souvent dans le monde du bug bounty : celle du chasseur solitaire, capuche sur la tête, qui tape frénétiquement des commandes dans un terminal sombre. La réalité est beaucoup moins romantique. La plupart du temps, un bon chasseur de bugs passe <strong>80% de son temps à observer, cartographier, comprendre</strong> — et seulement 20% à attaquer. C'est la phase de reconnaissance, et c'est elle qui sépare les amateurs des professionnels.</p>
 
-      <p>Ce message m'a frappé. Pas parce que 500 dollars, c'est beaucoup (quoique). Mais parce que ça m'a rappelé un truc fondamental que je vis chaque jour en tant que growth engineer chez SumUp : <strong>la reconnaissance, c'est 80% du travail</strong>. Que tu cherches des utilisateurs à convertir ou des vulnérabilités à remonter, le principe est le même. Tu dois comprendre le terrain avant de frapper.</p>
+      <p>Ce guide est un condensé de tout ce qu'il faut savoir pour mener une reconnaissance efficace. Il est dense, technique, et volontairement exhaustif. Si vous êtes patient et que vous aimez creuser, vous allez y trouver votre compte.</p>
 
-      <p>Alors j'ai décidé de poser par écrit tout ce que je sais sur la reconnaissance en sécurité offensive. Ce guide est dense. Il est technique. Mais si vous êtes patient et que vous aimez creuser, vous allez adorer.</p>
+      <h2>La philosophie : comprendre avant de frapper</h2>
 
-      <h2>Le mindset : penser comme un growth engineer qui chasse</h2>
+      <p><strong>Toujours lire le code source.</strong> C'est la règle numéro un. Choisissez un programme offrant un large scope. Explorez les informations sur les domaines, les serveurs de messagerie, les connexions aux réseaux sociaux. Fouillez le site web, interceptez chaque requête et réponse via un proxy comme Burp, analysez-les. Comprenez leur infrastructure : comment ils gèrent les sessions, l'authentification, quel type de protection CSRF ils ont.</p>
 
-      <p>Quand je suis arrivé dans le bug bounty, j'ai tout de suite vu le parallèle avec mon métier. En growth, on ne lance pas une campagne sans avoir analysé le funnel, segmenté les utilisateurs, compris les points de friction. En bug bounty, c'est pareil : <strong>on ne lance pas un exploit sans avoir cartographié la surface d'attaque</strong>.</p>
+      <p>Utilisez des <strong>tests négatifs</strong> pour provoquer des erreurs. Les messages d'erreur sont une mine d'or : ils révèlent des chemins internes, des technologies cachées, des noms de variables. Prenez le temps de comprendre le flux de l'application pour savoir quel type de vulnérabilités chercher.</p>
 
-      <p>La première règle ? <strong>Toujours lire le code source.</strong> Choisissez un programme avec un large scope. Explorez les informations sur les domaines, les serveurs de messagerie, les connexions aux réseaux sociaux. Fouillez le site, interceptez chaque requête et réponse, analysez-les. Comprenez leur infrastructure : comment ils gèrent les sessions, l'authentification, quel type de protection CSRF ils ont.</p>
+      <p>Commencez tôt. Dès qu'un programme est lancé, foncez dessus. Puis choisissez une fonctionnalité précise et creusez-la à fond. Arrêtez de courir après les outils qui brillent — Burp Suite est un couteau suisse, et c'est souvent le seul outil nécessaire pour tester une application web.</p>
 
-      <p>Les tests négatifs sont vos meilleurs amis. Les messages d'erreur révèlent souvent des chemins internes, des noms de variables, des technologies cachées. Prenez le temps de comprendre le flux de l'application pour avoir une meilleure idée du type de vulnérabilités à rechercher.</p>
+      <h2>L'art de casser les paramètres</h2>
 
-      <h2>Mon workflow : de la découverte au premier bug</h2>
-
-      <p>Je vais vous raconter comment je procède, étape par étape.</p>
-
-      <p><strong>D'abord, je fuzze les endpoints.</strong> Avec une bonne wordlist, je teste tous les chemins possibles. Ce sont souvent des répertoires d'administration oubliés, des dossiers <code>/.git/</code> qu'on n'a pas pensé à supprimer, des scripts de debug laissés en production. Ça m'est arrivé de trouver un panneau d'admin complet juste en bruteforçant des chemins standard.</p>
-
-      <p><strong>Ensuite, je teste chaque formulaire.</strong> J'utilise plusieurs payloads pour contourner les filtres côté client. Et surtout : je commence tôt. Dès qu'un programme ouvre, je fonce. Les premières heures sont les plus rentables.</p>
-
-      <p>Un conseil que j'aurais aimé qu'on me donne plus tôt : <strong>choisissez un workflow précis dans l'application et creusez-le à fond.</strong> Arrêtez de courir après chaque outil qui brille. Burp Suite est à peu près le seul outil que j'utilise pour tester les applications web. C'est un couteau suisse.</p>
-
-      <h2>L'art du paramètre : casser pour comprendre</h2>
-
-      <p>Supposons qu'un champ prenne un numéro (appelons-le ID). Voici ma checklist systématique :</p>
+      <p>Supposons qu'une application possède un champ qui prend un numéro (appelons-le ID). Voici la checklist systématique :</p>
 
       <ul>
         <li>Mettre un chiffre négatif</li>
@@ -77,158 +65,412 @@
         <li>Injecter des vecteurs XSS</li>
         <li>Injecter des vecteurs SQLi</li>
         <li>Utiliser des caractères non-ASCII</li>
-        <li>Se tromper de type : envoyer une string dans un array</li>
-        <li>Utiliser des caractères nuls</li>
+        <li>Se tromper de type : envoyer une string dans un tableau</li>
+        <li>Utiliser des caractères nuls ou sans valeur</li>
       </ul>
 
-      <p>Dans 80% des cas, vous finirez par remarquer un comportement étrange. Ce comportement ne signifie pas forcément que vous avez trouvé un bug reportable. Mais ça signifie que vous êtes sur la bonne piste. Continuez à creuser.</p>
+      <p>Dans 80% des cas, vous finirez par remarquer un comportement étrange. Ce comportement ne signifie pas forcément un bug reportable — mais ça signifie que vous êtes sur la bonne piste. Creusez. Et si après quelques heures vous n'en tirez rien, notez vos observations et passez à autre chose. S'accrocher à une piste morte est le plus grand tueur de motivation.</p>
 
-      <h2>Les bonnes questions à se poser</h2>
-
-      <p>Après avoir développé une bonne intuition du site, conservez mentalement un enregistrement de votre workflow et posez-vous ces questions :</p>
+      <h2>Les questions à se poser face à chaque fonctionnalité</h2>
 
       <ul>
-        <li><strong>Affichage :</strong> La page affiche-t-elle quelque chose pour les utilisateurs ? (XSS, usurpation de contenu)</li>
-        <li><strong>Données stockées :</strong> La page fait-elle appel à des données persistantes ? (Injections, IDOR, stockage côté client)</li>
-        <li><strong>Système de fichiers :</strong> Interagit-elle avec le serveur de fichiers ? (Upload vulnérable, LFI)</li>
-        <li><strong>Sécurité transactionnelle :</strong> Est-ce une fonction qui mérite d'être protégée par CSRF ?</li>
-        <li><strong>Privilèges :</strong> Cette fonction est-elle privilégiée ? (Défauts de logique, escalade de privilèges)</li>
-        <li><strong>Entrées utilisateur :</strong> La saisie est-elle affichée quelque part ?</li>
-        <li><strong>Endpoints de sauvegarde :</strong> Quels endpoints persistent des données ?</li>
+        <li><strong>Affichage :</strong> La page affiche-t-elle quelque chose pour les utilisateurs ? &rarr; XSS, usurpation de contenu</li>
+        <li><strong>Données stockées :</strong> La page fait-elle appel à des données persistantes ? &rarr; Injections, IDOR, stockage côté client</li>
+        <li><strong>Système de fichiers :</strong> Interagit-elle avec le serveur de fichiers ? &rarr; Upload vulnérable, LFI</li>
+        <li><strong>Transactions :</strong> Est-ce une fonction digne d'être sécurisée ? &rarr; CSRF, mode mixte</li>
+        <li><strong>Privilèges :</strong> Cette fonction est-elle privilégiée ? &rarr; Défauts de logique, escalade de privilèges</li>
+        <li><strong>Entrées :</strong> La saisie est-elle acceptée et potentiellement affichée à l'utilisateur ?</li>
+        <li><strong>Persistance :</strong> Quels endpoints sauvegardent des données ?</li>
         <li><strong>Upload :</strong> Y a-t-il une fonctionnalité de téléchargement de fichiers ?</li>
-        <li><strong>Authentification :</strong> Quel type d'authentification est utilisé ?</li>
+        <li><strong>Auth :</strong> Quel type d'authentification est utilisé ?</li>
       </ul>
 
-      <p>Et n'oubliez pas : <strong>les développeurs soulignent souvent leurs propres faiblesses</strong>, que ce soit dans leur gestion du code ou dans les commentaires. Indirectement, ils deviennent les premiers supporters de votre réussite.</p>
+      <p>Concentrez-vous sur les fonctionnalités qui ont été redessinées ou modifiées récemment. Les nouvelles features sont souvent moins testées. Et n'oubliez pas : <strong>les développeurs soulignent souvent leurs propres faiblesses</strong>, que ce soit dans leur gestion du code ou dans les commentaires.</p>
 
-      <h2>La boîte à outils de la reconnaissance</h2>
-
-      <p>Avant d'entrer dans le vif du sujet, quelques mises en garde importantes : certains outils demandent une connaissance avancée. La majorité des configurations sont faites sur Linux (Kali, Ubuntu, Debian). Préférez toujours un environnement virtuel pour vos installations Python. Et surtout : <strong>soyez patient</strong>. Si vous n'êtes pas prêt à avoir des galères, ce qui suit n'est pas pour vous.</p>
-
-      <h3>Étape 1 : Énumération des sous-domaines</h3>
-
-      <p>La reconnaissance ne se limite pas à la recherche de sous-domaines périmés. Il s'agit de comprendre l'application et de trouver des fonctionnalités cachées. Comme le dit <strong>NahamSec</strong> : pour réussir, il faut trouver l'équilibre entre la reconnaissance et le bon vieux hacking.</p>
-
-      <p>Mes outils de prédilection :</p>
-
-      <ul>
-        <li><strong>Sublist3r</strong> &mdash; Énumération rapide de sous-domaines via des moteurs de recherche</li>
-        <li><strong>subfinder</strong> &mdash; Découverte passive de sous-domaines avec support du bruteforce</li>
-        <li><strong>findomain</strong> &mdash; Surveillance de sous-domaines avec notifications Slack/Discord</li>
-        <li><strong>assetfinder</strong> &mdash; Découverte de domaines liés par Tom Hudson</li>
-        <li><strong>Amass (OWASP)</strong> &mdash; L'outil le plus complet, avec corrélation horizontale via whois inversé</li>
-        <li><strong>censys-enumeration</strong> &mdash; Extraction via les certificats SSL/TLS, trouve des sous-domaines invisibles aux autres outils</li>
-        <li><strong>altdns</strong> &mdash; Génération de permutations de sous-domaines</li>
-        <li><strong>massdns</strong> &mdash; Résolution DNS ultra-rapide pour valider vos découvertes</li>
-      </ul>
-
-      <p>Un conseil de growth hacker : <strong>combinez ces outils</strong>. Chacun a ses sources et ses angles morts. Amass pour le deep scan, censys pour les certificats, altdns pour les permutations. C'est l'agrégation qui fait la différence.</p>
-
-      <h3>Étape 2 : Découverte de contenu</h3>
-
-      <p>Une fois vos sous-domaines identifiés, il faut creuser chaque domaine :</p>
-
-      <ul>
-        <li>Vérifiez <code>robots.txt</code> pour les répertoires cachés</li>
-        <li>Scrapez l'hôte pour découvrir les endpoints d'API</li>
-        <li>Testez les ports alternatifs (8443, 8080)</li>
-        <li>Vérifiez si <code>/admin/</code> renvoie un 403 — puis bruteforcez son contenu</li>
-      </ul>
-
-      <p>Outils recommandés : <strong>ffuf</strong> (fuzzer ultra-rapide en Go), <strong>dirsearch</strong>, <strong>Gobuster</strong>, <strong>wfuzz</strong>. Mon préféré ? ffuf, pour sa vitesse et sa flexibilité avec les listes de mots multiples.</p>
-
-      <h3>Étape 3 : Screenshots et cartographie visuelle</h3>
-
-      <p>Prenez des captures d'écran de chaque sous-domaine résolu. Ça paraît basique, mais c'est redoutablement efficace pour identifier visuellement les panneaux d'admin, les pages par défaut, les applications oubliées.</p>
-
-      <ul>
-        <li><strong>Aquatone</strong> &mdash; Génère un rapport HTML avec captures de tous vos sous-domaines</li>
-        <li><strong>EyeWitness</strong> &mdash; Alternative robuste avec support headless</li>
-      </ul>
-
-      <p>Regardez les en-têtes HTTP : <code>X-XSS-Protection</code>, <code>X-Frame-Options</code>, <code>Content-Security-Policy</code>. Connaître les mesures de sécurité en place, c'est connaître vos limites — et vos opportunités.</p>
-
-      <h3>Étape 4 : GitHub, la mine d'or</h3>
-
-      <p>C'est ici que mon réflexe de growth engineer entre en jeu. GitHub est comme une base de données de leads qualifiés, sauf que les "leads" sont des secrets oubliés dans le code.</p>
-
-      <p>Recherchez dans les repos de votre cible :</p>
-
-      <ul>
-        <li><code>API</code>, <code>key</code>, <code>token</code>, <code>secret</code>, <code>password</code></li>
-        <li><code>TODO</code> (les développeurs y notent souvent les failles connues)</li>
-        <li><code>CSRF</code>, <code>random</code>, <code>hash</code>, <code>MD5</code>, <code>HMAC</code></li>
-        <li>Les <strong>Issues</strong> — la vraie mine d'or. Les équipes partagent des infos sur leur infra dans les discussions</li>
-      </ul>
-
-      <p>Outils : <strong>gitrob</strong>, <strong>shhgit</strong> (surveillance en temps réel), <strong>TruffleHog</strong> (fouille l'historique des commits), <strong>gitGraber</strong> (monitoring continu).</p>
-
-      <h3>Étape 5 : Fichiers JavaScript</h3>
-
-      <p>Les fichiers JS sont souvent négligés. C'est une erreur. Ils contiennent régulièrement des clés d'API hardcodées, des endpoints internes, des buckets S3 avec des permissions trop larges.</p>
-
-      <ul>
-        <li><strong>LinkFinder</strong> &mdash; Découvre les endpoints et leurs paramètres dans les fichiers JS</li>
-        <li><strong>getJS</strong> &mdash; Récupère rapidement tous les fichiers JS d'un domaine</li>
-        <li><strong>JSParser</strong> &mdash; Parse et analyse les fichiers JS avec interface web</li>
-      </ul>
-
-      <h3>Étape 6 : Wayback Machine</h3>
-
-      <p>La Wayback Machine est un trésor. On y trouve des fichiers JS abandonnés, d'anciens endpoints d'API, des sous-domaines oubliés, des pages de staging avec des commentaires juteux dans le code source. Si vous obtenez un 403 sur une page, cherchez-la dans la Wayback Machine — parfois elle y est exposée avec des infos sensibles.</p>
-
-      <h3>Étape 7 : Port scanning et ASN</h3>
-
-      <p>Analysez chaque adresse IP associée à vos sous-domaines. Recherchez les services sur des ports inhabituels, les versions obsolètes potentiellement vulnérables.</p>
-
-      <ul>
-        <li><strong>Masscan</strong> &mdash; Scanner de ports à l'échelle d'Internet. Peut scanner tout Internet en moins de 6 minutes</li>
-        <li><strong>Nmap</strong> &mdash; Pour le scan de version et l'analyse détaillée</li>
-      </ul>
-
-      <p>N'oubliez pas de récupérer les numéros ASN de votre cible pour découvrir toutes les plages IP qui lui appartiennent.</p>
-
-      <h2>Le workflow complet : ma recette</h2>
-
-      <p>Voici mon processus de bout en bout, celui que j'applique à chaque nouvelle cible :</p>
+      <h2>Mesures à prendre à l'approche d'une cible</h2>
 
       <ol>
-        <li><strong>Vérifier le scope</strong> — Définir précisément le périmètre (<code>*.example.com</code>)</li>
-        <li><strong>Énumérer les sous-domaines</strong> — Amass + subfinder + assetfinder en parallèle</li>
-        <li><strong>Générer les permutations</strong> — CommonSpeak2 + dnsgen pour les combinaisons probables</li>
-        <li><strong>Résoudre avec massdns</strong> — Valider quels domaines pointent vers une IP</li>
-        <li><strong>Scanner les ports</strong> — Masscan pour le balayage large, Nmap pour la version</li>
-        <li><strong>Capturer les écrans</strong> — Aquatone pour la cartographie visuelle</li>
-        <li><strong>Recon GitHub</strong> — Secrets, endpoints, discussions internes</li>
-        <li><strong>Analyser les JS</strong> — LinkFinder + getJS pour les endpoints cachés</li>
-        <li><strong>Explorer la Wayback Machine</strong> — Anciens fichiers, endpoints abandonnés</li>
-        <li><strong>Directory bruteforce</strong> — ffuf avec des wordlists ciblées</li>
-        <li><strong>Tester les subdomain takeovers</strong> — SubOver ou subjack</li>
-        <li><strong>Importer dans Burp</strong> — Tout passe dans Burp pour le test manuel</li>
+        <li>Contrôler la portée (scope) de la cible (<code>*.example.com</code>)</li>
+        <li>Trouver les sous-domaines</li>
+        <li>Exécuter masscan</li>
+        <li>Vérifier quels domaines sont résolus</li>
+        <li>Prendre des screenshots</li>
+        <li>Faire de la découverte de contenu (directory bruteforce)</li>
       </ol>
 
-      <h2>Outils web indispensables</h2>
+      <h2>Outils web pour commencer</h2>
 
-      <p>Avant de sortir le terminal, ces outils en ligne vous donnent déjà énormément d'informations :</p>
+      <p>Avant de sortir le terminal, ces outils en ligne donnent déjà énormément d'informations :</p>
 
       <ul>
-        <li><a href="https://pentest-tools.com/">pentest-tools.com</a> &mdash; Suite complète en ligne</li>
-        <li><a href="https://www.virustotal.com/">VirusTotal</a> &mdash; Analyse de domaines et IPs</li>
-        <li><a href="https://www.shodan.io/">Shodan</a> &mdash; Moteur de recherche pour les appareils connectés</li>
-        <li><a href="https://crt.sh/">crt.sh</a> &mdash; Transparence des certificats</li>
-        <li><a href="https://dnsdumpster.com/">DNSDumpster</a> &mdash; Cartographie DNS</li>
-        <li><a href="https://censys.io">Censys</a> &mdash; Données SSL/TLS</li>
+        <li><a href="https://pentest-tools.com/">pentest-tools.com</a></li>
+        <li><a href="https://www.virustotal.com/">VirusTotal</a></li>
+        <li><a href="https://www.shodan.io/">Shodan</a></li>
+        <li><a href="https://crt.sh/?q=%25target.com">crt.sh</a></li>
+        <li><a href="https://dnsdumpster.com/">DNSDumpster</a></li>
+        <li><a href="https://censys.io">Censys</a></li>
       </ul>
 
-      <h2>Ce que le growth m'a appris sur la sécurité</h2>
+      <hr>
 
-      <p>En growth engineering, on parle souvent de "compounding effects" — les petits gains qui s'accumulent. La reconnaissance en sécurité fonctionne exactement pareil. Chaque sous-domaine trouvé ouvre de nouvelles pistes. Chaque fichier JS analysé peut révéler un endpoint. Chaque endpoint peut mener à une vulnérabilité.</p>
+      <h2>ATTENTION : avant de commencer</h2>
 
-      <p>La clé, c'est la <strong>persévérance méthodique</strong>. Ne vous accrochez pas à une piste pendant des heures si elle ne mène nulle part — c'est le plus grand tueur de motivation. Prenez-en note, passez à autre chose, et revenez-y plus tard si un nouvel élément apparaît.</p>
+      <ul>
+        <li>Certains outils demandent une connaissance avancée</li>
+        <li>La majorité des configurations sont faites sur Linux (Kali, Ubuntu, Debian) — toute utilisation sur Windows ou Mac risque d'endommager votre système. Utilisez un container Docker ou une machine virtuelle</li>
+        <li>Les lignes commençant par <code>$</code> indiquent une exécution sur le terminal</li>
+        <li>Certaines commandes ne fonctionnent pas en copier-coller</li>
+        <li>Sachez utiliser <code>chmod</code> et comprendre le fonctionnement des chemins (path) sur votre OS</li>
+        <li>Certains outils ont pu être mis à jour ou ne sont plus maintenus</li>
+        <li>Installer des outils hors environnement virtuel peut casser vos dépendances — <strong>préférez toujours un venv</strong></li>
+        <li>Vérifiez les versions des langages de programmation utilisés</li>
+        <li><strong>Si vous n'êtes pas patient et que vous ne vous préparez pas à avoir des galères, ce qui suit n'est pas pour vous</strong></li>
+      </ul>
 
-      <p>Et souvenez-vous : un bon growth engineer, comme un bon pentester, ne se contente pas de suivre un playbook. Il observe, il comprend, il s'adapte. La reconnaissance, c'est l'art de voir ce que tout le monde regarde sans le remarquer.</p>
+      <hr>
 
-      <p><em>Cet article est inspiré et adapté du guide "Recon Everything" avec des ajouts personnels issus de mon expérience en tant que growth engineer et professeur.</em></p>
+      <h2>1. Énumération des sous-domaines</h2>
+
+      <p>Comme le dit <strong>NahamSec</strong> : <em>"La reconnaissance ne doit pas se limiter à la recherche de biens et de choses périmées. Il s'agit aussi de comprendre l'application et de trouver des fonctionnalités qui ne sont pas facilement accessibles."</em></p>
+
+      <p>Deux types de corrélation :</p>
+      <ul>
+        <li><strong>Corrélation verticale</strong> : tous les sous-domaines d'un domaine (<code>maps.google.com</code>, <code>mail.google.com</code>...)</li>
+        <li><strong>Corrélation horizontale</strong> : tout ce qui est acquis par une même entité (<code>google.com</code>, <code>youtube.com</code>, <code>blogger.com</code>...)</li>
+      </ul>
+
+      <p><strong>Rappel :</strong> préférez l'utilisation des outils dans un environnement virtuel :</p>
+<pre><code>$ cd home/user/dossier/
+$ python3 -m venv venv
+$ source venv/bin/activate
+$ pip install toolname</code></pre>
+
+      <h3>Sublist3r</h3>
+      <p><a href="https://github.com/aboul3la/Sublist3r">github.com/aboul3la/Sublist3r</a></p>
+<pre><code>$ git clone https://github.com/aboul3la/Sublist3r.git
+$ sudo pip install -r requirements.txt
+$ python sublist3r.py -d example.com</code></pre>
+      <p>Alias utile :</p>
+<pre><code>$ alias sublist3r='python /path/to/Sublist3r/sublist3r.py -d '</code></pre>
+
+      <h3>subfinder</h3>
+      <p><a href="https://github.com/subfinder/subfinder">github.com/subfinder/subfinder</a></p>
+<pre><code>$ go get github.com/subfinder/subfinder
+$ subfinder -d freelancer.com
+$ subfinder -d &lt;domain&gt; -recursive -silent -t 200 -v -o &lt;outfile&gt;</code></pre>
+
+      <h3>findomain</h3>
+      <p><a href="https://github.com/Edu4rdSHL/findomain">github.com/Edu4rdSHL/findomain</a> — Surveillance de sous-domaines avec webhooks Slack/Discord.</p>
+<pre><code>$ wget https://github.com/Edu4rdSHL/findomain/releases/latest/download/findomain-linux
+$ chmod +x findomain-linux
+$ findomain -t example.com</code></pre>
+
+      <h3>assetfinder</h3>
+      <p><a href="https://github.com/tomnomnom/assetfinder">github.com/tomnomnom/assetfinder</a></p>
+<pre><code>$ go get -u github.com/tomnomnom/assetfinder
+$ assetfinder --subs-only &lt;domain&gt;
+$ cat domains | assetfinder --subs-only</code></pre>
+
+      <h3>Amass (OWASP)</h3>
+      <p><a href="https://github.com/OWASP/Amass">github.com/OWASP/Amass</a></p>
+<pre><code>$ go get -u github.com/OWASP/Amass/...
+$ amass enum -o subdomains.txt -d output_file.txt
+$ amass intel -whois -d example.com</code></pre>
+
+      <h3>censys-enumeration</h3>
+      <p><a href="https://github.com/0xbharath/censys-enumeration">github.com/0xbharath/censys-enumeration</a> — L'étape la plus importante : les sous-domaines trouvés ici sont souvent invisibles aux autres outils car votre wordlist n'a pas les patterns nécessaires.</p>
+<pre><code>$ git clone git@github.com:yamakira/censys-enumeration.git
+$ pip install -r requirements.txt
+$ python censys_enumeration.py --no-emails --verbose --outfile results.json domains.txt</code></pre>
+
+      <h3>altdns</h3>
+      <p><a href="https://github.com/infosec-au/altdns">github.com/infosec-au/altdns</a> — Génère les combinaisons possibles du domaine d'origine avec les mots d'une wordlist.</p>
+<pre><code>$ pip install py-altdns
+$ altdns -i subdomains.txt -o data_output -w words.txt -s results_output.txt</code></pre>
+
+      <h3>massdns</h3>
+      <p><a href="https://github.com/blechschmidt/massdns">github.com/blechschmidt/massdns</a></p>
+<pre><code>$ git clone https://github.com/blechschmidt/massdns.git
+$ cd massdns && make
+$ ./bin/massdns -r lists/resolvers.txt -t A domains.txt > results.txt</code></pre>
+
+      <h3>domains-from-csp</h3>
+      <p><a href="https://github.com/0xbharath/domains-from-csp">github.com/0xbharath/domains-from-csp</a> — Extrait les domaines autorisés depuis l'en-tête Content-Security-Policy.</p>
+<pre><code>$ python csp_parser.py target_url
+$ python csp_parser.py target_url --resolve</code></pre>
+
+      <h3>SPF Records</h3>
+      <p><a href="https://github.com/0xbharath/assets-from-spf/">github.com/0xbharath/assets-from-spf</a> — Analyse les netblocks et noms de domaine depuis l'enregistrement DNS SPF.</p>
+<pre><code>$ python assets_from_spf.py target_url
+$ python assets_from_spf.py target_url --asn</code></pre>
+
+      <h3>Récupérer les numéros ASN</h3>
+<pre><code>$ curl -s http://ip-api.com/json/192.30.253.113 | jq -r .as
+$ whois -h whois.radb.net -- '-i origin AS36459' | grep -Eo "([0-9.]+){4}/[0-9]+" | uniq
+$ nmap --script targets-asn --script-args targets-asn.asn=17012 > paypal.txt</code></pre>
+
+      <h3>Autres outils d'énumération</h3>
+      <ul>
+        <li><strong>Certspotter</strong> — <a href="https://certspotter.com/api/v0/certs?domain=hackerone.com">certspotter.com</a> — Corrélation verticale et horizontale via les certificats</li>
+        <li><strong>crt.sh</strong> — <a href="https://crt.sh/?q=%25domain.com">crt.sh</a></li>
+        <li><strong>knockpy</strong> — <a href="https://github.com/guelfoweb/knock.git">github.com/guelfoweb/knock</a></li>
+        <li><strong>Shodan</strong> — Recherche par ports (8443, 8080), titre ("Dashboard[Jenkins]"), hostname, org, ssl</li>
+        <li><strong>Viewdns.info</strong> — Recherche inversée de whois pour l'énumération horizontale</li>
+        <li><strong>Sublert</strong> — <a href="https://github.com/yassineaboukir/sublert">github.com/yassineaboukir/sublert</a> — Surveillance automatique des nouveaux sous-domaines via la transparence des certificats</li>
+      </ul>
+
+      <h2>2. Découverte de contenu (Directory Bruteforcing)</h2>
+
+      <ul>
+        <li>Utilisez <code>robots.txt</code> pour déterminer les répertoires cachés</li>
+        <li>Scrapez l'hôte pour découvrir les endpoints d'API</li>
+        <li>Vérifiez le port 8443</li>
+        <li>Vérifiez si <code>/admin/</code> renvoie un 403, puis énumérez son contenu</li>
+        <li>Regardez si <code>/admin/users.php</code> renvoie un 200</li>
+      </ul>
+
+      <h3>ffuf</h3>
+      <p><a href="https://github.com/ffuf/ffuf">github.com/ffuf/ffuf</a> — Fuzzer web ultra-rapide écrit en Go.</p>
+<pre><code>$ go get github.com/ffuf/ffuf
+
+# Découverte de répertoires
+$ ffuf -w /path/to/wordlist -u https://target/FUZZ
+
+# Multi-hôtes
+$ ffuf -w hosts.txt:HOSTS -w content.txt:FUZZ -u https://HOSTS/FUZZ
+
+# Découverte de virtual hosts
+$ ffuf -c -w /path/to/wordlist -u http://example.com -H "Host: FUZZ.example.com" -fs &lt;length&gt;
+
+# Fuzzing de paramètres GET
+$ ffuf -w /path/to/paramnames.txt -u https://target/script.php?FUZZ=test_value -fs 4242
+
+# Fuzzing POST
+$ ffuf -w /path/to/postdata.txt -X POST -d "username=admin\&password=FUZZ" -u https://target/login.php -fc 401</code></pre>
+
+      <h3>dirsearch</h3>
+      <p><a href="https://github.com/maurosoria/dirsearch">github.com/maurosoria/dirsearch</a></p>
+<pre><code>$ git clone https://github.com/maurosoria/dirsearch.git
+$ python3 dirsearch.py -e php,txt,zip -u https://target -w db/dicc.txt --recursive -R 2</code></pre>
+
+      <h3>Gobuster</h3>
+<pre><code>$ go get github.com/OJ/gobuster
+$ gobuster dir -u https://mysite.com/path -c 'session=123456' -t 50 -w common-files.txt -x .php,.html</code></pre>
+
+      <h3>wfuzz</h3>
+<pre><code>$ pip install wfuzz
+$ wfuzz -w raft-large-directories.txt --sc 200,403,302 http://testphp.vulnweb.com/FUZZ</code></pre>
+
+      <h2>3. Screenshots et cartographie visuelle</h2>
+
+      <p>Regardez les en-têtes pour voir quelles mesures de sécurité sont en place : <code>X-XSS-Protection</code>, <code>X-Frame-Options: deny</code>. Connaître ses limites, c'est connaître ses opportunités.</p>
+
+      <h3>Aquatone</h3>
+<pre><code>$ go get -u github.com/michenriksen/aquatone
+$ cat hosts.txt | aquatone -out ~/aquatone/example.com</code></pre>
+
+      <h3>EyeWitness</h3>
+<pre><code>$ git clone https://github.com/FortyNorthSecurity/EyeWitness.git
+$ ./EyeWitness -f urls.txt --web
+$ ./EyeWitness -x urls.xml --timeout 8 --headless</code></pre>
+
+      <h3>Webscreenshot</h3>
+<pre><code>$ pip install webscreenshot
+$ python webscreenshot.py -i list.txt -v</code></pre>
+
+      <h2>4. Vérifier le CMS et les WAF</h2>
+
+      <ul>
+        <li><strong>Wappalyzer</strong> — Extension navigateur pour identifier les technologies</li>
+        <li><strong>Builtwith</strong> — <a href="https://builtwith.com/">builtwith.com</a></li>
+        <li><strong>Retire.js</strong> — Détecte les bibliothèques JS obsolètes</li>
+        <li><strong>WafW00f</strong> — <a href="https://github.com/sandrogauci/wafw00f">github.com/sandrogauci/wafw00f</a> — Détection des WAF</li>
+      </ul>
+
+      <h2>5. Google Dorks</h2>
+
+      <p>Quelques dorks utiles pour la reconnaissance :</p>
+
+<pre><code># Trouver des programmes de bug bounty
+site:.eu responsible disclosure
+site:.nl bug bounty
+
+# Identifier des CMS
+"index of" inurl:wp-content/
+inurl:"q=user/password"
+
+# Chercher dans du code
+site:github.com "company" password
+site:pastebin.com "keyword"
+site:trello.com "keyword"
+
+# Chercher des infos sensibles
+site:codepad.co "company"
+site:npmjs.com "keyword"
+site:gitlab "keyword"</code></pre>
+
+      <h2>6. GitHub Recon — la mine d'or</h2>
+
+      <p>GitHub est extrêmement utile pour trouver des informations sensibles : clés d'accès, mots de passe, endpoints ouverts, buckets S3, fichiers de sauvegarde.</p>
+
+      <p>Recherchez dans les repos de votre cible :</p>
+      <ul>
+        <li><code>API</code>, <code>key</code>, <code>token</code>, <code>secret</code>, <code>password</code>, <code>vulnerable</code></li>
+        <li><code>TODO</code>, <code>CSRF</code>, <code>random</code>, <code>hash</code>, <code>MD5</code>, <code>HMAC</code></li>
+        <li>Les <strong>Issues</strong> — les équipes partagent énormément d'infos sur leur infra dans les discussions</li>
+      </ul>
+
+      <h3>gitrob</h3>
+<pre><code>$ go get github.com/michenriksen/gitrob
+$ gitrob [options] target [target2] ... [targetN]</code></pre>
+
+      <h3>shhgit</h3>
+      <p>Trouve les secrets en temps réel en écoutant l'API GitHub Events.</p>
+<pre><code>$ go get github.com/eth0izzle/shhgit
+$ shhgit
+$ shhgit --search-query AWS_ACCESS_KEY_ID=AKIA</code></pre>
+
+      <h3>TruffleHog</h3>
+      <p>Fouille l'historique des commits à la recherche de secrets.</p>
+<pre><code>$ pip install truffleHog
+$ truffleHog --regex --entropy=False https://github.com/dxa4481/truffleHog.git</code></pre>
+
+      <h3>gitGraber</h3>
+      <p>Surveillance en temps réel pour Google, Amazon, Paypal, Github, Mailgun, Facebook, Twitter, Heroku, Stripe...</p>
+<pre><code>$ git clone https://github.com/hisxo/gitGraber.git
+$ pip3 install -r requirements.txt
+$ python3 gitGraber.py -k wordlists/keywords.txt -q "uber" -s</code></pre>
+
+      <h2>7. Fichiers JavaScript</h2>
+
+      <p>Les fichiers JS contiennent souvent des informations sensibles : secrets, jetons hardcodés, clés d'accès AWS, buckets S3 ouverts, endpoints internes.</p>
+
+      <h3>LinkFinder</h3>
+      <p>Découvre les endpoints et leurs paramètres dans les fichiers JS.</p>
+<pre><code>$ git clone https://github.com/GerbenJavado/LinkFinder.git
+$ pip3 install -r requirements.txt
+$ python linkfinder.py -i https://example.com/1.js -o results.html
+$ python linkfinder.py -i https://example.com -d</code></pre>
+
+      <h3>getJS</h3>
+<pre><code>$ go get github.com/003random/getJS
+$ cat domains.txt | getJS | tojson
+$ getJS -input=domains.txt</code></pre>
+
+      <h2>8. Wayback Machine</h2>
+
+      <p>En cherchant dans la Wayback Machine, on peut trouver : des fichiers JS anciens et abandonnés, d'anciens endpoints d'API, des endpoints de staging avec des commentaires juteux dans le code source. Si vous obtenez un 403 sur une page, cherchez-la dans la Wayback Machine — parfois elle y est exposée.</p>
+
+      <h3>waybackurls</h3>
+<pre><code>$ go get github.com/tomnomnom/waybackurls
+$ cat domains.txt | waybackurls > urls</code></pre>
+
+      <h3>Générer une wordlist depuis le Wayback</h3>
+<pre><code>$ curl -s "http://web.archive.org/cdx/search/cdx?url=hackerone.com/*&output=text&fl=original&collapse=urlkey" \
+  | sed 's/\//\n/g' | sort -u \
+  | grep -v 'svg\|.png\|.img\|.ttf\|http:\|:\|.eot\|woff\|ico\|css\|bootstrap\|wordpress\|.jpg\|.jpeg' > wordlist.txt</code></pre>
+
+      <h2>9. Port Scanning</h2>
+
+      <p>Analysez chaque adresse IP associée aux sous-domaines. Recherchez les services sur des ports inhabituels et les versions obsolètes potentiellement vulnérables.</p>
+
+      <h3>Masscan</h3>
+      <p>Scanner de ports à l'échelle d'Internet — peut scanner tout Internet en moins de 6 minutes.</p>
+<pre><code>$ sudo apt-get install git gcc make libpcap-dev
+$ git clone https://github.com/robertdavidgraham/masscan
+$ cd masscan && make -j8
+
+# Usage
+$ masscan -p1-65535 -iL $TARGET_LIST --max-rate 10000 -oG $TARGET_OUTPUT
+$ masscan -p80,8000-8100 10.0.0.0/8</code></pre>
+
+      <h3>Nmap</h3>
+<pre><code>$ nmap -p- -sV -iL targets.txt -oX output.xml
+$ sudo nmap -sS -T4 -sC -oA report --stylesheet \
+  https://raw.githubusercontent.com/honze-net/nmap-bootstrap-xsl/master/nmap-bootstrap.xsl -iL subdomain.txt</code></pre>
+
+      <h2>10. Subdomain Takeover</h2>
+
+      <h3>SubOver</h3>
+<pre><code>$ go get github.com/Ice3man543/SubOver
+$ ./SubOver -l subdomains.txt</code></pre>
+
+      <h3>subjack</h3>
+<pre><code>$ go get github.com/haccer/subjack
+$ ./subjack -w subdomains.txt -t 100 -timeout 30 -o results.txt -ssl</code></pre>
+
+      <h2>11. Outils complémentaires</h2>
+
+      <h3>Parameth — Découverte de paramètres</h3>
+<pre><code>$ git clone https://github.com/maK-/parameth.git
+$ ./parameth.py -u http://example.com/test.php</code></pre>
+
+      <h3>Arjun — Suite de découverte de paramètres HTTP</h3>
+<pre><code>$ git clone https://github.com/s0md3v/Arjun.git
+$ python3 arjun.py -u https://api.example.com/endpoint --get
+$ python3 arjun.py --urls targets.txt --get</code></pre>
+
+      <h3>XSStrike — Scanner XSS avancé</h3>
+<pre><code>$ git clone https://github.com/s0md3v/XSStrike.git
+$ python xsstrike.py -u "http://example.com/search.php?q=query"</code></pre>
+
+      <h3>Commix — Injection de commandes OS</h3>
+<pre><code>$ git clone https://github.com/commixproject/commix.git commix
+$ python commix.py --url="http://target/vuln.php" --data="param=value"</code></pre>
+
+      <h3>Bolt — Scanner CSRF</h3>
+<pre><code>$ git clone https://github.com/s0md3v/Bolt.git
+$ python3 bolt.py -u https://github.com -l 2</code></pre>
+
+      <h3>CORS Scanner</h3>
+<pre><code>$ git clone https://github.com/chenjj/CORScanner.git
+$ python cors_scan.py -u example.com
+$ python cors_scan.py -i top_100_domains.txt -t 100</code></pre>
+
+      <h3>SSRFmap</h3>
+<pre><code>$ git clone https://github.com/swisskyrepo/SSRFmap
+$ pip3 install -r requirements.txt
+$ python ssrfmap.py -r data/request.txt -p url -m readfiles,portscan</code></pre>
+
+      <h2>12. Wordlists et Payloads</h2>
+
+      <ul>
+        <li><a href="https://github.com/danielmiessler/SecLists">SecLists</a> — raft-large-words.txt et bien plus</li>
+        <li><a href="https://gist.github.com/jhaddix/b80ea67d85c13206125806f0828f4d10">contentdiscoveryall.txt</a> de jhaddix</li>
+        <li><a href="https://github.com/swisskyrepo/PayloadsAllTheThings">PayloadsAllTheThings</a></li>
+        <li><a href="http://www.xss-payloads.com/">XSS Payloads</a></li>
+        <li><a href="https://github.com/trietptm/SQL-Injection-Payloads">SQL Injection Payloads</a></li>
+      </ul>
+
+      <h2>Le workflow complet de bout en bout</h2>
+
+      <ol>
+        <li><strong>Énumérer les sous-domaines</strong> avec amass, assetfinder, subfinder</li>
+        <li><strong>Générer les permutations</strong> avec la wordlist CommonSpeak2</li>
+        <li><strong>Résoudre avec massdns</strong> : <code>./bin/massdns -r lists/resolvers.txt -t A domains.txt > results.txt</code></li>
+        <li><strong>Récupérer les resolvers</strong> avec bass : <code>python3 bass.py -d target.com -o resolvers.txt</code></li>
+        <li><strong>Générer les combinaisons</strong> avec dnsgen : <code>cat domains.txt | dnsgen -- | massdns -r resolvers.txt -t A -o J --flush 2>/dev/null</code></li>
+        <li><strong>Port scan</strong> avec masscan + nmap pour la version</li>
+        <li><strong>Recon GitHub</strong></li>
+        <li><strong>Screenshots</strong> avec aquatone</li>
+        <li><strong>Directory bruteforce</strong> avec ffuf</li>
+        <li><strong>Analyser les fichiers JS</strong>, chercher les tokens et clés secrètes</li>
+        <li><strong>Wayback Machine</strong> pour les anciens fichiers JS et les pages 403</li>
+        <li><strong>Importer dans Burp</strong> : <code>cat file | parallel -j 200 curl -L -o /dev/null {} -x 127.0.0.1:8080 -k -s</code></li>
+      </ol>
+
+      <h2>Lectures recommandées</h2>
+
+      <ul>
+        <li><a href="https://0xpatrik.com/subdomain-takeover/">Subdomain Takeover</a> par Patrik</li>
+        <li><a href="https://0xpatrik.com/subdomain-enumeration-2019/">Subdomain Enumeration</a></li>
+        <li><a href="https://github.com/EdOverflow/can-i-take-over-xyz">Can-I-take-over-xyz</a></li>
+        <li><a href="https://blog.ropnop.com/serverless-toolkit-for-pentesters/">Serverless Toolkit for Pentesters</a></li>
+        <li><a href="https://blog.ropnop.com/docker-for-pentesters/">Docker for Pentesters</a></li>
+        <li><a href="https://portswigger.net/research/http-desync-attacks-request-smuggling-reborn">HTTP Desync Attacks</a></li>
+      </ul>
+
+      <p><em>Cet article est inspiré et adapté du guide "Recon Everything", traduit de l'anglais avec des précisions et modifications.</em></p>
 
     </div><!-- /.entry-content -->
 
