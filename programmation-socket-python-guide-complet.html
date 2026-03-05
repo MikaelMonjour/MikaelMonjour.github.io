@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+        <title>Programmation socket en Python : le guide complet</title>
+        <link rel="stylesheet" href="/theme/css/main.css?v=4" />
+        <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Blog de Mikael Atom Feed" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="/" class="home-icon" title="Accueil"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></a><a href="/">Blog de Mikael</a></h1>
+                <nav><ul>
+                    <li><a href="/category/misc.html">misc</a></li>
+                    <li class="active"><a href="/category/tech.html">tech</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="/programmation-socket-python-guide-complet.html" rel="bookmark"
+           title="Permalink to Programmation socket en Python : le guide complet">Programmation socket en Python : le guide complet</a></h1>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2026-03-05T20:00:00+01:00">
+                Published: mer. 05 mars 2026
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="/author/mikael-monjour.html">Mikael Monjour</a>
+        </address>
+<p>In <a href="/category/tech.html">tech</a>.</p>
+<p>tags: <a href="/tag/python.html">python</a> <a href="/tag/reseau.html">reseau</a> <a href="/tag/tech.html">tech</a> </p>
+</footer><!-- /.post-info -->
+
+      <p>Vous construisez un outil interne. Un script qui doit envoyer des données à un autre service sur le réseau. Pas un appel HTTP classique — quelque chose de plus bas niveau. Un échange brut entre deux machines, octet par octet.</p>
+
+      <p>Vous ouvrez la doc Python, vous tombez sur le module <code>socket</code>, et là : <code>AF_INET</code>, <code>SOCK_STREAM</code>, <code>bind()</code>, <code>listen()</code>, <code>accept()</code>… On dirait du C des années 80.</p>
+
+      <p>Bonne nouvelle : c'est exactement du C des années 80 — mais avec Python par-dessus. Et une fois que vous comprenez la logique, tout s'éclaire.</p>
+
+      <p><strong>Ce guide couvre tout : de l'echo server le plus simple jusqu'à une application client-serveur complète avec protocole personnalisé, gestion multi-connexion et troubleshooting réseau.</strong></p>
+
+      <h2>Les sockets, c'est quoi ?</h2>
+
+      <p>Les sockets sont le mécanisme de base pour envoyer des messages sur un réseau. Ils fournissent une forme de <strong>communication inter-processus</strong> (IPC) : deux programmes, sur la même machine ou sur deux machines différentes, qui échangent des données.</p>
+
+      <p>Le réseau peut être local (votre machine uniquement) ou connecté à l'extérieur — typiquement Internet, via votre fournisseur d'accès.</p>
+
+      <p>L'histoire des sockets commence avec ARPANET en 1971. L'API telle qu'on la connaît date de 1983, avec les "Berkeley sockets" du système BSD. Quand le Web a explosé dans les années 90, la programmation réseau a suivi. Serveurs web, navigateurs, applications client-serveur en tout genre — tous utilisent des sockets.</p>
+
+      <p>Le plus remarquable : <strong>l'API de bas niveau n'a quasiment pas changé depuis</strong>. Ce que vous apprenez ici reste valable pour longtemps.</p>
+
+      <h2>L'API socket de Python en un coup d'œil</h2>
+
+      <p>Le module <code>socket</code> de Python fournit une interface directe avec l'API socket de Berkeley. Les fonctions Python correspondent aux appels système (syscalls) C :</p>
+
+      <table>
+        <thead>
+          <tr><th>Fonction</th><th>Rôle</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>socket()</code></td><td>Crée un nouveau socket</td></tr>
+          <tr><td><code>bind()</code></td><td>Associe le socket à une adresse et un port</td></tr>
+          <tr><td><code>listen()</code></td><td>Met le socket en mode écoute (serveur)</td></tr>
+          <tr><td><code>accept()</code></td><td>Accepte une connexion entrante</td></tr>
+          <tr><td><code>connect()</code></td><td>Se connecte à un serveur distant</td></tr>
+          <tr><td><code>connect_ex()</code></td><td>Comme <code>connect()</code>, mais retourne un code d'erreur au lieu de lever une exception</td></tr>
+          <tr><td><code>send()</code></td><td>Envoie des données</td></tr>
+          <tr><td><code>recv()</code></td><td>Reçoit des données</td></tr>
+          <tr><td><code>close()</code></td><td>Ferme le socket</td></tr>
+        </tbody>
+      </table>
+
+      <p>Python dispose aussi de modules de plus haut niveau (<code>socketserver</code>, <code>http</code>, <code>smtplib</code>…), mais comprendre les sockets bruts vous donne le contrôle total.</p>
+
+      <h2>Pourquoi TCP ?</h2>
+
+      <p>Dans ce guide, nous utilisons <code>socket.SOCK_STREAM</code>, c'est-à-dire le protocole <strong>TCP</strong> (Transmission Control Protocol). Pourquoi ?</p>
+
+      <ul>
+        <li><strong>Fiable :</strong> les paquets perdus sont détectés et retransmis automatiquement.</li>
+        <li><strong>Ordonné :</strong> les données arrivent dans l'ordre où elles ont été envoyées.</li>
+        <li><strong>Handshake :</strong> un échange initial garantit que les deux côtés sont accessibles.</li>
+      </ul>
+
+      <p>L'alternative est UDP (<code>socket.SOCK_DGRAM</code>) : plus rapide mais sans garantie de livraison ni d'ordre. Pour la plupart des applications, TCP est le bon choix.</p>
+
+      <h2>Le flux TCP en image</h2>
+
+      <p>Voici la séquence d'appels entre un serveur et un client TCP :</p>
+
+      <p><strong>Côté serveur :</strong></p>
+      <ol>
+        <li><code>socket()</code> — crée le socket</li>
+        <li><code>bind()</code> — l'associe à une adresse/port</li>
+        <li><code>listen()</code> — passe en mode écoute</li>
+        <li><code>accept()</code> — attend et accepte une connexion</li>
+      </ol>
+
+      <p><strong>Côté client :</strong></p>
+      <ol>
+        <li><code>socket()</code> — crée le socket</li>
+        <li><code>connect()</code> — se connecte au serveur (handshake à 3 étapes)</li>
+      </ol>
+
+      <p><strong>Échange :</strong> les deux côtés utilisent <code>send()</code> et <code>recv()</code> pour échanger des données.</p>
+
+      <p><strong>Fin :</strong> chacun appelle <code>close()</code> pour fermer sa connexion.</p>
+
+      <h2>Premier exemple : echo server</h2>
+
+      <p>On commence par le cas le plus simple : un serveur qui renvoie au client exactement ce qu'il reçoit.</p>
+
+      <h3>Le serveur</h3>
+
+<pre><code class="language-python">#!/usr/bin/env python3
+
+import socket
+
+HOST = '127.0.0.1'  # Adresse de bouclage (localhost)
+PORT = 65432        # Port d'écoute (> 1023 pour éviter les privilèges root)
+
+with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+    s.bind((HOST, PORT))
+    s.listen()
+    conn, addr = s.accept()
+    with conn:
+        print('Connecté par', addr)
+        while True:
+            data = conn.recv(1024)
+            if not data:
+                break
+            conn.sendall(data)</code></pre>
+
+      <p>Décortiquons chaque appel :</p>
+
+      <p><code>socket.socket(socket.AF_INET, socket.SOCK_STREAM)</code> crée un objet socket. <code>AF_INET</code> = famille d'adresses IPv4. <code>SOCK_STREAM</code> = type TCP. L'instruction <code>with</code> garantit que le socket sera fermé automatiquement.</p>
+
+      <p><code>bind((HOST, PORT))</code> associe le socket à l'interface réseau <code>127.0.0.1</code> (localhost) et au port <code>65432</code>. Seuls les processus locaux pourront se connecter. Pour accepter les connexions de n'importe quelle interface, utilisez une chaîne vide <code>''</code> comme hôte.</p>
+
+      <p><code>listen()</code> active le mode écoute. Le paramètre optionnel <code>backlog</code> définit le nombre maximum de connexions en attente.</p>
+
+      <p><code>accept()</code> <strong>bloque</strong> jusqu'à ce qu'un client se connecte. Il renvoie un nouvel objet socket <code>conn</code> (pour communiquer avec ce client) et un tuple <code>addr</code> contenant l'adresse IP et le port du client.</p>
+
+      <p>Point important : <code>conn</code> est un <strong>nouveau socket</strong>, distinct du socket d'écoute <code>s</code>. C'est avec <code>conn</code> que vous échangez des données.</p>
+
+      <p>La boucle <code>while True</code> lit les données avec <code>conn.recv(1024)</code> (jusqu'à 1024 octets à la fois) et les renvoie avec <code>conn.sendall(data)</code>. Quand le client ferme la connexion, <code>recv()</code> renvoie <code>b''</code> et la boucle s'arrête.</p>
+
+      <h3>Le client</h3>
+
+<pre><code class="language-python">#!/usr/bin/env python3
+
+import socket
+
+HOST = '127.0.0.1'  # Adresse du serveur
+PORT = 65432        # Port du serveur
+
+with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+    s.connect((HOST, PORT))
+    s.sendall(b'Hello, world')
+    data = s.recv(1024)
+
+print('Reçu', repr(data))</code></pre>
+
+      <p>Le client crée un socket, se connecte au serveur, envoie un message, lit la réponse et l'affiche. Simple.</p>
+
+      <h3>Exécution</h3>
+
+      <p>Terminal 1 (serveur) :</p>
+
+<pre><code class="language-bash">$ python echo-server.py
+# Le terminal se fige — le serveur attend une connexion</code></pre>
+
+      <p>Terminal 2 (client) :</p>
+
+<pre><code class="language-bash">$ python echo-client.py
+Reçu b'Hello, world'</code></pre>
+
+      <p>Et côté serveur, vous voyez :</p>
+
+<pre><code class="language-bash">Connecté par ('127.0.0.1', 64623)</code></pre>
+
+      <h3>Inspecter l'état des sockets</h3>
+
+      <p>Pour voir les sockets actifs sur votre machine, utilisez <code>netstat</code> :</p>
+
+<pre><code class="language-bash">$ netstat -an
+Proto Recv-Q Send-Q Local Address        Foreign Address      (state)
+tcp4     0      0  127.0.0.1.65432      *.*                  LISTEN</code></pre>
+
+      <p>Ou <code>lsof</code> pour des informations plus détaillées (PID, processus) :</p>
+
+<pre><code class="language-bash">$ lsof -i -n
+COMMAND  PID   USER  FD  TYPE DEVICE SIZE/OFF NODE NAME
+Python  67982 user   3u  IPv4 0xecf272   0t0  TCP *:65432 (LISTEN)</code></pre>
+
+      <h3>L'interface de bouclage (loopback)</h3>
+
+      <p>Quand on utilise l'adresse <code>127.0.0.1</code> (ou <code>::1</code> en IPv6), les données ne quittent jamais la machine. C'est l'interface de bouclage, aussi appelée "localhost". Elle est utile pour le développement et pour isoler des communications internes.</p>
+
+      <p>Dès que vous utilisez une adresse IP réelle (par exemple <code>10.1.2.3</code>), les données transitent par le réseau externe. Attention à la sécurité.</p>
+
+      <h2>Gérer plusieurs connexions</h2>
+
+      <p>Notre echo server a un problème majeur : il ne gère qu'un seul client, puis s'arrête. Dans la vraie vie, un serveur doit accepter des dizaines, des centaines de connexions simultanées.</p>
+
+      <p>Plusieurs approches existent : threads, <code>asyncio</code>, ou le vénérable <code>select()</code>. Nous allons utiliser le module <code>selectors</code> de Python, qui fournit une abstraction de haut niveau au-dessus de <code>select()</code> :</p>
+
+      <blockquote>
+        <p>"Ce module permet un multiplexage des entrées/sorties de haut niveau et efficace, basé sur les primitives du module select."</p>
+      </blockquote>
+
+      <p>L'avantage : pas de threads à gérer, pas de GIL à subir. Et pour une application I/O-bound (qui passe son temps à attendre le réseau), c'est souvent suffisant.</p>
+
+      <h3>Le serveur multi-connexion</h3>
+
+<pre><code class="language-python">import selectors
+import socket
+import types
+
+sel = selectors.DefaultSelector()
+
+host, port = '127.0.0.1', 65432
+lsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+lsock.bind((host, port))
+lsock.listen()
+print('Écoute sur', (host, port))
+lsock.setblocking(False)
+sel.register(lsock, selectors.EVENT_READ, data=None)
+
+
+def accept_wrapper(sock):
+    conn, addr = sock.accept()
+    print('Connexion acceptée de', addr)
+    conn.setblocking(False)
+    data = types.SimpleNamespace(addr=addr, inb=b'', outb=b'')
+    events = selectors.EVENT_READ | selectors.EVENT_WRITE
+    sel.register(conn, events, data=data)
+
+
+def service_connection(key, mask):
+    sock = key.fileobj
+    data = key.data
+    if mask & selectors.EVENT_READ:
+        recv_data = sock.recv(1024)
+        if recv_data:
+            data.outb += recv_data
+        else:
+            print('Fermeture de la connexion vers', data.addr)
+            sel.unregister(sock)
+            sock.close()
+    if mask & selectors.EVENT_WRITE:
+        if data.outb:
+            print('Echo', repr(data.outb), 'vers', data.addr)
+            sent = sock.send(data.outb)
+            data.outb = data.outb[sent:]
+
+
+while True:
+    events = sel.select(timeout=None)
+    for key, mask in events:
+        if key.data is None:
+            accept_wrapper(key.fileobj)
+        else:
+            service_connection(key, mask)</code></pre>
+
+      <p>Les différences clés avec le serveur simple :</p>
+
+      <ul>
+        <li><code>lsock.setblocking(False)</code> : le socket passe en <strong>mode non-bloquant</strong>. Plus aucun appel ne suspend l'exécution.</li>
+        <li><code>sel.register()</code> : on enregistre chaque socket auprès du sélecteur pour surveiller les événements (lecture, écriture).</li>
+        <li>La boucle d'événements : <code>sel.select()</code> bloque jusqu'à ce qu'un socket soit prêt. On distingue ensuite le socket d'écoute (<code>key.data is None</code>) des sockets clients.</li>
+        <li><code>types.SimpleNamespace</code> : un objet léger pour stocker les données associées à chaque connexion (adresse, tampons d'entrée/sortie).</li>
+      </ul>
+
+      <h3>Le client multi-connexion</h3>
+
+<pre><code class="language-python">import selectors
+import socket
+import types
+
+sel = selectors.DefaultSelector()
+messages = [b'Message 1 du client.', b'Message 2 du client.']
+
+
+def start_connections(host, port, num_conns):
+    server_addr = (host, port)
+    for i in range(num_conns):
+        connid = i + 1
+        print('Connexion', connid, 'vers', server_addr)
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.setblocking(False)
+        sock.connect_ex(server_addr)
+        events = selectors.EVENT_READ | selectors.EVENT_WRITE
+        data = types.SimpleNamespace(
+            connid=connid,
+            msg_total=sum(len(m) for m in messages),
+            recv_total=0,
+            messages=list(messages),
+            outb=b''
+        )
+        sel.register(sock, events, data=data)
+
+
+def service_connection(key, mask):
+    sock = key.fileobj
+    data = key.data
+    if mask & selectors.EVENT_READ:
+        recv_data = sock.recv(1024)
+        if recv_data:
+            print('Reçu', repr(recv_data), 'connexion', data.connid)
+            data.recv_total += len(recv_data)
+        if not recv_data or data.recv_total == data.msg_total:
+            print('Fermeture connexion', data.connid)
+            sel.unregister(sock)
+            sock.close()
+    if mask & selectors.EVENT_WRITE:
+        if not data.outb and data.messages:
+            data.outb = data.messages.pop(0)
+        if data.outb:
+            print('Envoi', repr(data.outb), 'connexion', data.connid)
+            sent = sock.send(data.outb)
+            data.outb = data.outb[sent:]
+
+
+start_connections('127.0.0.1', 65432, 2)
+
+while True:
+    events = sel.select(timeout=None)
+    for key, mask in events:
+        message = key.data
+        service_connection(key, mask)</code></pre>
+
+      <p>Le client utilise <code>connect_ex()</code> au lieu de <code>connect()</code> pour éviter une exception <code>BlockingIOError</code> immédiate en mode non-bloquant. La connexion se termine en arrière-plan, et <code>select()</code> nous prévient quand le socket est prêt.</p>
+
+      <h3>Exécution</h3>
+
+<pre><code class="language-bash"># Terminal 1 — serveur
+$ python multiconn-server.py
+Écoute sur ('127.0.0.1', 65432)
+Connexion acceptée de ('127.0.0.1', 61354)
+Connexion acceptée de ('127.0.0.1', 61355)
+Echo b'Message 1 du client.Message 2 du client.' vers ('127.0.0.1', 61354)
+Echo b'Message 1 du client.Message 2 du client.' vers ('127.0.0.1', 61355)
+Fermeture de la connexion vers ('127.0.0.1', 61354)
+Fermeture de la connexion vers ('127.0.0.1', 61355)
+
+# Terminal 2 — client
+$ python multiconn-client.py
+Connexion 1 vers ('127.0.0.1', 65432)
+Connexion 2 vers ('127.0.0.1', 65432)
+Envoi b'Message 1 du client.' connexion 1
+Envoi b'Message 2 du client.' connexion 1
+Reçu b'Message 1 du client.Message 2 du client.' connexion 1
+Fermeture connexion 1</code></pre>
+
+      <h2>Application complète : protocole personnalisé</h2>
+
+      <p>L'echo server multi-connexion fonctionne, mais il lui manque l'essentiel pour une vraie application : un <strong>protocole</strong> — c'est-à-dire un format qui définit comment les messages sont structurés, délimités et interprétés.</p>
+
+      <h3>Le problème des limites de messages</h3>
+
+      <p>Avec TCP, vous lisez un <strong>flux continu d'octets</strong>. Il n'y a pas de notion de "message". Quand vous appelez <code>recv(1024)</code>, vous pouvez recevoir 1 octet, 500 octets, ou 1024 octets — ce n'est pas garanti.</p>
+
+      <p>C'est à vous de définir où commence et où finit un message. Trois approches :</p>
+
+      <ol>
+        <li><strong>Messages de taille fixe :</strong> simple, mais gaspille de la bande passante pour les petits messages.</li>
+        <li><strong>Délimiteur :</strong> un caractère spécial marque la fin (comme <code>\n</code>). Fragile si le délimiteur apparaît dans les données.</li>
+        <li><strong>En-tête de longueur :</strong> on préfixe chaque message avec sa taille. C'est l'approche utilisée par HTTP et celle que nous allons implémenter.</li>
+      </ol>
+
+      <h3>Notre protocole</h3>
+
+      <p>Chaque message est composé de trois parties :</p>
+
+      <table>
+        <thead>
+          <tr><th>Partie</th><th>Taille</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>En-tête fixe</td><td>2 octets</td><td>Longueur de l'en-tête JSON (entier, big-endian)</td></tr>
+          <tr><td>En-tête JSON</td><td>Variable</td><td>Dictionnaire avec les métadonnées : <code>byteorder</code>, <code>content-length</code>, <code>content-type</code>, <code>content-encoding</code></td></tr>
+          <tr><td>Contenu</td><td>Variable</td><td>La charge utile (texte JSON ou binaire)</td></tr>
+        </tbody>
+      </table>
+
+      <p>L'approche est hybride : un petit en-tête fixe (2 octets) permet de connaître la taille de l'en-tête JSON variable, qui lui-même contient la taille du contenu.</p>
+
+      <h3>La classe Message</h3>
+
+      <p>Toute la logique de lecture, écriture et traitement des messages est encapsulée dans une classe <code>Message</code>. Voici le point d'entrée :</p>
+
+<pre><code class="language-python">def process_events(self, mask):
+    if mask & selectors.EVENT_READ:
+        self.read()
+    if mask & selectors.EVENT_WRITE:
+        self.write()</code></pre>
+
+      <p>La méthode <code>read()</code> gère les trois étapes de lecture :</p>
+
+<pre><code class="language-python">def read(self):
+    self._read()
+
+    if self._jsonheader_len is None:
+        self.process_protoheader()
+
+    if self._jsonheader_len is not None:
+        if self.jsonheader is None:
+            self.process_jsonheader()
+
+    if self.jsonheader:
+        if self.request is None:
+            self.process_request()</code></pre>
+
+      <p>Chaque méthode vérifie d'abord qu'elle a assez de données dans le tampon avant de traiter sa partie :</p>
+
+      <table>
+        <thead>
+          <tr><th>Composant</th><th>Méthode</th><th>Résultat</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>En-tête fixe (2 octets)</td><td><code>process_protoheader()</code></td><td><code>self._jsonheader_len</code></td></tr>
+          <tr><td>En-tête JSON</td><td><code>process_jsonheader()</code></td><td><code>self.jsonheader</code></td></tr>
+          <tr><td>Contenu</td><td><code>process_request()</code></td><td><code>self.request</code></td></tr>
+        </tbody>
+      </table>
+
+      <h3>Lecture de l'en-tête fixe</h3>
+
+<pre><code class="language-python">def process_protoheader(self):
+    hdrlen = 2
+    if len(self._recv_buffer) >= hdrlen:
+        self._jsonheader_len = struct.unpack(
+            '>H', self._recv_buffer[:hdrlen]
+        )[0]
+        self._recv_buffer = self._recv_buffer[hdrlen:]</code></pre>
+
+      <p><code>struct.unpack('>H', ...)</code> lit un entier non signé de 2 octets en big-endian (ordre réseau). C'est la longueur de l'en-tête JSON qui suit.</p>
+
+      <h3>Lecture de l'en-tête JSON</h3>
+
+<pre><code class="language-python">def process_jsonheader(self):
+    hdrlen = self._jsonheader_len
+    if len(self._recv_buffer) >= hdrlen:
+        self.jsonheader = self._json_decode(
+            self._recv_buffer[:hdrlen], 'utf-8'
+        )
+        self._recv_buffer = self._recv_buffer[hdrlen:]
+        for reqhdr in (
+            'byteorder', 'content-length',
+            'content-type', 'content-encoding'
+        ):
+            if reqhdr not in self.jsonheader:
+                raise ValueError(f'En-tête requis manquant : "{reqhdr}".')</code></pre>
+
+      <h3>Traitement de la requête</h3>
+
+<pre><code class="language-python">def process_request(self):
+    content_len = self.jsonheader['content-length']
+    if not len(self._recv_buffer) >= content_len:
+        return
+    data = self._recv_buffer[:content_len]
+    self._recv_buffer = self._recv_buffer[content_len:]
+    if self.jsonheader['content-type'] == 'text/json':
+        encoding = self.jsonheader['content-encoding']
+        self.request = self._json_decode(data, encoding)
+        print('Requête reçue', repr(self.request), 'de', self.addr)
+    else:
+        self.request = data
+        print(f'Requête {self.jsonheader["content-type"]} reçue de',
+              self.addr)
+    self._set_selector_events_mask('w')</code></pre>
+
+      <p>La dernière ligne est cruciale : une fois la requête lue, on passe le sélecteur en mode écriture uniquement. Le serveur n'a plus besoin de lire — il doit maintenant répondre.</p>
+
+      <h3>Écriture et réponse</h3>
+
+<pre><code class="language-python">def write(self):
+    if self.request:
+        if not self.response_created:
+            self.create_response()
+
+    self._write()
+
+
+def _write(self):
+    if self._send_buffer:
+        try:
+            sent = self.sock.send(self._send_buffer)
+        except BlockingIOError:
+            pass
+        else:
+            self._send_buffer = self._send_buffer[sent:]
+            if sent and not self._send_buffer:
+                self.close()</code></pre>
+
+      <p>La méthode <code>_write()</code> gère le cas où <code>send()</code> ne peut pas tout envoyer d'un coup (tampon réseau plein). Elle attrape l'exception <code>BlockingIOError</code> — le sélecteur rappellera la méthode quand le socket sera de nouveau prêt.</p>
+
+      <h3>Gestion des erreurs</h3>
+
+      <p>Dans la boucle d'événements principale, chaque appel à <code>process_events()</code> est entouré d'un <code>try/except</code> :</p>
+
+<pre><code class="language-python">try:
+    message.process_events(mask)
+except Exception:
+    print(
+        'Erreur pour',
+        f'{message.addr}:\n{traceback.format_exc()}'
+    )
+    message.close()</code></pre>
+
+      <p>L'appel à <code>message.close()</code> est essentiel : il ferme le socket <strong>et</strong> le désenregistre du sélecteur. Si un client provoque une erreur, les autres connexions ne sont pas affectées.</p>
+
+      <h3>Séquence complète</h3>
+
+      <table>
+        <thead>
+          <tr><th>Étape</th><th>Qui</th><th>Action</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td>Client</td><td>Envoie un message de requête</td></tr>
+          <tr><td>2</td><td>Serveur</td><td>Reçoit et traite la requête</td></tr>
+          <tr><td>3</td><td>Serveur</td><td>Envoie un message de réponse</td></tr>
+          <tr><td>4</td><td>Client</td><td>Reçoit et traite la réponse</td></tr>
+        </tbody>
+      </table>
+
+      <h2>Troubleshooting</h2>
+
+      <p>Inévitablement, quelque chose ne fonctionnera pas. Voici vos outils de diagnostic.</p>
+
+      <h3>ping</h3>
+
+      <p><code>ping</code> vérifie si un hôte est accessible en envoyant des requêtes ICMP :</p>
+
+<pre><code class="language-bash">$ ping -c 3 127.0.0.1
+PING 127.0.0.1 (127.0.0.1): 56 data bytes
+64 bytes from 127.0.0.1: icmp_seq=0 ttl=64 time=0.058 ms
+64 bytes from 127.0.0.1: icmp_seq=1 ttl=64 time=0.165 ms
+64 bytes from 127.0.0.1: icmp_seq=2 ttl=64 time=0.164 ms
+
+--- 127.0.0.1 ping statistics ---
+3 packets transmitted, 3 packets received, 0.0 % packet loss</code></pre>
+
+      <p>Surveillez les statistiques en fin de sortie : perte de paquets et temps de latence.</p>
+
+      <h3>netstat</h3>
+
+      <p>Pour voir les sockets actifs et leurs files d'attente :</p>
+
+<pre><code class="language-bash">$ netstat -an | grep 65432
+Proto Recv-Q Send-Q Local Address        Foreign Address      (state)
+tcp4  408300      0 127.0.0.1.65432      127.0.0.1.53225      ESTABLISHED
+tcp4       0 269868 127.0.0.1.53225      127.0.0.1.65432      ESTABLISHED</code></pre>
+
+      <p>Les colonnes <code>Recv-Q</code> et <code>Send-Q</code> montrent les octets en attente dans les tampons réseau. Des valeurs élevées signifient que l'application n'arrive pas à lire ou écrire assez vite.</p>
+
+      <h3>Wireshark</h3>
+
+      <p>Quand il faut voir ce qui transite réellement sur le réseau, Wireshark (graphique) ou <code>tshark</code> (terminal) sont indispensables :</p>
+
+<pre><code class="language-bash">$ tshark -i lo0 'tcp port 65432'
+Capturing on 'Loopback'
+  1 0.000000 127.0.0.1 → 127.0.0.1 TCP 68 53942 → 65432 [SYN] Seq=0
+  2 0.000057 127.0.0.1 → 127.0.0.1 TCP 68 65432 → 53942 [SYN, ACK] Seq=0
+  3 0.000068 127.0.0.1 → 127.0.0.1 TCP 56 53942 → 65432 [ACK] Seq=1</code></pre>
+
+      <p>Vous voyez le handshake TCP en direct : SYN, SYN-ACK, ACK — les trois étapes de l'établissement de connexion.</p>
+
+      <h2>Erreurs fréquentes</h2>
+
+      <table>
+        <thead>
+          <tr><th>Exception</th><th>Constante errno</th><th>Cause</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>BlockingIOError</code></td><td><code>EWOULDBLOCK</code></td><td>Ressource temporairement indisponible. En mode non-bloquant, le tampon réseau est plein. Normalement temporaire.</td></tr>
+          <tr><td><code>OSError</code></td><td><code>EADDRINUSE</code></td><td>Adresse déjà utilisée. Un autre processus écoute sur ce port, ou le port est en état <code>TIME_WAIT</code>. Utilisez <code>SO_REUSEADDR</code>.</td></tr>
+          <tr><td><code>ConnectionResetError</code></td><td><code>ECONNRESET</code></td><td>Connexion réinitialisée par le pair. Le processus distant a crashé ou n'a pas fermé son socket proprement.</td></tr>
+          <tr><td><code>TimeoutError</code></td><td><code>ETIMEDOUT</code></td><td>Pas de réponse du pair. Timeout dépassé.</td></tr>
+          <tr><td><code>ConnectionRefusedError</code></td><td><code>ECONNREFUSED</code></td><td>Connexion refusée. Aucune application n'écoute sur le port spécifié.</td></tr>
+        </tbody>
+      </table>
+
+      <p>L'erreur la plus fréquente quand on débute :</p>
+
+<pre><code class="language-bash">$ python echo-client.py
+Traceback (most recent call last):
+  File "echo-client.py", line 9, in &lt;module&gt;
+    s.connect((HOST, PORT))
+ConnectionRefusedError: [Errno 61] Connection refused</code></pre>
+
+      <p>Trois causes possibles : mauvais numéro de port, serveur non démarré, ou pare-feu qui bloque la connexion.</p>
+
+      <h2>Bonnes pratiques</h2>
+
+      <h3>Utilisation des noms d'hôtes</h3>
+
+      <p>Utilisez des adresses IP numériques plutôt que des noms d'hôtes pour un comportement déterministe. La résolution DNS peut retourner des adresses différentes à chaque appel :</p>
+
+      <table>
+        <thead>
+          <tr><th>Usage</th><th>Interface</th><th>Recommandation</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Serveur</td><td>Loopback</td><td>Utilisez <code>127.0.0.1</code> ou <code>::1</code></td></tr>
+          <tr><td>Serveur</td><td>Ethernet</td><td>Utilisez une IP spécifique ou <code>''</code> pour toutes les interfaces</td></tr>
+          <tr><td>Client</td><td>Loopback</td><td>Utilisez <code>127.0.0.1</code> ou <code>::1</code></td></tr>
+          <tr><td>Client</td><td>Ethernet</td><td>IP pour la cohérence, hostname pour le cas typique</td></tr>
+        </tbody>
+      </table>
+
+      <h3>SO_REUSEADDR</h3>
+
+      <p>Ajoutez toujours cette option pour éviter l'erreur "Address already in use" au redémarrage du serveur :</p>
+
+<pre><code class="language-python">lsock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)</code></pre>
+
+      <p>Sans cette option, après un arrêt du serveur, le port reste en état <code>TIME_WAIT</code> pendant environ 2 minutes.</p>
+
+      <h3>Fermeture propre des connexions</h3>
+
+      <p>TCP permet les connexions "semi-ouvertes" : un côté ferme, l'autre reste ouvert. Définissez clairement dans votre protocole comment et quand les connexions se ferment. Pensez aux timeouts pour éviter les connexions zombies.</p>
+
+      <h3>Appels bloquants vs non-bloquants</h3>
+
+      <p>Par défaut, les sockets sont en mode <strong>bloquant</strong> : <code>accept()</code>, <code>connect()</code>, <code>send()</code> et <code>recv()</code> suspendent l'exécution jusqu'à ce qu'ils aient terminé. Pour un serveur multi-connexion, passez en mode non-bloquant avec <code>setblocking(False)</code> et utilisez un sélecteur.</p>
+
+      <h2>IPv6</h2>
+
+      <p>Si votre réseau le supporte, testez avec IPv6. La fonction <code>socket.getaddrinfo()</code> simplifie les choses en résolvant automatiquement les adresses IPv4 et IPv6 :</p>
+
+<pre><code class="language-python">>>> socket.getaddrinfo("example.org", 80, proto=socket.IPPROTO_TCP)
+[(&lt;AddressFamily.AF_INET6: 10&gt;, &lt;SocketType.SOCK_STREAM: 1&gt;,
+  6, '', ('2606:2800:220:1:248:1893:25c8:1946', 80, 0, 0)),
+ (&lt;AddressFamily.AF_INET: 2&gt;, &lt;SocketType.SOCK_STREAM: 1&gt;,
+  6, '', ('93.184.216.34', 80))]</code></pre>
+
+      <p>Le tuple d'adresse IPv6 contient quatre éléments : <code>(host, port, flowinfo, scopeid)</code>, contre deux pour IPv4 : <code>(host, port)</code>.</p>
+
+      <h2>Récapitulatif</h2>
+
+      <table>
+        <thead>
+          <tr><th>Concept</th><th>Ce qu'il faut retenir</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Socket</td><td>Point de communication entre deux processus, local ou réseau</td></tr>
+          <tr><td>TCP vs UDP</td><td>TCP = fiable et ordonné. UDP = rapide mais sans garantie</td></tr>
+          <tr><td>Flux serveur</td><td><code>socket()</code> → <code>bind()</code> → <code>listen()</code> → <code>accept()</code></td></tr>
+          <tr><td>Flux client</td><td><code>socket()</code> → <code>connect()</code></td></tr>
+          <tr><td>Multi-connexion</td><td>Utilisez <code>selectors</code> + sockets non-bloquants</td></tr>
+          <tr><td>Protocole</td><td>Définissez un en-tête avec la longueur du contenu pour délimiter les messages</td></tr>
+          <tr><td>Erreurs courantes</td><td><code>ConnectionRefusedError</code>, <code>OSError: Address already in use</code>, <code>BlockingIOError</code></td></tr>
+          <tr><td>Debug</td><td><code>netstat</code>, <code>lsof</code>, <code>ping</code>, Wireshark / <code>tshark</code></td></tr>
+          <tr><td>Sécurité</td><td>Utilisez TLS pour les connexions sensibles, validez les données entrantes</td></tr>
+        </tbody>
+      </table>
+
+      <p>Les sockets sont la fondation de toute communication réseau. Comprendre cette couche basse vous permet de débugger n'importe quel problème réseau, de concevoir des protocoles sur mesure et de mieux comprendre les abstractions de plus haut niveau comme HTTP, WebSocket ou gRPC.</p>
+
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+        <section id="extras" class="body">
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+                            <li><a href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</body>
+</html>
