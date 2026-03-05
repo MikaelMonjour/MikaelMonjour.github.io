@@ -1,3 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Blog de Mikael - misc</title><link href="/" rel="alternate"></link><link href="/feeds/misc.atom.xml" rel="self"></link><id>/</id><updated>2017-11-27T12:30:00+01:00</updated><entry><title>My first post</title><link href="/My-first-post.html" rel="alternate"></link><published>2017-11-26T10:01:00+01:00</published><updated>2017-11-27T12:30:00+01:00</updated><author><name>Your name</name></author><id>tag:None,2017-11-26:/My-first-post.html</id><summary type="html">&lt;p&gt;What does your post talk about? Write here.&lt;/p&gt;</summary><content type="html">&lt;p&gt;This is the &lt;em&gt;first post&lt;/em&gt; from my Pelican blog. &lt;strong&gt;YAY!&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img alt="Write here a good description for people who can't see the image" src="/images/eduba.png"&gt;&lt;/p&gt;</content><category term="misc"></category><category term="first"></category><category term="misc"></category></entry></feed>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Blog de Mikael - misc</title><link href="/" rel="alternate"/><link href="/feeds/misc.atom.xml" rel="self"/><id>/</id><updated>2017-11-27T12:30:00+01:00</updated><entry><title>Hello World — Pourquoi ce blog existe</title><link href="/My-first-post.html" rel="alternate"/><published>2017-11-26T10:01:00+01:00</published><updated>2017-11-27T12:30:00+01:00</updated><author><name>Mikael Monjour</name></author><id>tag:None,2017-11-26:/My-first-post.html</id><summary type="html">&lt;p&gt;Premier post. Pourquoi j'ai décidé de créer ce blog, ce que vous y trouverez, et pourquoi écrire est le meilleur moyen d'apprendre.&lt;/p&gt;</summary><content type="html">&lt;h2 id="pourquoi-ce-blog"&gt;Pourquoi ce blog ?&lt;/h2&gt;
+&lt;p&gt;Je suis développeur. Je passe mes journées à résoudre des problèmes, lire de la documentation, et construire des choses. Mais j'ai remarqué un truc : &lt;strong&gt;on oublie ce qu'on apprend si on ne l'écrit pas.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Ce blog, c'est mon carnet de notes public. Chaque article est un sujet que j'ai creusé, testé, et reformulé jusqu'à ce qu'il soit clair. Si ça peut servir à quelqu'un d'autre au passage, tant mieux.&lt;/p&gt;
+&lt;h2 id="ce-que-vous-trouverez-ici"&gt;Ce que vous trouverez ici&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Python&lt;/strong&gt; — des guides concrets sur les sockets, les regex, les stats. Pas de la théorie abstraite, du code qui tourne.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Sécurité&lt;/strong&gt; — reconnaissance, outils, méthodologie. Le côté offensif de la tech.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Growth engineering&lt;/strong&gt; — comment automatiser, mesurer, et optimiser. Des A/B tests aux pipelines de données.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Lectures&lt;/strong&gt; — les livres techniques qui m'ont marqué.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="le-format"&gt;Le format&lt;/h2&gt;
+&lt;p&gt;Des articles longs. Pas des tweets déguisés en billets de blog. Chaque article est pensé pour être &lt;strong&gt;le seul guide dont vous avez besoin&lt;/strong&gt; sur le sujet traité.&lt;/p&gt;
+&lt;p&gt;Du code. Des exemples. Des explications qui partent du principe que vous êtes intelligent mais que vous n'avez pas encore eu le temps de creuser le sujet.&lt;/p&gt;
+&lt;p&gt;Bonne lecture.&lt;/p&gt;</content><category term="misc"/><category term="first"/><category term="misc"/></entry></feed>

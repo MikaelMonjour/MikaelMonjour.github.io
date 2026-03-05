@@ -31,7 +31,7 @@
     <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2026-03-05T16:00:00+01:00">
-                Published: mer. 05 mars 2026
+                Published: jeu. 05 mars 2026
         </abbr>
 
         <address class="vcard author">
@@ -39,292 +39,213 @@
         </address>
 <p>In <a href="/category/tech.html">tech</a>.</p>
 <p>tags: <a href="/tag/python.html">python</a> <a href="/tag/data.html">data</a> <a href="/tag/statistiques.html">statistiques</a> <a href="/tag/tech.html">tech</a> </p>
-</footer><!-- /.post-info -->
-
-      <!-- ATTENTION -->
-      <p>Imaginez la scène. Lundi matin, 9 h 30, réunion d'équipe. Le product manager (la personne responsable du produit) affiche un graphique et annonce fièrement :</p>
-
-      <p><em>"Notre nouveau bouton vert a augmenté le taux de conversion de 12 %. La p-value est de 0.03. C'est statistiquement significatif. On déploie en production."</em></p>
-
-      <p>Traduction : il pense avoir prouvé que le bouton vert fait acheter plus de clients. Tout le monde applaudit.</p>
-
-      <p>Sauf vous. Parce que vous savez que ce test a été lancé un vendredi soir, sur seulement 200 visiteurs. Et qu'une p-value de 0.03 dans ces conditions ne prouve pas grand-chose.</p>
-
-      <p>Pourtant, des décisions à plusieurs millions d'euros sont prises chaque jour sur la base de ce petit nombre mal compris. <strong>La p-value est le concept statistique le plus utilisé — et le plus mal interprété — dans le monde de la tech.</strong></p>
-
-      <!-- INTÉRÊT -->
-      <h2>Qu'est-ce que la valeur p, en termes simples ?</h2>
-
-      <p>Avant d'aller plus loin, posons quelques définitions :</p>
-
-      <ul>
-        <li><strong>Test A/B :</strong> on montre deux versions d'une page (A et B) à des groupes différents de visiteurs pour voir laquelle fonctionne le mieux.</li>
-        <li><strong>Taux de conversion :</strong> le pourcentage de visiteurs qui font l'action souhaitée (acheter, s'inscrire, cliquer).</li>
-        <li><strong>Hypothèse nulle :</strong> l'idée de départ qu'on cherche à tester. Par exemple : "le bouton vert ne change rien au comportement des visiteurs".</li>
-      </ul>
-
-      <p>La p-value, c'est un chiffre entre 0 et 1 qui répond à une question simple :</p>
-
-      <p><strong>Si rien n'a changé (si l'hypothèse nulle est vraie), quelle est la probabilité d'observer un résultat aussi extrême que celui qu'on a mesuré ?</strong></p>
-
-      <p>Plus la p-value est petite, plus le résultat observé serait surprenant si rien n'avait changé. Mais attention : "surprenant" ne veut pas dire "impossible". C'est toute la subtilité.</p>
-
-      <h2>Un exemple concret : le panier moyen</h2>
-
-      <p>Prenons un cas que tout growth engineer connaît bien.</p>
-
-      <p>Vous travaillez sur une plateforme e-commerce. Après des mois d'observation, vous savez que vos clients dépensent en moyenne <strong>170 €</strong> par commande. C'est votre référence — votre hypothèse nulle.</p>
-
-      <p>Deux notions importantes ici :</p>
-      <ul>
-        <li><strong>La moyenne :</strong> la somme de toutes les valeurs divisée par le nombre de valeurs. Si 3 clients dépensent 150 €, 170 € et 190 €, la moyenne est (150 + 170 + 190) / 3 = 170 €.</li>
-        <li><strong>L'écart type :</strong> il mesure à quel point les valeurs sont dispersées autour de la moyenne. Un écart type faible (par exemple 5 €) signifie que la plupart des clients dépensent entre 165 € et 175 €. Un écart type élevé signifierait des montants très variés. Ici, notre écart type est de <strong>5 €</strong>.</li>
-      </ul>
-
-      <p>Vous lancez un test. Vous prenez un groupe de clients au hasard. Et vous observez que leur panier moyen est de <strong>183 €</strong>.</p>
-
-      <p>La question : <em>est-ce que ce groupe dépense vraiment plus, ou est-ce juste le hasard qui a sélectionné des clients plus dépensiers ?</em></p>
-
-      <p>C'est exactement la question à laquelle la p-value va répondre.</p>
-
-      <h2>Pourquoi un seul échantillon ne suffit pas</h2>
-
-      <p>Un <strong>échantillon</strong>, c'est un sous-groupe tiré au hasard dans une population plus large. Si votre site a 500 000 clients, un échantillon pourrait être un groupe de 1 000 clients pris au hasard.</p>
-
-      <p>Le problème : chaque fois que vous tirez un échantillon différent, vous obtenez une moyenne légèrement différente. Un groupe tombera sur 168 €, un autre sur 172 €, un autre sur 175 €. C'est normal — c'est la <strong>variabilité d'échantillonnage</strong>.</p>
-
-      <p>Il existe un théorème fondamental en statistiques — le <strong>théorème de la limite centrale</strong> — qui dit ceci : si vous tirez suffisamment d'échantillons et que vous tracez toutes leurs moyennes sur un graphique, vous obtenez une courbe en forme de cloche (une <strong>distribution normale</strong>). Le sommet de cette cloche se situe à la vraie moyenne de la population.</p>
-
-      <p>Concrètement, si on tire <strong>10 000 échantillons</strong> de notre base clients :</p>
-
-      <ul>
-        <li>La plupart des moyennes d'échantillon seront proches de 170 €.</li>
-        <li>Quelques-unes seront à 160 € ou 180 €.</li>
-        <li>Très peu seront à 150 € ou 190 €.</li>
-      </ul>
-
-      <p>La question devient alors : <strong>quelle est la probabilité de tomber sur une moyenne de 183 € ou plus, si la vraie moyenne est bien de 170 € ?</strong> C'est la p-value.</p>
-
-      <!-- DÉSIR -->
-      <h2>Calculons-le avec Python</h2>
-
-      <p>Le code ci-dessous simule exactement ce scénario. Il tire 10 000 échantillons d'une population dont la moyenne est 170 € (paramètre <code>mu</code>) et l'écart type est 5 € (paramètre <code>sigma</code>), puis il compte combien de ces échantillons ont une moyenne supérieure à 183 € :</p>
-
-<pre><code class="language-python">import numpy as np
-import matplotlib.pyplot as plt
-
-def pvalue_101(mu, sigma, samp_size, samp_mean=0, deltam=0):
-    np.random.seed(1234)
-    s1 = np.random.normal(mu, sigma, samp_size)
-
-    if samp_mean > 0:
-        print(len(s1[s1>samp_mean]))
-        outliers = float(len(s1[s1>samp_mean])*100) / float(len(s1))
-        print('Percentage of numbers larger than {} is {}%'
-              .format(samp_mean, outliers))
-
-    if deltam == 0:
-        deltam = abs(mu - samp_mean)
-
-    if deltam > 0:
-        outliers = (float(len(s1[s1>(mu+deltam)]))
-                    + float(len(s1[s1<(mu-deltam)]))) * 100.0 / float(len(s1))
-        print("""Percentage of numbers further than the population mean
-              of {} by +/-{} is {}%""".format(mu, deltam, outliers))
-
-    fig, ax = plt.subplots(figsize=(8, 8))
-    fig.suptitle('Normal Distribution: population_mean={}'.format(mu))
-    plt.hist(s1)
-    plt.axvline(x=mu+deltam, color='red')
-    plt.axvline(x=mu-deltam, color='green')
-    plt.show()</code></pre>
-
-      <p>On lance le test :</p>
-
-<pre><code class="language-python">pvalue_101(170.0, 5.0, 10000, 183.0)</code></pre>
-
-      <p>Résultat : <strong>seulement 0,35 % des échantillons ont une moyenne supérieure à 183 €</strong>.</p>
-
-      <p>C'est très peu. Mais ce n'est pas zéro. Sur 10 000 tirages, environ 35 tombent au-dessus de 183 €. Le hasard peut produire ce résultat — rarement, mais il le peut.</p>
-
-      <h2>Test unilatéral ou bilatéral : pourquoi c'est important</h2>
-
-      <p>Deux termes à comprendre :</p>
-
-      <ul>
-        <li><strong>Test unilatéral :</strong> on cherche un écart dans une seule direction. "Est-ce que la moyenne est <em>supérieure</em> à 170 € ?" On ne regarde que le côté droit de la courbe.</li>
-        <li><strong>Test bilatéral :</strong> on cherche un écart dans les deux directions. "Est-ce que la moyenne est <em>différente</em> de 170 €, que ce soit en plus ou en moins ?" On regarde les deux côtés.</li>
-      </ul>
-
-      <p>Si on pose la question en bilatéral — quelle est la probabilité d'obtenir une moyenne éloignée de plus de 13 € de 170 €, soit inférieure à 157 € <strong>ou</strong> supérieure à 183 € — la réponse est <strong>0,77 %</strong>. Environ le double, car la courbe en cloche est symétrique.</p>
-
-      <p>En pratique, on utilise presque toujours un test bilatéral. Pourquoi ? Parce qu'un changement peut être positif <em>ou</em> négatif, et il faut mesurer les deux possibilités.</p>
-
-      <h2>La règle 68-95-99,7 : où tombent la plupart des résultats</h2>
-
-      <p>Cette règle permet de visualiser rapidement la répartition des moyennes d'échantillon autour de la vraie moyenne. Le symbole <strong>σ</strong> (sigma) représente l'écart type :</p>
-
-      <ul>
-        <li><strong>68,2 %</strong> des moyennes tombent à moins de 1 écart type de la moyenne (entre 165 € et 175 €). C'est la zone "normale".</li>
-        <li><strong>95,4 %</strong> tombent à moins de 2 écarts types (entre 160 € et 180 €). Presque tout est là.</li>
-        <li><strong>99,7 %</strong> tombent à moins de 3 écarts types (entre 155 € et 185 €). Au-delà, c'est exceptionnel.</li>
-      </ul>
-
-      <p>Notre échantillon à 183 € se situe au-delà de 2 écarts types. C'est rare — mais le hasard le permet.</p>
-
-      <h2>L'erreur que 90 % des équipes commettent</h2>
-
-      <p>Voici le raisonnement que l'on entend dans presque toutes les équipes produit et marketing :</p>
-
-      <p><em>"On veut un niveau de confiance de 95 %. Notre seuil est donc une p-value de 5 %. La moyenne d'échantillon est de 183 € et sa p-value est de 0,35 %. Comme 0,35 % est inférieur à 5 %, on rejette l'hypothèse que la moyenne de la population est de 170 €."</em></p>
-
-      <p><strong>Cette conclusion est fausse.</strong></p>
-
-      <p>Pourquoi ? Parce que dans notre simulation, nous avons <em>nous-mêmes</em> tiré cet échantillon d'une population dont la moyenne EST 170 €. L'échantillon à 183 € est rare, mais il existe bel et bien dans cette population.</p>
-
-      <p>Rejeter l'hypothèse sur la base d'un seul échantillon, c'est comme retourner une seule carte au poker et décider que vous avez gagné la partie.</p>
-
-      <p>La p-value nous dit : <strong>"Si l'hypothèse de départ est vraie, voici la probabilité d'observer ce résultat."</strong> Elle ne nous dit <strong>pas</strong> : "Voici la probabilité que l'hypothèse soit vraie." C'est la nuance la plus importante de cet article.</p>
-
-      <h2>Exemple concret : l'ingestion de leads dans un CRM</h2>
-
-      <p>Un <strong>lead</strong>, c'est un contact commercial potentiel — quelqu'un qui a rempli un formulaire, téléchargé un livre blanc, ou laissé ses coordonnées. Un <strong>CRM</strong> (Customer Relationship Management) est le logiciel qui centralise et suit tous ces contacts (HubSpot, Salesforce, Pipedrive, etc.).</p>
-
-      <p>Imaginons une équipe growth qui travaille sur l'ingestion de leads. Le pipeline actuel fonctionne comme ceci : un visiteur remplit un formulaire sur le site, ses données sont envoyées au CRM via une API, et un commercial le recontacte sous 24 h.</p>
-
-      <p>L'équipe observe que le <strong>taux de qualification</strong> des leads (le pourcentage de leads qui deviennent de vrais prospects qualifiés) est de <strong>18 %</strong> en moyenne. L'écart type, calculé sur 6 mois de données, est de <strong>3 %</strong>.</p>
-
-      <p>Un développeur propose un changement : enrichir automatiquement chaque lead avec des données publiques (taille d'entreprise, secteur, poste) <em>avant</em> qu'il arrive dans le CRM. L'idée est que les commerciaux, mieux informés, qualifient mieux les leads.</p>
-
-      <p>Après 2 semaines de test sur un échantillon de leads, le taux de qualification grimpe à <strong>26 %</strong>.</p>
-
-      <p>L'équipe est enthousiaste. Le Head of Sales veut généraliser immédiatement. Mais posons-nous la question :</p>
-
-      <p><strong>Quelle est la probabilité d'observer un taux de 26 % ou plus, si en réalité l'enrichissement n'a rien changé et que la vraie moyenne est toujours de 18 % ?</strong></p>
-
-<pre><code class="language-python">pvalue_101(18.0, 3.0, 10000, 26.0)</code></pre>
-
-      <p>Résultat : <strong>pratiquement 0 %</strong>. La différence est de plus de 2,5 écarts types. Il est extrêmement improbable d'observer un tel écart par le seul hasard.</p>
-
-      <p>Mais avant de célébrer, il faut vérifier plusieurs choses :</p>
-
-      <ul>
-        <li><strong>La durée du test :</strong> 2 semaines, est-ce suffisant ? Si le cycle de vente est de 30 jours, on n'a vu qu'une partie du tableau.</li>
-        <li><strong>La taille de l'échantillon :</strong> combien de leads ont été testés ? 50 leads enrichis contre 50 non enrichis, c'est trop peu. 500 contre 500, c'est plus solide.</li>
-        <li><strong>Le biais de sélection :</strong> les leads enrichis venaient-ils de la même source que les autres ? Si l'enrichissement a été testé uniquement sur les leads entrants de Google Ads (souvent plus qualifiés que ceux venant des réseaux sociaux), la comparaison est faussée.</li>
-        <li><strong>La saisonnalité :</strong> la période de test correspond-elle à un pic naturel d'activité (rentrée, Black Friday, fin de trimestre) qui gonfle artificiellement les résultats ?</li>
-      </ul>
-
-      <p>Ici, la p-value est rassurante — le signal est fort. Mais elle ne remplace pas un design expérimental rigoureux. Si le test avait été lancé uniquement pendant la dernière semaine du trimestre (quand les commerciaux poussent pour atteindre leurs objectifs), le taux de qualification serait naturellement plus élevé, enrichissement ou pas.</p>
-
-      <h2>Le test A/B qui a presque tout cassé</h2>
-
-      <p>Autre situation classique. Une équipe growth lance un test A/B sur la page de tarification de leur SaaS. La version B affiche le prix barré avec une réduction de 20 %. Après seulement 3 jours, la p-value tombe sous 0,05. Le product manager veut déployer immédiatement.</p>
-
-      <p>Mais en analysant les données de plus près, on découvre que le test a été lancé un vendredi soir. Le trafic du week-end est dominé par un profil de visiteurs différent : des particuliers qui achètent plus facilement que les professionnels en semaine. La "significativité statistique" n'était que du bruit lié à la composition du trafic.</p>
-
-      <p>Si l'équipe avait attendu un cycle complet — au moins 7 jours, pour couvrir tous les profils de visiteurs — elle aurait vu que l'effet disparaissait complètement.</p>
-
-      <p><strong>Leçon :</strong> une p-value basse ne signifie rien si la conception du test est bancale.</p>
-
-      <h2>Ce que la p-value nous dit — et ce qu'elle ne dit pas</h2>
-
-      <p>Résumons en termes simples :</p>
-
-      <ul>
-        <li>Une p-value de <strong>0,35 %</strong> signifie : "Si la vraie moyenne est de 170 €, il n'y a que 0,35 % de chance d'observer une moyenne d'échantillon supérieure à 183 €."</li>
-        <li>Une p-value de <strong>0,77 %</strong> signifie : "Si la vraie moyenne est de 170 €, il n'y a que 0,77 % de chance d'observer une moyenne qui s'en éloigne de plus de 13 €, dans un sens ou dans l'autre."</li>
-        <li>La p-value <strong>ne nous dit pas</strong> si l'hypothèse de départ est vraie ou fausse.</li>
-        <li>On <strong>ne peut pas</strong> rejeter une hypothèse de manière fiable sur la base d'un seul échantillon.</li>
-      </ul>
-
-      <!-- ACTION -->
-      <h2>Les 5 questions à poser avant de conclure</h2>
-
-      <p>La prochaine fois que quelqu'un brandit une p-value en réunion, posez ces questions :</p>
-
-      <ol>
-        <li><strong>Combien de personnes ont été testées ?</strong> — Un test sur 200 visiteurs ou 50 leads ne prouve rien. Il faut un volume suffisant pour que les résultats soient fiables.</li>
-        <li><strong>Pendant combien de temps le test a-t-il tourné ?</strong> — Il faut couvrir au moins un cycle business complet : 7 jours minimum pour du B2C (vente aux particuliers), souvent 14 jours ou plus pour du B2B (vente aux entreprises).</li>
-        <li><strong>Le test est-il bilatéral ?</strong> — On doit mesurer si le changement est meilleur <em>ou</em> pire, pas seulement meilleur. Un test unilatéral surestime la significativité.</li>
-        <li><strong>Les groupes sont-ils comparables ?</strong> — Si le groupe A vient de Google Ads et le groupe B vient des réseaux sociaux, la comparaison n'a aucun sens. C'est un <strong>biais de segmentation</strong>.</li>
-        <li><strong>A-t-on regardé les résultats une seule fois ou plusieurs ?</strong> — Vérifier la p-value tous les jours (le <strong>"peeking"</strong>) gonfle artificiellement les chances de trouver un résultat significatif. Il faut définir la durée du test à l'avance et ne regarder qu'à la fin.</li>
-      </ol>
-
-      <h2>Le code complet pour reproduire les calculs</h2>
-
-      <p>Ce code Python génère les graphiques et calcule les p-values présentées dans cet article. Vous pouvez le copier-coller dans un notebook Jupyter ou un script Python :</p>
-
-<pre><code class="language-python">import numpy as np
-import matplotlib.pyplot as plt
-
-def pvalue_101(mu, sigma, samp_size, samp_mean=0, deltam=0):
-    np.random.seed(1234)
-    s1 = np.random.normal(mu, sigma, samp_size)
-
-    if samp_mean > 0:
-        print(len(s1[s1>samp_mean]))
-        outliers = float(len(s1[s1>samp_mean])*100) / float(len(s1))
-        print('Percentage of numbers larger than {} is {}%'
-              .format(samp_mean, outliers))
-
-    if deltam == 0:
-        deltam = abs(mu - samp_mean)
-
-    if deltam > 0:
-        outliers = (float(len(s1[s1>(mu+deltam)]))
-                    + float(len(s1[s1<(mu-deltam)]))) * 100.0 / float(len(s1))
-        print("""Percentage of numbers further than the population mean
-              of {} by +/-{} is {}%""".format(mu, deltam, outliers))
-
-    fig, ax = plt.subplots(figsize=(8, 8))
-    fig.suptitle('Normal Distribution: population_mean={}'.format(mu))
-    plt.hist(s1)
-    plt.axvline(x=mu+deltam, color='red')
-    plt.axvline(x=mu-deltam, color='green')
-    plt.show()
-
-# Exemple e-commerce : probabilité d'un panier moyen > 183 €
-pvalue_101(170.0, 5.0, 10000, 183.0)
-
-# Exemple e-commerce : probabilité d'un écart de +/- 13 € autour de 170 €
-pvalue_101(170.0, 5.0, 10000, 0, 13.0)
-
-# Exemple CRM : probabilité d'un taux de qualification > 26 %
-pvalue_101(18.0, 3.0, 10000, 26.0)</code></pre>
-
-      <h2>Checklist complète : les étapes pour tester correctement une p-value</h2>
-
-      <p>Avant de lancer un test, pendant le test, et après le test — voici la liste des étapes à respecter pour que votre p-value ait réellement du sens.</p>
-
-      <h3>Avant le test</h3>
-      <ol>
-        <li><strong>Formuler une hypothèse claire.</strong> Écrivez noir sur blanc ce que vous testez. Exemple : "L'enrichissement automatique des leads augmente le taux de qualification." Sans hypothèse précise, vous ne saurez pas quoi mesurer.</li>
-        <li><strong>Choisir la métrique principale.</strong> Une seule métrique par test. Taux de conversion ? Panier moyen ? Taux de qualification ? Si vous mesurez 10 choses en même temps, vous trouverez forcément un résultat "significatif" par pur hasard (c'est le problème des <strong>comparaisons multiples</strong>).</li>
-        <li><strong>Calculer la taille d'échantillon nécessaire.</strong> Utilisez un calculateur de puissance statistique (comme celui de <a href="https://www.evanmiller.org/ab-testing/sample-size.html">Evan Miller</a>). Un test sur 50 personnes ne prouvera rien. La taille dépend de l'effet minimum que vous voulez détecter et de la variabilité de vos données.</li>
-        <li><strong>Définir le seuil de significativité (α).</strong> En général, on fixe α à 0,05 (soit 5 %). Cela signifie qu'on accepte 5 % de risque de conclure à tort qu'il y a un effet alors qu'il n'y en a pas. Ce seuil doit être décidé <em>avant</em> de regarder les résultats.</li>
-        <li><strong>Choisir entre test unilatéral et bilatéral.</strong> Si vous voulez savoir si le changement est meilleur <em>ou</em> pire, utilisez un test bilatéral (c'est le cas le plus courant). Un test unilatéral ne se justifie que si vous êtes certain que l'effet ne peut aller que dans un sens.</li>
-        <li><strong>Fixer la durée du test à l'avance.</strong> Un cycle business complet au minimum : 7 jours pour couvrir les variations jour/week-end, 14 jours ou plus si votre cycle de vente est long (B2B par exemple).</li>
-      </ol>
-
-      <h3>Pendant le test</h3>
-      <ol>
-        <li><strong>Ne pas regarder les résultats avant la fin.</strong> Vérifier la p-value tous les jours (le "peeking") augmente artificiellement vos chances de trouver un faux positif. Si vous devez absolument surveiller le test en cours, utilisez des méthodes de correction comme le <strong>test séquentiel</strong> ou la <strong>correction de Bonferroni</strong>.</li>
-        <li><strong>Vérifier que les groupes sont comparables.</strong> Le groupe A et le groupe B doivent recevoir le même type de trafic. Si un groupe reçoit surtout des visiteurs mobiles et l'autre des visiteurs desktop, la comparaison est biaisée.</li>
-        <li><strong>Ne rien changer en cours de route.</strong> Si vous modifiez la page, le ciblage ou les critères pendant le test, les résultats ne sont plus interprétables. Relancez un nouveau test propre.</li>
-      </ol>
-
-      <h3>Après le test</h3>
-      <ol>
-        <li><strong>Lire la p-value correctement.</strong> Une p-value de 0,03 signifie : "Si rien n'a changé, il y a 3 % de chance d'observer un résultat aussi extrême." Ça ne signifie <em>pas</em> : "Il y a 97 % de chance que notre changement fonctionne."</li>
-        <li><strong>Vérifier la taille de l'effet.</strong> La p-value vous dit si le résultat est statistiquement significatif, mais pas s'il est <em>important</em>. Un test peut être significatif avec un effet de +0,1 % de conversion — trop faible pour justifier le coût du changement. Regardez aussi l'<strong>intervalle de confiance</strong> pour connaître la fourchette probable de l'effet réel.</li>
-        <li><strong>Chercher les biais.</strong> Posez-vous ces questions : le test a-t-il couvert un cycle complet ? Les groupes étaient-ils homogènes ? Y a-t-il eu un événement extérieur (promotion, bug, pic de trafic) qui fausse les résultats ?</li>
-        <li><strong>Reproduire avant de généraliser.</strong> Un seul test positif ne suffit pas. Si l'enjeu est important, relancez le test sur une autre période ou un autre segment pour confirmer le résultat. La reproductibilité est la base de toute démarche scientifique.</li>
-        <li><strong>Documenter le test.</strong> Notez l'hypothèse, la métrique, la taille d'échantillon, la durée, la p-value, la taille de l'effet et votre conclusion. Un test non documenté est un test perdu — pour vous et pour votre équipe.</li>
-      </ol>
-
-      <p><em>La p-value est un outil puissant — à condition de comprendre ce qu'elle mesure et ce qu'elle ne mesure pas. La prochaine fois que vous voyez "p &lt; 0.05" dans un rapport ou un dashboard, reprenez cette checklist et vérifiez si le test qui se cache derrière mérite vraiment qu'on lui fasse confiance.</em></p>
-
+</footer><!-- /.post-info -->      <p>Imaginez la scène. Lundi matin, 9 h 30, réunion d'équipe. Le product manager (la personne responsable du produit) affiche un graphique et annonce fièrement :</p>
+<p><em>"Notre nouveau bouton vert a augmenté le taux de conversion de 12 %. La p-value est de 0.03. C'est statistiquement significatif. On déploie en production."</em></p>
+<p>Traduction : il pense avoir prouvé que le bouton vert fait acheter plus de clients. Tout le monde applaudit.</p>
+<p>Sauf vous. Parce que vous savez que ce test a été lancé un vendredi soir, sur seulement 200 visiteurs. Et qu'une p-value de 0.03 dans ces conditions ne prouve pas grand-chose.</p>
+<p>Pourtant, des décisions à plusieurs millions d'euros sont prises chaque jour sur la base de ce petit nombre mal compris. <strong>La p-value est le concept statistique le plus utilisé — et le plus mal interprété — dans le monde de la tech.</strong></p>
+<h2 id="quest-ce-que-la-valeur-p-en-termes-simples">Qu'est-ce que la valeur p, en termes simples ?</h2>
+<p>Avant d'aller plus loin, posons quelques définitions :</p>
+<ul>
+<li><strong>Test A/B :</strong> on montre deux versions d'une page (A et B) à des groupes différents de visiteurs pour voir laquelle fonctionne le mieux.</li>
+<li><strong>Taux de conversion :</strong> le pourcentage de visiteurs qui font l'action souhaitée (acheter, s'inscrire, cliquer).</li>
+<li><strong>Hypothèse nulle :</strong> l'idée de départ qu'on cherche à tester. Par exemple : "le bouton vert ne change rien au comportement des visiteurs".</li>
+</ul>
+<p>La p-value, c'est un chiffre entre 0 et 1 qui répond à une question simple :</p>
+<p><strong>Si rien n'a changé (si l'hypothèse nulle est vraie), quelle est la probabilité d'observer un résultat aussi extrême que celui qu'on a mesuré ?</strong></p>
+<p>Plus la p-value est petite, plus le résultat observé serait surprenant si rien n'avait changé. Mais attention : "surprenant" ne veut pas dire "impossible". C'est toute la subtilité.</p>
+<h2 id="un-exemple-concret-le-panier-moyen">Un exemple concret : le panier moyen</h2>
+<p>Prenons un cas que tout growth engineer connaît bien.</p>
+<p>Vous travaillez sur une plateforme e-commerce. Après des mois d'observation, vous savez que vos clients dépensent en moyenne <strong>170 €</strong> par commande. C'est votre référence — votre hypothèse nulle.</p>
+<p>Deux notions importantes ici :</p>
+<ul>
+<li><strong>La moyenne :</strong> la somme de toutes les valeurs divisée par le nombre de valeurs. Si 3 clients dépensent 150 €, 170 € et 190 €, la moyenne est (150 + 170 + 190) / 3 = 170 €.</li>
+<li><strong>L'écart type :</strong> il mesure à quel point les valeurs sont dispersées autour de la moyenne. Un écart type faible (par exemple 5 €) signifie que la plupart des clients dépensent entre 165 € et 175 €. Un écart type élevé signifierait des montants très variés. Ici, notre écart type est de <strong>5 €</strong>.</li>
+</ul>
+<p>Vous lancez un test. Vous prenez un groupe de clients au hasard. Et vous observez que leur panier moyen est de <strong>183 €</strong>.</p>
+<p>La question : <em>est-ce que ce groupe dépense vraiment plus, ou est-ce juste le hasard qui a sélectionné des clients plus dépensiers ?</em></p>
+<p>C'est exactement la question à laquelle la p-value va répondre.</p>
+<h2 id="pourquoi-un-seul-echantillon-ne-suffit-pas">Pourquoi un seul échantillon ne suffit pas</h2>
+<p>Un <strong>échantillon</strong>, c'est un sous-groupe tiré au hasard dans une population plus large. Si votre site a 500 000 clients, un échantillon pourrait être un groupe de 1 000 clients pris au hasard.</p>
+<p>Le problème : chaque fois que vous tirez un échantillon différent, vous obtenez une moyenne légèrement différente. Un groupe tombera sur 168 €, un autre sur 172 €, un autre sur 175 €. C'est normal — c'est la <strong>variabilité d'échantillonnage</strong>.</p>
+<p>Il existe un théorème fondamental en statistiques — le <strong>théorème de la limite centrale</strong> — qui dit ceci : si vous tirez suffisamment d'échantillons et que vous tracez toutes leurs moyennes sur un graphique, vous obtenez une courbe en forme de cloche (une <strong>distribution normale</strong>). Le sommet de cette cloche se situe à la vraie moyenne de la population.</p>
+<p>Concrètement, si on tire <strong>10 000 échantillons</strong> de notre base clients :</p>
+<ul>
+<li>La plupart des moyennes d'échantillon seront proches de 170 €.</li>
+<li>Quelques-unes seront à 160 € ou 180 €.</li>
+<li>Très peu seront à 150 € ou 190 €.</li>
+</ul>
+<p>La question devient alors : <strong>quelle est la probabilité de tomber sur une moyenne de 183 € ou plus, si la vraie moyenne est bien de 170 € ?</strong> C'est la p-value.</p>
+<h2 id="calculons-le-avec-python">Calculons-le avec Python</h2>
+<p>Le code ci-dessous simule exactement ce scénario. Il tire 10 000 échantillons d'une population dont la moyenne est 170 € (paramètre <code>mu</code>) et l'écart type est 5 € (paramètre <code>sigma</code>), puis il compte combien de ces échantillons ont une moyenne supérieure à 183 € :</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="k">def</span> <span class="nf">pvalue_101</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">samp_size</span><span class="p">,</span> <span class="n">samp_mean</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">deltam</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1234</span><span class="p">)</span>
+    <span class="n">s1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">samp_size</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">samp_mean</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">s1</span><span class="p">[</span><span class="n">s1</span><span class="o">&gt;</span><span class="n">samp_mean</span><span class="p">]))</span>
+        <span class="n">outliers</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">s1</span><span class="p">[</span><span class="n">s1</span><span class="o">&gt;</span><span class="n">samp_mean</span><span class="p">])</span><span class="o">*</span><span class="mi">100</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">s1</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Percentage of numbers larger than </span><span class="si">{}</span><span class="s1"> is </span><span class="si">{}</span><span class="s1">%&#39;</span>
+              <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">samp_mean</span><span class="p">,</span> <span class="n">outliers</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">deltam</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">deltam</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">mu</span> <span class="o">-</span> <span class="n">samp_mean</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">deltam</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">outliers</span> <span class="o">=</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">s1</span><span class="p">[</span><span class="n">s1</span><span class="o">&gt;</span><span class="p">(</span><span class="n">mu</span><span class="o">+</span><span class="n">deltam</span><span class="p">)]))</span>
+                    <span class="o">+</span> <span class="nb">float</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">s1</span><span class="p">[</span><span class="n">s1</span><span class="o">&lt;</span><span class="p">(</span><span class="n">mu</span><span class="o">-</span><span class="n">deltam</span><span class="p">)])))</span> <span class="o">*</span> <span class="mf">100.0</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">s1</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;Percentage of numbers further than the population mean</span>
+<span class="s2">              of </span><span class="si">{}</span><span class="s2"> by +/-</span><span class="si">{}</span><span class="s2"> is </span><span class="si">{}</span><span class="s2">%&quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">deltam</span><span class="p">,</span> <span class="n">outliers</span><span class="p">))</span>
+
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Normal Distribution: population_mean=</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mu</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">s1</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">mu</span><span class="o">+</span><span class="n">deltam</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">mu</span><span class="o">-</span><span class="n">deltam</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+
+<p>On lance le test :</p>
+<div class="highlight"><pre><span></span><code><span class="n">pvalue_101</span><span class="p">(</span><span class="mf">170.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mi">10000</span><span class="p">,</span> <span class="mf">183.0</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Résultat : <strong>seulement 0,35 % des échantillons ont une moyenne supérieure à 183 €</strong>.</p>
+<p>C'est très peu. Mais ce n'est pas zéro. Sur 10 000 tirages, environ 35 tombent au-dessus de 183 €. Le hasard peut produire ce résultat — rarement, mais il le peut.</p>
+<h2 id="test-unilateral-ou-bilateral-pourquoi-cest-important">Test unilatéral ou bilatéral : pourquoi c'est important</h2>
+<p>Deux termes à comprendre :</p>
+<ul>
+<li><strong>Test unilatéral :</strong> on cherche un écart dans une seule direction. "Est-ce que la moyenne est <em>supérieure</em> à 170 € ?" On ne regarde que le côté droit de la courbe.</li>
+<li><strong>Test bilatéral :</strong> on cherche un écart dans les deux directions. "Est-ce que la moyenne est <em>différente</em> de 170 €, que ce soit en plus ou en moins ?" On regarde les deux côtés.</li>
+</ul>
+<p>Si on pose la question en bilatéral — quelle est la probabilité d'obtenir une moyenne éloignée de plus de 13 € de 170 €, soit inférieure à 157 € <strong>ou</strong> supérieure à 183 € — la réponse est <strong>0,77 %</strong>. Environ le double, car la courbe en cloche est symétrique.</p>
+<p>En pratique, on utilise presque toujours un test bilatéral. Pourquoi ? Parce qu'un changement peut être positif <em>ou</em> négatif, et il faut mesurer les deux possibilités.</p>
+<h2 id="la-regle-68-95-997-ou-tombent-la-plupart-des-resultats">La règle 68-95-99,7 : où tombent la plupart des résultats</h2>
+<p>Cette règle permet de visualiser rapidement la répartition des moyennes d'échantillon autour de la vraie moyenne. Le symbole <strong>σ</strong> (sigma) représente l'écart type :</p>
+<ul>
+<li><strong>68,2 %</strong> des moyennes tombent à moins de 1 écart type de la moyenne (entre 165 € et 175 €). C'est la zone "normale".</li>
+<li><strong>95,4 %</strong> tombent à moins de 2 écarts types (entre 160 € et 180 €). Presque tout est là.</li>
+<li><strong>99,7 %</strong> tombent à moins de 3 écarts types (entre 155 € et 185 €). Au-delà, c'est exceptionnel.</li>
+</ul>
+<p>Notre échantillon à 183 € se situe au-delà de 2 écarts types. C'est rare — mais le hasard le permet.</p>
+<h2 id="lerreur-que-90-des-equipes-commettent">L'erreur que 90 % des équipes commettent</h2>
+<p>Voici le raisonnement que l'on entend dans presque toutes les équipes produit et marketing :</p>
+<p><em>"On veut un niveau de confiance de 95 %. Notre seuil est donc une p-value de 5 %. La moyenne d'échantillon est de 183 € et sa p-value est de 0,35 %. Comme 0,35 % est inférieur à 5 %, on rejette l'hypothèse que la moyenne de la population est de 170 €."</em></p>
+<p><strong>Cette conclusion est fausse.</strong></p>
+<p>Pourquoi ? Parce que dans notre simulation, nous avons <em>nous-mêmes</em> tiré cet échantillon d'une population dont la moyenne EST 170 €. L'échantillon à 183 € est rare, mais il existe bel et bien dans cette population.</p>
+<p>Rejeter l'hypothèse sur la base d'un seul échantillon, c'est comme retourner une seule carte au poker et décider que vous avez gagné la partie.</p>
+<p>La p-value nous dit : <strong>"Si l'hypothèse de départ est vraie, voici la probabilité d'observer ce résultat."</strong> Elle ne nous dit <strong>pas</strong> : "Voici la probabilité que l'hypothèse soit vraie." C'est la nuance la plus importante de cet article.</p>
+<h2 id="exemple-concret-lingestion-de-leads-dans-un-crm">Exemple concret : l'ingestion de leads dans un CRM</h2>
+<p>Un <strong>lead</strong>, c'est un contact commercial potentiel — quelqu'un qui a rempli un formulaire, téléchargé un livre blanc, ou laissé ses coordonnées. Un <strong>CRM</strong> (Customer Relationship Management) est le logiciel qui centralise et suit tous ces contacts (HubSpot, Salesforce, Pipedrive, etc.).</p>
+<p>Imaginons une équipe growth qui travaille sur l'ingestion de leads. Le pipeline actuel fonctionne comme ceci : un visiteur remplit un formulaire sur le site, ses données sont envoyées au CRM via une API, et un commercial le recontacte sous 24 h.</p>
+<p>L'équipe observe que le <strong>taux de qualification</strong> des leads (le pourcentage de leads qui deviennent de vrais prospects qualifiés) est de <strong>18 %</strong> en moyenne. L'écart type, calculé sur 6 mois de données, est de <strong>3 %</strong>.</p>
+<p>Un développeur propose un changement : enrichir automatiquement chaque lead avec des données publiques (taille d'entreprise, secteur, poste) <em>avant</em> qu'il arrive dans le CRM. L'idée est que les commerciaux, mieux informés, qualifient mieux les leads.</p>
+<p>Après 2 semaines de test sur un échantillon de leads, le taux de qualification grimpe à <strong>26 %</strong>.</p>
+<p>L'équipe est enthousiaste. Le Head of Sales veut généraliser immédiatement. Mais posons-nous la question :</p>
+<p><strong>Quelle est la probabilité d'observer un taux de 26 % ou plus, si en réalité l'enrichissement n'a rien changé et que la vraie moyenne est toujours de 18 % ?</strong></p>
+<div class="highlight"><pre><span></span><code><span class="n">pvalue_101</span><span class="p">(</span><span class="mf">18.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mi">10000</span><span class="p">,</span> <span class="mf">26.0</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Résultat : <strong>pratiquement 0 %</strong>. La différence est de plus de 2,5 écarts types. Il est extrêmement improbable d'observer un tel écart par le seul hasard.</p>
+<p>Mais avant de célébrer, il faut vérifier plusieurs choses :</p>
+<ul>
+<li><strong>La durée du test :</strong> 2 semaines, est-ce suffisant ? Si le cycle de vente est de 30 jours, on n'a vu qu'une partie du tableau.</li>
+<li><strong>La taille de l'échantillon :</strong> combien de leads ont été testés ? 50 leads enrichis contre 50 non enrichis, c'est trop peu. 500 contre 500, c'est plus solide.</li>
+<li><strong>Le biais de sélection :</strong> les leads enrichis venaient-ils de la même source que les autres ? Si l'enrichissement a été testé uniquement sur les leads entrants de Google Ads (souvent plus qualifiés que ceux venant des réseaux sociaux), la comparaison est faussée.</li>
+<li><strong>La saisonnalité :</strong> la période de test correspond-elle à un pic naturel d'activité (rentrée, Black Friday, fin de trimestre) qui gonfle artificiellement les résultats ?</li>
+</ul>
+<p>Ici, la p-value est rassurante — le signal est fort. Mais elle ne remplace pas un design expérimental rigoureux. Si le test avait été lancé uniquement pendant la dernière semaine du trimestre (quand les commerciaux poussent pour atteindre leurs objectifs), le taux de qualification serait naturellement plus élevé, enrichissement ou pas.</p>
+<h2 id="le-test-ab-qui-a-presque-tout-casse">Le test A/B qui a presque tout cassé</h2>
+<p>Autre situation classique. Une équipe growth lance un test A/B sur la page de tarification de leur SaaS. La version B affiche le prix barré avec une réduction de 20 %. Après seulement 3 jours, la p-value tombe sous 0,05. Le product manager veut déployer immédiatement.</p>
+<p>Mais en analysant les données de plus près, on découvre que le test a été lancé un vendredi soir. Le trafic du week-end est dominé par un profil de visiteurs différent : des particuliers qui achètent plus facilement que les professionnels en semaine. La "significativité statistique" n'était que du bruit lié à la composition du trafic.</p>
+<p>Si l'équipe avait attendu un cycle complet — au moins 7 jours, pour couvrir tous les profils de visiteurs — elle aurait vu que l'effet disparaissait complètement.</p>
+<p><strong>Leçon :</strong> une p-value basse ne signifie rien si la conception du test est bancale.</p>
+<h2 id="ce-que-la-p-value-nous-dit-et-ce-quelle-ne-dit-pas">Ce que la p-value nous dit — et ce qu'elle ne dit pas</h2>
+<p>Résumons en termes simples :</p>
+<ul>
+<li>Une p-value de <strong>0,35 %</strong> signifie : "Si la vraie moyenne est de 170 €, il n'y a que 0,35 % de chance d'observer une moyenne d'échantillon supérieure à 183 €."</li>
+<li>Une p-value de <strong>0,77 %</strong> signifie : "Si la vraie moyenne est de 170 €, il n'y a que 0,77 % de chance d'observer une moyenne qui s'en éloigne de plus de 13 €, dans un sens ou dans l'autre."</li>
+<li>La p-value <strong>ne nous dit pas</strong> si l'hypothèse de départ est vraie ou fausse.</li>
+<li>On <strong>ne peut pas</strong> rejeter une hypothèse de manière fiable sur la base d'un seul échantillon.</li>
+</ul>
+<h2 id="les-5-questions-a-poser-avant-de-conclure">Les 5 questions à poser avant de conclure</h2>
+<p>La prochaine fois que quelqu'un brandit une p-value en réunion, posez ces questions :</p>
+<ol>
+<li><strong>Combien de personnes ont été testées ?</strong> — Un test sur 200 visiteurs ou 50 leads ne prouve rien. Il faut un volume suffisant pour que les résultats soient fiables.</li>
+<li><strong>Pendant combien de temps le test a-t-il tourné ?</strong> — Il faut couvrir au moins un cycle business complet : 7 jours minimum pour du B2C (vente aux particuliers), souvent 14 jours ou plus pour du B2B (vente aux entreprises).</li>
+<li><strong>Le test est-il bilatéral ?</strong> — On doit mesurer si le changement est meilleur <em>ou</em> pire, pas seulement meilleur. Un test unilatéral surestime la significativité.</li>
+<li><strong>Les groupes sont-ils comparables ?</strong> — Si le groupe A vient de Google Ads et le groupe B vient des réseaux sociaux, la comparaison n'a aucun sens. C'est un <strong>biais de segmentation</strong>.</li>
+<li><strong>A-t-on regardé les résultats une seule fois ou plusieurs ?</strong> — Vérifier la p-value tous les jours (le <strong>"peeking"</strong>) gonfle artificiellement les chances de trouver un résultat significatif. Il faut définir la durée du test à l'avance et ne regarder qu'à la fin.</li>
+</ol>
+<h2 id="le-code-complet-pour-reproduire-les-calculs">Le code complet pour reproduire les calculs</h2>
+<p>Ce code Python génère les graphiques et calcule les p-values présentées dans cet article. Vous pouvez le copier-coller dans un notebook Jupyter ou un script Python :</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="k">def</span> <span class="nf">pvalue_101</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">samp_size</span><span class="p">,</span> <span class="n">samp_mean</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">deltam</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1234</span><span class="p">)</span>
+    <span class="n">s1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">samp_size</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">samp_mean</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">s1</span><span class="p">[</span><span class="n">s1</span><span class="o">&gt;</span><span class="n">samp_mean</span><span class="p">]))</span>
+        <span class="n">outliers</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">s1</span><span class="p">[</span><span class="n">s1</span><span class="o">&gt;</span><span class="n">samp_mean</span><span class="p">])</span><span class="o">*</span><span class="mi">100</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">s1</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Percentage of numbers larger than </span><span class="si">{}</span><span class="s1"> is </span><span class="si">{}</span><span class="s1">%&#39;</span>
+              <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">samp_mean</span><span class="p">,</span> <span class="n">outliers</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">deltam</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">deltam</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">mu</span> <span class="o">-</span> <span class="n">samp_mean</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">deltam</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">outliers</span> <span class="o">=</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">s1</span><span class="p">[</span><span class="n">s1</span><span class="o">&gt;</span><span class="p">(</span><span class="n">mu</span><span class="o">+</span><span class="n">deltam</span><span class="p">)]))</span>
+                    <span class="o">+</span> <span class="nb">float</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">s1</span><span class="p">[</span><span class="n">s1</span><span class="o">&lt;</span><span class="p">(</span><span class="n">mu</span><span class="o">-</span><span class="n">deltam</span><span class="p">)])))</span> <span class="o">*</span> <span class="mf">100.0</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">s1</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;Percentage of numbers further than the population mean</span>
+<span class="s2">              of </span><span class="si">{}</span><span class="s2"> by +/-</span><span class="si">{}</span><span class="s2"> is </span><span class="si">{}</span><span class="s2">%&quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">deltam</span><span class="p">,</span> <span class="n">outliers</span><span class="p">))</span>
+
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Normal Distribution: population_mean=</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mu</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">s1</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">mu</span><span class="o">+</span><span class="n">deltam</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">mu</span><span class="o">-</span><span class="n">deltam</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Exemple e-commerce : probabilité d&#39;un panier moyen &gt; 183 €</span>
+<span class="n">pvalue_101</span><span class="p">(</span><span class="mf">170.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mi">10000</span><span class="p">,</span> <span class="mf">183.0</span><span class="p">)</span>
+
+<span class="c1"># Exemple e-commerce : probabilité d&#39;un écart de +/- 13 € autour de 170 €</span>
+<span class="n">pvalue_101</span><span class="p">(</span><span class="mf">170.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mi">10000</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">13.0</span><span class="p">)</span>
+
+<span class="c1"># Exemple CRM : probabilité d&#39;un taux de qualification &gt; 26 %</span>
+<span class="n">pvalue_101</span><span class="p">(</span><span class="mf">18.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mi">10000</span><span class="p">,</span> <span class="mf">26.0</span><span class="p">)</span>
+</code></pre></div>
+
+<h2 id="checklist-complete-les-etapes-pour-tester-correctement-une-p-value">Checklist complète : les étapes pour tester correctement une p-value</h2>
+<p>Avant de lancer un test, pendant le test, et après le test — voici la liste des étapes à respecter pour que votre p-value ait réellement du sens.</p>
+<h3 id="avant-le-test">Avant le test</h3>
+<ol>
+<li><strong>Formuler une hypothèse claire.</strong> Écrivez noir sur blanc ce que vous testez. Exemple : "L'enrichissement automatique des leads augmente le taux de qualification." Sans hypothèse précise, vous ne saurez pas quoi mesurer.</li>
+<li><strong>Choisir la métrique principale.</strong> Une seule métrique par test. Taux de conversion ? Panier moyen ? Taux de qualification ? Si vous mesurez 10 choses en même temps, vous trouverez forcément un résultat "significatif" par pur hasard (c'est le problème des <strong>comparaisons multiples</strong>).</li>
+<li><strong>Calculer la taille d'échantillon nécessaire.</strong> Utilisez un calculateur de puissance statistique (comme celui de <a href="https://www.evanmiller.org/ab-testing/sample-size.html">Evan Miller</a>). Un test sur 50 personnes ne prouvera rien. La taille dépend de l'effet minimum que vous voulez détecter et de la variabilité de vos données.</li>
+<li><strong>Définir le seuil de significativité (α).</strong> En général, on fixe α à 0,05 (soit 5 %). Cela signifie qu'on accepte 5 % de risque de conclure à tort qu'il y a un effet alors qu'il n'y en a pas. Ce seuil doit être décidé <em>avant</em> de regarder les résultats.</li>
+<li><strong>Choisir entre test unilatéral et bilatéral.</strong> Si vous voulez savoir si le changement est meilleur <em>ou</em> pire, utilisez un test bilatéral (c'est le cas le plus courant). Un test unilatéral ne se justifie que si vous êtes certain que l'effet ne peut aller que dans un sens.</li>
+<li><strong>Fixer la durée du test à l'avance.</strong> Un cycle business complet au minimum : 7 jours pour couvrir les variations jour/week-end, 14 jours ou plus si votre cycle de vente est long (B2B par exemple).</li>
+</ol>
+<h3 id="pendant-le-test">Pendant le test</h3>
+<ol>
+<li><strong>Ne pas regarder les résultats avant la fin.</strong> Vérifier la p-value tous les jours (le "peeking") augmente artificiellement vos chances de trouver un faux positif. Si vous devez absolument surveiller le test en cours, utilisez des méthodes de correction comme le <strong>test séquentiel</strong> ou la <strong>correction de Bonferroni</strong>.</li>
+<li><strong>Vérifier que les groupes sont comparables.</strong> Le groupe A et le groupe B doivent recevoir le même type de trafic. Si un groupe reçoit surtout des visiteurs mobiles et l'autre des visiteurs desktop, la comparaison est biaisée.</li>
+<li><strong>Ne rien changer en cours de route.</strong> Si vous modifiez la page, le ciblage ou les critères pendant le test, les résultats ne sont plus interprétables. Relancez un nouveau test propre.</li>
+</ol>
+<h3 id="apres-le-test">Après le test</h3>
+<ol>
+<li><strong>Lire la p-value correctement.</strong> Une p-value de 0,03 signifie : "Si rien n'a changé, il y a 3 % de chance d'observer un résultat aussi extrême." Ça ne signifie <em>pas</em> : "Il y a 97 % de chance que notre changement fonctionne."</li>
+<li><strong>Vérifier la taille de l'effet.</strong> La p-value vous dit si le résultat est statistiquement significatif, mais pas s'il est <em>important</em>. Un test peut être significatif avec un effet de +0,1 % de conversion — trop faible pour justifier le coût du changement. Regardez aussi l'<strong>intervalle de confiance</strong> pour connaître la fourchette probable de l'effet réel.</li>
+<li><strong>Chercher les biais.</strong> Posez-vous ces questions : le test a-t-il couvert un cycle complet ? Les groupes étaient-ils homogènes ? Y a-t-il eu un événement extérieur (promotion, bug, pic de trafic) qui fausse les résultats ?</li>
+<li><strong>Reproduire avant de généraliser.</strong> Un seul test positif ne suffit pas. Si l'enjeu est important, relancez le test sur une autre période ou un autre segment pour confirmer le résultat. La reproductibilité est la base de toute démarche scientifique.</li>
+<li><strong>Documenter le test.</strong> Notez l'hypothèse, la métrique, la taille d'échantillon, la durée, la p-value, la taille de l'effet et votre conclusion. Un test non documenté est un test perdu — pour vous et pour votre équipe.</li>
+</ol>
+<p><em>La p-value est un outil puissant — à condition de comprendre ce qu'elle mesure et ce qu'elle ne mesure pas. La prochaine fois que vous voyez "p &lt; 0.05" dans un rapport ou un dashboard, reprenez cette checklist et vérifiez si le test qui se cache derrière mérite vraiment qu'on lui fasse confiance.</em></p>
     </div><!-- /.entry-content -->
 
   </article>
